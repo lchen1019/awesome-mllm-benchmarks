@@ -1,10 +1,10 @@
 
 <p align="center">
-  <img src="assets/logo_transparent.png" width="120" alt="Awesome MLLM Benchmarks">
+  <img src="assets/logo_transparent.png" width="90" alt="Awesome MLLM Benchmarks">
 </p>
 <h1 align="center">Awesome MLLM Benchmarks</h1>
 <p align="center">
-  <em>An interactive explorer & paper list for Vision-Language Model benchmarks.</em>
+  <em>An interactive explorer & paper list for MLLM benchmarks.</em>
 </p>
 <p align="center">
   <a href="https://awesome.re"><img src="https://awesome.re/badge.svg" alt="Awesome"></a>
@@ -14,17 +14,17 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-orange?style=flat-square" alt="License"></a>
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/Benchmarks-130+-blue?style=for-the-badge" alt="Benchmarks">
-  <img src="https://img.shields.io/badge/Categories-20+-orange?style=for-the-badge" alt="Categories">
-  <img src="https://img.shields.io/badge/Samples-110+-purple?style=for-the-badge" alt="Samples">
+  <img src="https://img.shields.io/badge/Benchmarks-130+-blue?style=flat-square" alt="Benchmarks">
+  <img src="https://img.shields.io/badge/Categories-20+-orange?style=flat-square" alt="Categories">
+  <img src="https://img.shields.io/badge/Samples-110+-purple?style=flat-square" alt="Samples">
 </p>
-
-
-**[🌐 Explore the Interactive Dashboard »](https://lchen1019.github.io/awesome-mllm-benchmarks/)**
+<p align="center">
+  <a href="https://lchen1019.github.io/awesome-mllm-benchmarks/"><strong>🌐 Explore the Interactive Dashboard »</strong></a>
+</p>
 
 ---
 
-We collect **130+ VLM benchmarks** across **20+ categories** (OCR, Math, Video, Agent, Spatial Intelligence, etc.) with rich metadata including GitHub stars, HuggingFace downloads, paper abstracts, model evaluation coverage, and more. Everything is presented through a **modern interactive dashboard** — you can search, filter, sort, and browse actual benchmark samples directly in the browser.
+We collect **130+ MLLM benchmarks** across **20+ categories** (OCR, Math, Video, Agent, Spatial Intelligence, etc.) with rich metadata including GitHub stars, HuggingFace downloads, paper abstracts, model evaluation coverage, and more. Everything is presented through a **modern interactive dashboard** — you can search, filter, sort, and browse actual benchmark samples directly in the browser.
 
 <p align="center">
   <a href="https://lchen1019.github.io/awesome-mllm-benchmarks/">
@@ -411,7 +411,7 @@ If you find this project useful for your research, please consider citing:
 
 ```bibtex
 @misc{awesome-mllm-benchmarks,
-  title        = {Awesome MLLM Benchmarks: An Interactive Explorer for Vision-Language Model Benchmarks},
+  title        = {Awesome MLLM Benchmarks: An Interactive Explorer for MLLM Benchmarks},
   author       = {Chen, Lin},
   year         = {2026},
   howpublished = {\url{https://github.com/lchen1019/awesome-mllm-benchmarks}},
