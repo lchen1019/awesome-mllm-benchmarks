@@ -73,16 +73,17 @@ Then open [http://localhost:8080](http://localhost:8080) in your browser.
 
 ```
 awesome-mllm-benchmarks/
-├── index.html                  # Main dashboard page
-├── cases.html                  # Sample viewer page
-├── data/                       # JSON metadata
-│   ├── benchmarks.json         # Benchmark metadata (133 entries)
-│   ├── model-matrix.json       # Model × Benchmark coverage data
-│   └── cases-manifest.json     # Sample viewer config
-├── samples/                    # Benchmark sample data (images, per-benchmark data.json)
-├── assets/                     # Static assets (logo, favicon, screenshots)
-├── serve.py                    # Dev server with no-cache headers
-└── .github/workflows/pages.yml # GitHub Pages deployment
+├── index.html                   # Main dashboard page
+├── cases.html                   # Sample viewer page
+├── data/
+│   ├── benchmarks.json          # Benchmark metadata (130+ entries)
+│   ├── model-matrix.json        # Model × Benchmark coverage data
+│   └── cases-manifest.json      # Sample viewer config
+├── samples/                     # Benchmark sample data (images, per-benchmark data)
+├── assets/                      # Logo, favicon, screenshots
+├── serve.py                     # Dev server with no-cache headers
+├── .github/workflows/pages.yml  # GitHub Pages deployment
+└── .nojekyll                    # Bypass Jekyll processing
 ```
 
 
