@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VLM Benchmark Explorer</title>
+<link rel="icon" type="image/png" href=".assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f8fb;
+  --surface: #ffffff;
+  --surface2: #f0f2f7;
+  --border: #e1e5ee;
+  --border-hover: #c5cad8;
+  --text: #1a1f2e;
+  --text-dim: #5a6178;
+  --text-muted: #949bb0;
+  --accent: #5b5fc7;
+  --accent-light: #6366f1;
+  --green: #059669;
+  --orange: #d97706;
+  --pink: #db2777;
+  --blue: #3b82f6;
+  --red: #ef4444;
+  --cyan: #0891b2;
+  --radius: 12px;
+  --shadow: 0 0 0 1px rgba(0,0,0,.02), 0 2px 4px rgba(0,0,0,.03), 0 12px 24px rgba(0,0,0,.04);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.hero {
+  text-align: center;
+  padding: 60px 24px 40px;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(99,102,241,.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(168,85,247,.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(236,72,153,.04) 0%, transparent 50%),
+    linear-gradient(180deg, #f5f3ff 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+}
+.hero-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.hero-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 12px rgba(99, 102, 241, 0.22));
+}
+.hero h1 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  margin-top: 8px;
+}
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.stat-item { text-align: center; }
+.stat-num { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.controls {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.control-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.03);
+}
+.control-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.control-section + .control-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.section-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.search-box {
+  min-width: 180px;
+  max-width: 220px;
+  position: relative;
+  flex-shrink: 0;
+}
+.search-box svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  width: 16px; height: 16px;
+}
+.search-box input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  background: var(--surface2);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,.08); background: var(--surface); }
+.search-box input::placeholder { color: var(--text-muted); }
+
+.filter-wrap {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+.filter-btn {
+  padding: 5px 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 0.76rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.filter-btn:hover:not(.active) { border-color: var(--border-hover); color: var(--text); background: var(--surface2); }
+/* Selected: soft brand tint + clear ring (still no category rainbow—table keeps colors) */
+.filter-btn.active {
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.11) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border-color: rgba(99, 102, 241, 0.55);
+  color: #252a3d;
+  font-weight: 400;
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.2),
+    0 2px 6px rgba(99, 102, 241, 0.12);
+}
+.filter-btn.active .count {
+  opacity: 0.9;
+  color: #4f46e5;
+  font-weight: 400;
+}
+.filter-btn .count {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.66rem;
+  opacity: 0.65;
+  font-weight: 500;
+}
+
+.result-count {
+  width: 100%;
+  padding: 12px 24px 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.table-wrap {
+  max-width: 1400px;
+  margin: 12px auto 60px;
+  padding: 0 24px;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  table-layout: fixed;
+}
+col.col-num { width: 36px; }
+col.col-name { width: 200px; }
+col.col-cat { width: 140px; }
+col.col-org { width: 115px; }
+col.col-date { width: 72px; }
+col.col-stars { width: 64px; }
+col.col-dl { width: 120px; }
+col.col-likes { width: 56px; }
+col.col-models { width: 130px; }
+col.col-links { width: 76px; }
+col.col-samples { width: 95px; }
+thead th {
+  background: var(--surface2);
+  padding: 10px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: color .2s;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+thead th:hover { color: var(--accent-light); }
+thead th .sort-arrow {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.7rem;
+  opacity: 0.5;
+}
+thead th.sort-active .sort-arrow { opacity: 1; color: var(--accent-light); }
+thead th.no-sort { cursor: default; }
+thead th.no-sort:hover { color: var(--text-dim); }
+
+tbody tr {
+  transition: all .2s;
+  cursor: pointer;
+}
+tbody tr:hover { background: rgba(99,102,241,.03); }
+tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+tbody td {
+  padding: 10px 8px;
+  font-size: 0.82rem;
+  vertical-align: middle;
+}
+
+.benchmark-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+tbody td { overflow: hidden; text-overflow: ellipsis; }
+tbody td:last-child, tbody td:nth-last-child(2) { overflow: visible; text-overflow: clip; }
+
+.cat-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.73rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.link-icons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.link-icons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: all .2s;
+}
+.link-icons a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(99,102,241,.05);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(99,102,241,.12);
+}
+.link-icons a svg { width: 15px; height: 15px; }
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.84rem;
+}
+.metric svg { width: 14px; height: 14px; flex-shrink: 0; }
+.metric.stars svg { color: var(--orange); }
+.metric.downloads svg { color: var(--blue); }
+.metric.likes svg { color: var(--pink); }
+
+.paper-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+  color: var(--text-dim);
+  font-size: 0.76rem;
+  max-width: 200px;
+}
+
+.no-data { color: var(--text-muted); font-size: 0.8rem; }
+
+.cases-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.76rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .25s;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(99,102,241,.2);
+}
+.cases-btn:hover { background: linear-gradient(135deg, #818cf8, #a78bfa); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(99,102,241,.25); }
+.cases-btn.disabled {
+  background: var(--surface2);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  cursor: default;
+}
+.cases-btn svg { width: 13px; height: 13px; }
+
+/* Detail overlay */
+.detail-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15,23,42,.18);
+  backdrop-filter: blur(12px);
+  justify-content: center;
+  align-items: start;
+  padding: 60px 24px;
+  overflow-y: auto;
+}
+.detail-overlay.open { display: flex; }
+.detail-overlay > .detail-card {
+  min-width: 0;
+  flex-shrink: 1;
+}
+.detail-card {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 780px;
+  padding: 36px;
+  padding-bottom: 44px;
+  box-shadow: 0 25px 50px rgba(0,0,0,.1), 0 0 0 1px rgba(0,0,0,.03);
+  position: relative;
+  animation: slideUp .25s ease;
+  overflow-x: clip;
+}
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(20px); }
+  to { opacity:1; transform: translateY(0); }
+}
+.detail-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 36px; height: 36px;
+  color: var(--text-dim);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s;
+}
+.detail-close:hover { color: var(--text); border-color: var(--border-hover); }
+.detail-card h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+.detail-card .detail-cat { display: inline-block; margin-bottom: 20px; }
+
+.detail-brief {
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  font-size: 0.92rem;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+
+.detail-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.detail-meta-item {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 14px;
+}
+.detail-meta-item .label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.detail-meta-item .value { font-size: 1.1rem; font-weight: 600; }
+
+.detail-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.detail-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all .2s;
+}
+.detail-links a:hover { border-color: var(--accent); color: var(--accent-light); }
+.detail-links a svg { width: 16px; height: 16px; }
+
+.detail-abstract {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: var(--text-dim);
+  max-height: 240px;
+  overflow-y: auto;
+}
+.detail-abstract h3 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.detail-tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px 6px;
+  margin-top: 16px;
+  margin-bottom: 4px;
+  max-width: 100%;
+  min-width: 0;
+}
+.detail-tags span {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+.detail-authors {
+  margin-top: 16px;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.detail-authors strong {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 1.6rem; }
+  .hero-logo { width: 56px; height: 56px; }
+  .hero { padding: 40px 16px 28px; }
+  .stats-bar { gap: 16px; }
+  .control-section { flex-direction: column; align-items: stretch; }
+  .search-box { min-width: 100%; max-width: 100%; }
+  .control-panel { padding: 12px 14px; }
+  .table-wrap { padding: 0 12px; }
+  tbody td, thead th { padding: 8px 6px; font-size: 0.78rem; }
+  .detail-card { padding: 24px 24px 36px; }
+}
+.model-tags-cell { padding: 2px 4px !important; }
+.model-tags { display: flex; gap: 3px; flex-wrap: wrap; }
+.mtag {
+  display: inline-block; padding: 1px 6px; border-radius: 8px;
+  font-size: .62rem; font-weight: 600; letter-spacing: .02em;
+  white-space: nowrap; line-height: 1.5;
+}
+.mtag-qwen { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.mtag-internvl { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.mtag-gpt { background: #fce7f3; color: #9d174d; border: 1px solid #f9a8d4; }
+.mtag-seed { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.mtag-step { background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; }
+.mtag-claude { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.mtag-gemini { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+.mtag-kimi { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+.mtag-minimax { background: #fff7ed; color: #9a3412; border: 1px solid #fdba74; }
+.mtag-glm { background: #cffafe; color: #0e7490; border: 1px solid #22d3ee; }
+.model-filter-bar { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; flex: 1; }
+.mf-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 14px; font-size: .68rem; font-weight: 600;
+  cursor: pointer; border: 1.5px solid; transition: all .15s; font-family: inherit;
+  opacity: .4;
+}
+.mf-btn:hover { opacity: .7; }
+.mf-btn.active { opacity: 1; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.mf-qwen { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+.mf-internvl { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+.mf-gpt { background: #fce7f3; color: #9d174d; border-color: #f9a8d4; }
+.mf-seed { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.mf-step { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+.mf-claude { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+.mf-gemini { background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+.mf-kimi { background: #f0fdf4; color: #166534; border-color: #86efac; }
+.mf-minimax { background: #fff7ed; color: #9a3412; border-color: #fdba74; }
+.mf-glm { background: #cffafe; color: #0e7490; border-color: #22d3ee; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-brand">
+    <img class="hero-logo" src=".assets/logo_transparent.png" alt="VLM Benchmark Explorer" width="72" height="72">
+    <h1>VLM Benchmark Explorer</h1>
+  </div>
+  <p>Vision-Language Model Benchmarks Metadata Dashboard</p>
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num" id="totalCount">-</div>
+      <div class="stat-label">Benchmarks</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="catCount">-</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="sampleCount">-</div>
+      <div class="stat-label">With Samples</div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="control-panel">
+    <div class="control-section">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search benchmarks…">
+      </div>
+      <div class="filter-wrap" id="filterGroup"></div>
+    </div>
+    <div class="control-section">
+      <span class="section-label">Filter by Model</span>
+      <div class="model-filter-bar">
+        <button class="mf-btn mf-qwen active" data-model="qwen" onclick="toggleModelFilter('qwen')">Qwen</button>
+        <button class="mf-btn mf-internvl active" data-model="internvl" onclick="toggleModelFilter('internvl')">InternVL</button>
+        <button class="mf-btn mf-gpt active" data-model="gpt" onclick="toggleModelFilter('gpt')">GPT</button>
+        <button class="mf-btn mf-seed active" data-model="seed" onclick="toggleModelFilter('seed')">Seed</button>
+        <button class="mf-btn mf-step active" data-model="step" onclick="toggleModelFilter('step')">Step</button>
+        <button class="mf-btn mf-claude active" data-model="claude" onclick="toggleModelFilter('claude')">Claude</button>
+        <button class="mf-btn mf-gemini active" data-model="gemini" onclick="toggleModelFilter('gemini')">Gemini</button>
+        <button class="mf-btn mf-kimi active" data-model="kimi" onclick="toggleModelFilter('kimi')">Kimi</button>
+        <button class="mf-btn mf-minimax active" data-model="minimax" onclick="toggleModelFilter('minimax')">MiniMax</button>
+        <button class="mf-btn mf-glm active" data-model="glm" onclick="toggleModelFilter('glm')">GLM</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="result-count" id="resultCount"></div>
+
+<div class="table-wrap">
+  <table>
+    <colgroup>
+      <col class="col-num"><col class="col-name"><col class="col-cat"><col class="col-org">
+      <col class="col-date"><col class="col-stars"><col class="col-dl"><col class="col-likes">
+      <col class="col-models"><col class="col-links"><col class="col-samples">
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="no-sort" style="text-align:center">#</th>
+        <th data-sort="name">Benchmark <span class="sort-arrow">↕</span></th>
+        <th data-sort="category">Category <span class="sort-arrow">↕</span></th>
+        <th data-sort="organization">Org <span class="sort-arrow">↕</span></th>
+        <th data-sort="paper_published">Date <span class="sort-arrow">↕</span></th>
+        <th data-sort="stars">Stars <span class="sort-arrow">↕</span></th>
+        <th data-sort="downloads">Downloads <span class="sort-arrow">↕</span></th>
+        <th data-sort="likes">Likes <span class="sort-arrow">↕</span></th>
+        <th data-sort="model_count">Evaluated By <span class="sort-arrow">↕</span></th>
+        <th class="no-sort">Links</th>
+        <th class="no-sort">Samples</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-card" id="detailCard"></div>
+</div>
+
+<script>
+const CAT_COLORS = {
+  'OCR/Doc/Chart':           { bg: '#dbeafe', text: '#1e40af', border: '#93c5fd' },
+  'Spatial Intelligence':    { bg: '#d1fae5', text: '#065f46', border: '#6ee7b7' },
+  'Knowledge':               { bg: '#ede9fe', text: '#5b21b6', border: '#c4b5fd' },
+  'Reasoning & Logic':       { bg: '#fef3c7', text: '#92400e', border: '#fcd34d' },
+  'Math':                    { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'STEM':                    { bg: '#ccfbf1', text: '#115e59', border: '#5eead4' },
+  'Perception':              { bg: '#fce7f3', text: '#9d174d', border: '#f9a8d4' },
+  'Grounding':               { bg: '#fef9c3', text: '#854d0e', border: '#fde047' },
+  'Video / Knowledge':       { bg: '#dbeafe', text: '#1e40af', border: '#93c5fd' },
+  'Video / Reasoning':       { bg: '#e0e7ff', text: '#3730a3', border: '#a5b4fc' },
+  'Video / Motion':          { bg: '#ede9fe', text: '#5b21b6', border: '#c4b5fd' },
+  'Video / Long-form':       { bg: '#e0e7ff', text: '#3730a3', border: '#a5b4fc' },
+  'Video / Multiple':        { bg: '#e0e7ff', text: '#3730a3', border: '#a5b4fc' },
+  'Video / Streaming':       { bg: '#cffafe', text: '#155e75', border: '#67e8f9' },
+  'Video / Multi-task':      { bg: '#ddd6fe', text: '#5b21b6', border: '#a78bfa' },
+  'Video / General':         { bg: '#dbeafe', text: '#1e40af', border: '#93c5fd' },
+  'Agent':                   { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Computer)':        { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Mobile)':          { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Browser)':         { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Visual Search)':   { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Tool)':            { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Coding':                  { bg: '#dcfce7', text: '#166534', border: '#86efac' },
+  'Medical':                 { bg: '#fef9c3', text: '#854d0e', border: '#fde047' },
+  /* Filter bar: merged Video / Agent families */
+  'Video*':                  { bg: '#e0e7ff', text: '#3730a3', border: '#a5b4fc' },
+  'Agent*':                  { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+};
+
+function escHtml(str) {
+  if (typeof str !== 'string') return String(str ?? '');
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function catBadge(cat) {
+  const c = CAT_COLORS[cat] || { bg: '#e2e8f0', text: '#334155', border: '#94a3b8' };
+  return `<span class="cat-badge" style="background:${c.bg};color:${c.text};border:1px solid ${c.border}">${cat}</span>`;
+}
+
+function fmtNum(n) {
+  if (n == null) return '-';
+  if (n >= 1000000) return (n/1000000).toFixed(1).replace(/\.0$/,'') + 'M';
+  if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'k';
+  return n.toString();
+}
+
+/** 列表与详情共用：有 hf_downloads_total 时视为全量下载（与 HF 多配置统计一致），否则用 hf_downloads。 */
+function hfDownloadsUnified(d) {
+  if (d.hf_downloads_total != null) return d.hf_downloads_total;
+  if (d.hf_downloads != null) return d.hf_downloads;
+  return null;
+}
+
+const svgGithub = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 17.07 3.633 16.7 3.633 16.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>`;
+
+const svgHF = `<svg viewBox="0 0 32 32" fill="currentColor"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/><ellipse cx="11" cy="13" rx="2" ry="3"/><ellipse cx="21" cy="13" rx="2" ry="3"/><path d="M9 20 Q16 27 23 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+
+const svgPaper = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`;
+const svgStar = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+const svgDownload = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+const svgHeart = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+const svgHome = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`;
+const svgEye = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+
+let allData = [];
+let currentSort = { key: 'downloads', dir: 'desc' };
+let modelCoverage = {};
+
+const MODEL_GROUPS = [
+  { key: 'qwen', label: 'Qwen', ids: ['qwen3vl', 'qwen25vl'], css: 'mtag-qwen' },
+  { key: 'internvl', label: 'InternVL', ids: ['internvl35'], css: 'mtag-internvl' },
+  { key: 'gpt', label: 'GPT', ids: ['gpt4'], css: 'mtag-gpt' },
+  { key: 'seed', label: 'Seed', ids: ['seed15vl'], css: 'mtag-seed' },
+  { key: 'step', label: 'Step', ids: ['step3vl'], css: 'mtag-step' },
+  { key: 'claude', label: 'Claude', ids: ['claude4'], css: 'mtag-claude' },
+  { key: 'gemini', label: 'Gemini', ids: ['gemini25'], css: 'mtag-gemini' },
+  { key: 'kimi', label: 'Kimi', ids: ['kimivl'], css: 'mtag-kimi' },
+  { key: 'minimax', label: 'MiniMax', ids: ['minimaxvl'], css: 'mtag-minimax' },
+  { key: 'glm', label: 'GLM', ids: ['glm4v'], css: 'mtag-glm' },
+];
+let activeModelFilters = new Set();
+
+function findCoverage(benchName) {
+  if (modelCoverage[benchName]) return modelCoverage[benchName];
+  const base = benchName.replace(/\(.*\)$/, '').replace(/[-_\s]/g, '').toLowerCase();
+  for (const [k, v] of Object.entries(modelCoverage)) {
+    const kBase = k.replace(/\(.*\)$/, '').replace(/[-_\s]/g, '').toLowerCase();
+    if (kBase === base) return v;
+  }
+  return [];
+}
+
+function getMatchedGroups(benchName) {
+  const models = findCoverage(benchName);
+  return MODEL_GROUPS.filter(g => g.ids.some(id => models.includes(id)));
+}
+
+function renderModelTags(benchName) {
+  const matched = getMatchedGroups(benchName);
+  if (matched.length === 0) return '<span style="color:var(--text-muted);font-size:.7rem">-</span>';
+  return '<div class="model-tags">' + matched.map(g =>
+    `<span class="mtag ${g.css}">${g.label}</span>`
+  ).join('') + '</div>';
+}
+
+function toggleModelFilter(key) {
+  if (activeModelFilters.has(key)) activeModelFilters.delete(key);
+  else activeModelFilters.add(key);
+  updateModelFilterUI();
+  render();
+}
+
+function updateModelFilterUI() {
+  document.querySelectorAll('.mf-btn').forEach(btn => {
+    const key = btn.dataset.model;
+    btn.classList.toggle('active', activeModelFilters.size === 0 || activeModelFilters.has(key));
+  });
+}
+
+/** 筛选条只显示大类：Video / Agent 多子类时合并为 Video* / Agent* */
+function buildMajorCategoryFilters(catCounts) {
+  const videoCats = [];
+  let videoTotal = 0;
+  const agentCats = [];
+  let agentTotal = 0;
+  const singles = [];
+
+  for (const [cat, count] of Object.entries(catCounts)) {
+    if (cat.startsWith('Video')) {
+      videoCats.push(cat);
+      videoTotal += count;
+    } else if (cat.startsWith('Agent')) {
+      agentCats.push(cat);
+      agentTotal += count;
+    } else {
+      singles.push({ label: cat, cats: [cat], total: count });
+    }
+  }
+
+  const entries = [];
+
+  if (videoCats.length > 1) {
+    videoCats.sort();
+    entries.push({ label: 'Video*', cats: videoCats, total: videoTotal });
+  } else if (videoCats.length === 1) {
+    const c = videoCats[0];
+    entries.push({ label: c, cats: [c], total: videoTotal });
+  }
+
+  if (agentCats.length > 1) {
+    agentCats.sort();
+    entries.push({ label: 'Agent*', cats: agentCats, total: agentTotal });
+  } else if (agentCats.length === 1) {
+    const c = agentCats[0];
+    entries.push({ label: c, cats: [c], total: agentTotal });
+  }
+
+  entries.push(...singles);
+  entries.sort((a, b) => b.total - a.total);
+  return entries;
+}
+
+async function init() {
+  const bust = '?v=' + Date.now();
+  const [resp, matrixResp] = await Promise.all([
+    fetch('data/benchmarks.json' + bust),
+    fetch('data/model-matrix.json' + bust).catch(() => null)
+  ]);
+  allData = await resp.json();
+  if (matrixResp && matrixResp.ok) {
+    const matrix = await matrixResp.json();
+    for (const b of matrix.benchmarks) {
+      modelCoverage[b.name] = b.models;
+    }
+  }
+
+  document.getElementById('totalCount').textContent = allData.length;
+  const cats = [...new Set(allData.map(d => d.category))];
+  document.getElementById('catCount').textContent = cats.length;
+  document.getElementById('sampleCount').textContent = allData.filter(d => d.has_samples).length;
+
+  const fg = document.getElementById('filterGroup');
+  const catCounts = {};
+  allData.forEach(d => catCounts[d.category] = (catCounts[d.category]||0) + 1);
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn active';
+  allBtn.innerHTML = `All <span class="count">${allData.length}</span>`;
+  allBtn.onclick = () => { activeCatList = null; updateFilters(); render(); };
+  fg.appendChild(allBtn);
+
+  const majorFilters = buildMajorCategoryFilters(catCounts);
+  for (const { label, cats, total } of majorFilters) {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.cats = JSON.stringify(cats);
+    btn.innerHTML = `${escHtml(label)} <span class="count">${total}</span>`;
+    btn.onclick = () => toggleFilter(btn, cats);
+    fg.appendChild(btn);
+  }
+
+  document.getElementById('searchInput').addEventListener('input', render);
+
+  document.querySelectorAll('thead th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      if (currentSort.key === key) {
+        currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort = { key, dir: key === 'name' || key === 'category' || key === 'organization' || key === 'paper_published' ? 'asc' : 'desc' };
+      }
+      updateSortUI();
+      render();
+    });
+  });
+
+  document.getElementById('detailOverlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeDetail();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDetail(); });
+
+  updateSortUI();
+  render();
+}
+
+let activeCatList = null;
+
+function toggleFilter(btn, catList) {
+  const same = activeCatList && JSON.stringify(activeCatList) === JSON.stringify(catList);
+  activeCatList = same ? null : catList;
+  updateFilters();
+  render();
+}
+
+function updateFilters() {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    if (!btn.dataset.cats) {
+      btn.classList.toggle('active', activeCatList === null);
+    } else {
+      const btnCats = JSON.parse(btn.dataset.cats);
+      btn.classList.toggle('active', activeCatList && JSON.stringify(activeCatList) === JSON.stringify(btnCats));
+    }
+  });
+}
+
+function updateSortUI() {
+  document.querySelectorAll('thead th[data-sort]').forEach(th => {
+    const isActive = th.dataset.sort === currentSort.key;
+    th.classList.toggle('sort-active', isActive);
+    const arrow = th.querySelector('.sort-arrow');
+    if (isActive) arrow.textContent = currentSort.dir === 'asc' ? '↑' : '↓';
+    else arrow.textContent = '↕';
+  });
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  let data = allData;
+  if (activeCatList) data = data.filter(d => activeCatList.includes(d.category));
+  if (activeModelFilters.size > 0) {
+    data = data.filter(d => {
+      const matched = getMatchedGroups(d.name);
+      return [...activeModelFilters].every(f => matched.some(g => g.key === f));
+    });
+  }
+  if (q) {
+    data = data.filter(d =>
+      d.name.toLowerCase().includes(q) ||
+      (d.paper_title || '').toLowerCase().includes(q) ||
+      d.category.toLowerCase().includes(q) ||
+      (d.brief || '').toLowerCase().includes(q) ||
+      (d.github_description || '').toLowerCase().includes(q)
+    );
+  }
+  const sortMap = {
+    name: d => d.name.toLowerCase(),
+    category: d => d.category.toLowerCase(),
+    organization: d => (d.organization || '').toLowerCase(),
+    paper_published: d => d.paper_published || '',
+    stars: d => d.github_stars || 0,
+    downloads: d => hfDownloadsUnified(d) || 0,
+    likes: d => d.hf_likes || 0,
+    model_count: d => getMatchedGroups(d.name).length,
+  };
+  const getter = sortMap[currentSort.key] || sortMap.name;
+  const dir = currentSort.dir === 'asc' ? 1 : -1;
+  data.sort((a, b) => {
+    const va = getter(a), vb = getter(b);
+    if (va < vb) return -1 * dir;
+    if (va > vb) return 1 * dir;
+    return 0;
+  });
+  return data;
+}
+
+function render() {
+  const data = getFiltered();
+  document.getElementById('resultCount').textContent = `Showing ${data.length} of ${allData.length} benchmarks`;
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = data.map((d, idx) => {
+    const hfDl = hfDownloadsUnified(d);
+    return `
+    <tr onclick="openDetail(${allData.indexOf(d)})">
+      <td style="text-align:center;color:var(--text-muted);font-size:0.78rem">${idx + 1}</td>
+      <td>
+        <span class="benchmark-name">${d.name}</span>
+      </td>
+      <td>${catBadge(d.category)}</td>
+      <td><span style="font-size:0.78rem;color:var(--text-dim);white-space:nowrap">${d.organization || '-'}</span></td>
+      <td>${d.paper_published ? `<span style="font-size:0.78rem;color:var(--text-dim);white-space:nowrap">${d.paper_published.slice(0,7)}</span>` : '<span class="no-data">-</span>'}</td>
+      <td>${d.github_stars != null ? `<div class="metric stars">${svgStar} ${fmtNum(d.github_stars)}</div>` : '<span class="no-data">-</span>'}</td>
+      <td>${hfDl != null ? `<div class="metric downloads">${svgDownload} ${fmtNum(hfDl)}</div>` : '<span class="no-data">-</span>'}</td>
+      <td>${d.hf_likes != null ? `<div class="metric likes">${svgHeart} ${fmtNum(d.hf_likes)}</div>` : '<span class="no-data">-</span>'}</td>
+      <td class="model-tags-cell">${renderModelTags(d.name)}</td>
+      <td>
+        <div class="link-icons">
+          ${d.github_url ? `<a href="${d.github_url}" target="_blank" title="GitHub" onclick="event.stopPropagation()">${svgGithub}</a>` : '<span style="width:27px;display:inline-block"></span>'}
+          ${d.hf_url ? `<a href="${d.hf_url}" target="_blank" title="HuggingFace" onclick="event.stopPropagation()">${svgHF}</a>` : '<span style="width:27px;display:inline-block"></span>'}
+          ${d.paper_urls && d.paper_urls.length ? `<a href="${d.paper_urls[0]}" target="_blank" title="Paper" onclick="event.stopPropagation()">${svgPaper}</a>` : '<span style="width:27px;display:inline-block"></span>'}
+        </div>
+      </td>
+      <td>
+        ${d.has_samples
+          ? `<button class="cases-btn" onclick="event.stopPropagation(); viewCases('${d.name}')">${svgEye} Samples</button>`
+          : ''}
+      </td>
+    </tr>
+  `;
+  }).join('');
+}
+
+function viewCases(name) {
+  window.open('cases.html?name=' + encodeURIComponent(name), '_blank');
+}
+
+function openDetail(idx) {
+  const d = allData[idx];
+  const hfDl = hfDownloadsUnified(d);
+  const card = document.getElementById('detailCard');
+  card.innerHTML = `
+    <button class="detail-close" onclick="closeDetail()">&times;</button>
+    <h2>${d.name}</h2>
+    <div class="detail-cat">${catBadge(d.category)}${d.affiliation ? ` <span style="font-size:0.82rem;color:var(--text-dim);margin-left:8px">${d.affiliation}</span>` : d.organization ? ` <span style="font-size:0.82rem;color:var(--text-dim);margin-left:8px">${d.organization}</span>` : ''}</div>
+
+    ${d.brief ? `<div class="detail-brief">${d.brief}</div>` : ''}
+
+    <div class="detail-meta-grid">
+      ${d.github_stars != null ? `<div class="detail-meta-item"><div class="label">GitHub Stars</div><div class="value" style="color:var(--orange)">${d.github_stars.toLocaleString()}</div></div>` : ''}
+      ${d.github_forks != null ? `<div class="detail-meta-item"><div class="label">Forks</div><div class="value">${d.github_forks.toLocaleString()}</div></div>` : ''}
+      ${hfDl != null ? `<div class="detail-meta-item"><div class="label">HF Downloads</div><div class="value" style="color:var(--blue)">${hfDl.toLocaleString()}</div></div>` : ''}
+      ${d.hf_likes != null ? `<div class="detail-meta-item"><div class="label">HF Likes</div><div class="value" style="color:var(--pink)">${d.hf_likes.toLocaleString()}</div></div>` : ''}
+      ${d.hf_license || d.github_license ? `<div class="detail-meta-item"><div class="label">License</div><div class="value">${d.hf_license || d.github_license}</div></div>` : ''}
+      ${d.paper_published ? `<div class="detail-meta-item"><div class="label">Published</div><div class="value">${d.paper_published}</div></div>` : ''}
+      ${d.github_language ? `<div class="detail-meta-item"><div class="label">Language</div><div class="value">${d.github_language}</div></div>` : ''}
+    </div>
+
+    ${d.github_description ? `<p style="color:var(--text-dim);margin-bottom:16px;font-size:0.92rem">${d.github_description}</p>` : ''}
+
+    <div class="detail-links">
+      ${d.github_url ? `<a href="${d.github_url}" target="_blank">${svgGithub} GitHub</a>` : ''}
+      ${d.hf_url ? `<a href="${d.hf_url}" target="_blank">${svgHF} HuggingFace</a>` : ''}
+      ${(d.paper_urls||[]).map((u,i) => `<a href="${u}" target="_blank">${svgPaper} Paper${d.paper_urls.length>1?' '+(i+1):''}</a>`).join('')}
+      ${d.homepage ? `<a href="${d.homepage}" target="_blank">${svgHome} Homepage</a>` : ''}
+    </div>
+
+    ${d.paper_title ? `
+      <div class="detail-abstract">
+        <h3>${d.paper_title}</h3>
+        ${d.paper_abstract || '<span style="color:var(--text-muted)">No abstract available.</span>'}
+      </div>
+    ` : ''}
+
+    ${d.paper_authors && d.paper_authors.length ? `
+      <div class="detail-authors">
+        <strong>Authors</strong><br>
+        ${d.paper_authors.join(', ')}
+      </div>
+    ` : ''}
+
+    ${(d.hf_tags && d.hf_tags.length) || (d.github_topics && d.github_topics.length) ? `
+      <div class="detail-tags">
+        ${(d.hf_tags||[]).map(t => `<span>${t}</span>`).join('')}
+        ${(d.github_topics||[]).map(t => `<span style="border-color:var(--border-hover)">${t}</span>`).join('')}
+      </div>
+    ` : ''}
+  `;
+  document.getElementById('detailOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+init();
+</script>
+<footer style="text-align:center;padding:24px 16px 32px;color:var(--text-muted);font-size:0.75rem;letter-spacing:0.02em">&copy; 2026. All rights reserved.</footer>
+</body>
+</html>

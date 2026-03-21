@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samples - VLM Benchmark Explorer</title>
+<link rel="icon" type="image/png" href=".assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root {
+  --bg: #f7f8fb;
+  --surface: #ffffff;
+  --surface2: #f0f2f7;
+  --border: #e1e5ee;
+  --border-hover: #c5cad8;
+  --text: #1a1f2e;
+  --text-dim: #5a6178;
+  --text-muted: #949bb0;
+  --accent: #5b5fc7;
+  --accent-light: #6366f1;
+  --green: #059669;
+  --orange: #d97706;
+  --pink: #db2777;
+  --blue: #3b82f6;
+  --red: #ef4444;
+  --cyan: #0891b2;
+  --radius: 12px;
+  --shadow: 0 0 0 1px rgba(0,0,0,.02), 0 2px 4px rgba(0,0,0,.03), 0 12px 24px rgba(0,0,0,.04);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.page-header {
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(99,102,241,.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(168,85,247,.04) 0%, transparent 50%),
+    linear-gradient(180deg, #f5f3ff 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 24px 24px;
+}
+.header-inner { max-width: 1200px; margin: 0 auto; }
+.header-brand { margin-bottom: 12px; }
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+  transition: color .2s;
+}
+.brand-link img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(99, 102, 241, 0.18));
+}
+.brand-link:hover { color: var(--accent-light); }
+.back-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--text-dim); text-decoration: none; font-size: 0.85rem;
+  margin-bottom: 18px; transition: color .2s;
+}
+.back-link:hover { color: var(--accent-light); }
+.back-link svg { width: 16px; height: 16px; }
+.dataset-title {
+  font-size: 2rem; font-weight: 800; letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.dataset-brief { color: var(--text-dim); font-size: 0.95rem; margin-top: 6px; max-width: 700px; }
+.dataset-meta { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+
+.cat-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 12px;
+  font-size: 0.73rem; font-weight: 500; white-space: nowrap;
+}
+
+/* Subtask row: same typography as .cases-info below; tabs are plain chips (no heavy card) */
+.subtask-bar {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 24px 0;
+}
+.subtask-bar .cases-info {
+  margin-bottom: 10px;
+}
+.subtask-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  padding: 0;
+  margin: 0 0 8px 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+.tab-btn {
+  padding: 5px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.35;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.76rem;
+  font-weight: 400;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.tab-btn:hover:not(.active) {
+  border-color: var(--border-hover);
+  background: var(--surface2);
+  color: var(--text);
+}
+.tab-btn.active {
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.11) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border-color: rgba(99, 102, 241, 0.55);
+  color: #252a3d;
+  font-weight: 400;
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.2),
+    0 2px 6px rgba(99, 102, 241, 0.12);
+}
+.tab-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 3px;
+}
+
+.cases-wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.cases-info { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px; }
+
+.case-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 16px;
+  overflow: hidden; transition: all .25s ease; box-shadow: var(--shadow);
+}
+.case-card:hover { border-color: var(--border-hover); box-shadow: 0 4px 12px rgba(0,0,0,.05), 0 12px 28px rgba(0,0,0,.06); transform: translateY(-1px); }
+.card-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 22px; background: var(--surface2);
+  border-bottom: 1px solid var(--border); flex-wrap: wrap;
+}
+.card-num {
+  font-weight: 700; font-size: 0.82rem; color: var(--accent-light);
+  background: rgba(99,102,241,.1); padding: 2px 10px; border-radius: 12px;
+}
+.card-badge {
+  display: inline-block; padding: 2px 10px; border-radius: 12px;
+  font-size: 0.72rem; font-weight: 500;
+  background: var(--surface); border: 1px solid var(--border); color: var(--text-dim);
+}
+.card-id { margin-left: auto; color: var(--text-muted); font-size: 0.72rem; font-family: monospace; }
+.card-body { padding: 18px 22px; }
+
+.card-content { display: flex; gap: 20px; }
+.card-media { flex-shrink: 0; }
+.card-text { flex: 1; min-width: 0; }
+
+.case-image {
+  max-width: 300px; max-height: 300px; border-radius: 8px;
+  border: 1px solid var(--border); cursor: zoom-in;
+  transition: transform .2s; object-fit: contain; background: var(--surface2);
+  display: block;
+}
+.case-image:hover { transform: scale(1.02); }
+.images-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.images-row .case-image { max-width: 200px; max-height: 200px; }
+.image-label { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 4px; }
+.image-label.gt-label {
+  color: var(--green); font-weight: 600;
+  background: rgba(5,150,105,.08); padding: 1px 8px; border-radius: 8px;
+}
+.img-wrap { display: flex; flex-direction: column; align-items: center; }
+
+.classify-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px;
+}
+.classify-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 10px; text-align: center;
+  transition: all .25s ease; box-shadow: var(--shadow);
+}
+.classify-item:hover { border-color: var(--border-hover); box-shadow: 0 4px 12px rgba(0,0,0,.05); transform: translateY(-1px); }
+.classify-item img {
+  width: 100%; max-height: 200px; object-fit: contain; border-radius: 6px;
+  margin-bottom: 8px; cursor: zoom-in; background: var(--surface2);
+}
+.classify-label { font-size: 0.82rem; font-weight: 600; }
+
+.card-question {
+  font-size: 0.92rem; color: var(--text); margin-bottom: 12px;
+  line-height: 1.7; word-break: break-word;
+}
+.card-question p, .md-content p { margin: 0.4em 0; }
+.card-question p:first-child, .md-content p:first-child { margin-top: 0; }
+.card-question p:last-child, .md-content p:last-child { margin-bottom: 0; }
+.md-truncate { max-height: 8em; overflow: hidden; position: relative; }
+.md-truncate.expanded { max-height: none; }
+.answer-text pre { background: #1e1e2e; color: #cdd6f4; border-radius: 8px; padding: 14px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; }
+.answer-text code { font-family: 'Courier New', monospace; }
+.answer-text pre code { background: none; padding: 0; }
+
+.choices-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.choice-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 12px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: 0.85rem; transition: all .2s;
+}
+.choice-item.is-answer { border-color: var(--green); background: rgba(5,150,105,.06); }
+.choice-letter { font-weight: 700; color: var(--accent-light); min-width: 24px; flex-shrink: 0; }
+.choice-text { flex: 1; color: var(--text-dim); }
+.choice-item.is-answer .choice-text { color: var(--green); }
+
+.answer-block {
+  margin-top: 12px; padding: 12px 16px; background: var(--surface2);
+  border-radius: 8px; border-left: 3px solid var(--accent);
+}
+.answer-label {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-muted); margin-bottom: 4px;
+}
+.answer-text { font-size: 0.88rem; color: var(--text); line-height: 1.6; word-break: break-word; }
+.answer-hidden { color: var(--text-muted); font-style: italic; }
+
+.video-ref {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; font-size: 0.82rem; color: var(--text-dim);
+  margin-bottom: 8px; margin-right: 8px;
+}
+.ego4d-clip-banner {
+  max-width: 520px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 55%, #f5f3ff 100%);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+.ego4d-clip-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: #4338ca;
+}
+.ego4d-clip-desc { margin: 0 0 8px 0; color: var(--text-dim); }
+.ego4d-clip-meta { margin: 0 0 6px 0; }
+.ego4d-clip-label { font-weight: 600; color: var(--text-muted); font-size: 0.78rem; }
+.ego4d-clip-id {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 4px 8px;
+  background: rgba(255,255,255,.75);
+  border-radius: 6px;
+  font-size: 0.76rem;
+  word-break: break-all;
+  border: 1px solid rgba(99,102,241,.2);
+}
+.ego4d-clip-links { margin: 0; font-size: 0.8rem; }
+.ego4d-clip-links a { color: #4f46e5; }
+.case-video {
+  width: 100%; max-width: 480px; aspect-ratio: 16/9; border-radius: 8px;
+  border: 1px solid var(--border); background: #000;
+  display: block; margin-bottom: 8px;
+}
+.video-poster {
+  position: relative; display: inline-block; cursor: pointer;
+  max-width: 480px; width: 100%; margin-bottom: 8px;
+}
+.video-poster img {
+  width: 100%; aspect-ratio: 16/9; object-fit: cover;
+  border-radius: 8px; border: 1px solid var(--border); background: #111;
+  display: block;
+}
+.video-poster .play-btn {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 56px; height: 56px; background: rgba(0,0,0,.6); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.video-poster:hover .play-btn { background: rgba(99,102,241,.85); }
+.video-poster .play-btn::after {
+  content: ''; border-style: solid; border-width: 10px 0 10px 18px;
+  border-color: transparent transparent transparent #fff; margin-left: 3px;
+}
+
+.contphy-media-fallback {
+  max-width: 480px; margin-bottom: 10px;
+}
+.contphy-fallback-hint {
+  margin-top: 10px; font-size: 0.78rem; color: var(--text-dim); line-height: 1.5;
+}
+.contphy-fallback-hint code { font-size: 0.74rem; }
+
+.video-err-box {
+  max-width: 480px;
+  padding: 12px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+  margin-bottom: 8px;
+}
+.video-err-box code { font-size: 0.78rem; word-break: break-all; }
+.video-err-box .ve-line { margin: 0.5em 0 0; }
+.video-err-box .ve-note { margin: 0.65em 0 0; opacity: 0.92; }
+
+.scoring-section {
+  margin-top: 14px;
+  padding: 14px 16px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent-light);
+}
+.scoring-title {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-muted); margin-bottom: 10px;
+}
+.scoring-list { display: flex; flex-direction: column; gap: 2px; }
+.scoring-point {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 5px 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+.scoring-dot {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  margin-top: 0.48em;
+  border-radius: 50%;
+  background: var(--accent-light);
+  box-shadow: 0 0 0 2px rgba(99,102,241,.12);
+}
+.scoring-point-md {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-dim);
+}
+.scoring-point-md p { margin: 0.3em 0; }
+.scoring-point-md p:first-child { margin-top: 0; }
+.scoring-point-md p:last-child { margin-bottom: 0; }
+.scoring-point-md ul, .scoring-point-md ol {
+  margin: 0.35em 0;
+  padding-left: 1.25em;
+}
+.scoring-point-md li { margin: 0.15em 0; }
+
+.qa-pairs-section { margin-top: 12px; }
+.qa-pairs-title {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-muted); margin-bottom: 8px;
+}
+.qa-pairs-section .chat-conv { margin-top: 2px; }
+
+.grid-container {
+  display: inline-block; border: 2px solid var(--border);
+  border-radius: 6px; overflow: hidden; margin: 8px 0;
+}
+.grid-row { display: flex; }
+.grid-cell { width: 22px; height: 22px; border: 0.5px solid rgba(0,0,0,.08); }
+.grid-label { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; }
+.grids-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+
+.arc-section { margin-bottom: 20px; }
+.arc-section-title {
+  font-size: 0.78rem; font-weight: 700; color: var(--accent-light);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 10px; padding-bottom: 6px;
+  border-bottom: 2px solid rgba(99,102,241,.15);
+}
+.arc-example {
+  display: flex; gap: 12px; align-items: flex-start;
+  margin-bottom: 16px; flex-wrap: wrap;
+}
+.arc-pair { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.arc-arrow {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; color: var(--accent-light); padding: 0 4px;
+  min-height: 50px; font-weight: 700;
+}
+.arc-unknown {
+  display: flex; align-items: center; justify-content: center;
+  min-width: 60px; min-height: 60px; border: 2px dashed var(--border);
+  border-radius: 6px; font-size: 1.5rem; color: var(--text-muted);
+}
+.arc-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.arc-meta-item {
+  font-size: 0.8rem; padding: 4px 12px; border-radius: 8px;
+  background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim);
+}
+.arc-meta-item strong { color: var(--text); margin-right: 4px; }
+
+/* video-embed removed - handled by renderVideosHtml */
+.video-embed-removed {
+  max-width: 560px; margin: 8px 0 12px;
+  border-radius: 8px; overflow: hidden;
+  border: 1px solid var(--border); background: #000;
+}
+.video-embed iframe { width: 100%; aspect-ratio: 16/9; border: none; display: block; }
+
+.json-display {
+  background: var(--surface2); border-radius: 8px; padding: 16px;
+  font-family: 'Courier New', monospace; font-size: 0.78rem;
+  color: var(--text-dim); overflow-x: auto; white-space: pre-wrap;
+  max-height: 400px; overflow-y: auto; word-break: break-all;
+}
+
+.extra-fields { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.extra-field {
+  font-size: 0.74rem; padding: 3px 10px; border-radius: 12px;
+  background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted);
+}
+.extra-field strong { color: var(--text-dim); }
+
+.expandable { position: relative; }
+.expand-btn {
+  background: none; border: none; color: var(--accent-light); font-size: 0.8rem;
+  cursor: pointer; font-family: inherit; padding: 0; margin-left: 4px;
+}
+.expand-btn:hover { text-decoration: underline; }
+
+.loading-state, .empty-state, .error-state { text-align: center; padding: 80px 24px; }
+.spinner {
+  width: 40px; height: 40px; border: 3px solid var(--border);
+  border-top: 3px solid var(--accent-light); border-radius: 50%;
+  animation: spin 1s linear infinite; margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-state p, .empty-state p { color: var(--text-muted); font-size: 0.92rem; }
+.empty-state .empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.3; }
+.empty-state h3 { color: var(--text-dim); margin-bottom: 8px; }
+.error-state h3 { color: var(--red); margin-bottom: 8px; }
+.retry-btn {
+  padding: 8px 20px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border: none;
+  border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.85rem;
+  cursor: pointer; margin-top: 16px; transition: all .25s;
+  box-shadow: 0 2px 6px rgba(99,102,241,.2);
+}
+.retry-btn:hover { background: linear-gradient(135deg, #818cf8, #a78bfa); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(99,102,241,.25); }
+
+.lightbox {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.75); backdrop-filter: blur(16px);
+  justify-content: center; align-items: center; cursor: zoom-out;
+}
+.lightbox.open { display: flex; animation: fadeIn .15s ease; }
+.lightbox img {
+  max-width: 92%; max-height: 92%; object-fit: contain;
+  border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.15);
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.case-card { animation: cardSlideIn .4s ease both; }
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-conv {
+  display: flex; flex-direction: column; gap: 12px;
+  --chat-ava-size: 30px;
+  --chat-row-gap: 10px;
+  /* 与 .chat-row 中头像 + gap 同宽，使上图与对话气泡左缘对齐 */
+  --chat-inset: calc(var(--chat-ava-size) + var(--chat-row-gap));
+}
+
+.chat-media {
+  margin-left: var(--chat-inset);
+  margin-bottom: 4px;
+  text-align: left;
+}
+.chat-media .case-image {
+  max-height: 280px; max-width: 100%; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--surface2);
+  box-shadow: 0 1px 6px rgba(0,0,0,.04);
+}
+.chat-media .images-row { justify-content: flex-start; margin-bottom: 0; }
+
+.chat-row { display: flex; gap: var(--chat-row-gap); align-items: flex-start; }
+
+.chat-ava {
+  width: var(--chat-ava-size); height: var(--chat-ava-size); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-weight: 700; font-size: 0.72rem;
+  margin-top: 1px;
+}
+.chat-ava-q {
+  background: linear-gradient(135deg, #6366f1, #818cf8);
+  color: #fff; box-shadow: 0 1px 4px rgba(99,102,241,.18);
+}
+.chat-ava-a {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff; box-shadow: 0 1px 4px rgba(16,185,129,.18);
+}
+
+.chat-bbl {
+  flex: 1; min-width: 0;
+  padding: 14px 18px; border-radius: 14px;
+  line-height: 1.7; font-size: 0.88rem; word-break: break-word;
+}
+.chat-bbl p { margin: .3em 0; }
+.chat-bbl p:first-child { margin-top: 0; }
+.chat-bbl p:last-child { margin-bottom: 0; }
+/* marked 输出：全局 * { padding:0 } 会去掉列表缩进，长 markdown 题干（如 ViVerBench）会贴边 */
+.chat-bbl ul, .chat-bbl ol,
+.answer-text ul, .answer-text ol,
+.md-content ul, .md-content ol {
+  padding-left: 1.35em;
+  margin: 0.45em 0;
+}
+.chat-bbl li, .answer-text li, .md-content li { margin: 0.2em 0; }
+.chat-bbl h1, .chat-bbl h2, .chat-bbl h3, .chat-bbl h4, .chat-bbl h5, .chat-bbl h6,
+.answer-text h1, .answer-text h2, .answer-text h3, .answer-text h4, .answer-text h5, .answer-text h6,
+.md-content h1, .md-content h2, .md-content h3, .md-content h4, .md-content h5, .md-content h6 {
+  margin: 0.75em 0 0.35em;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.chat-bbl > :first-child,
+.answer-text > :first-child,
+.md-content > :first-child { margin-top: 0; }
+.chat-bbl blockquote, .answer-text blockquote, .md-content blockquote {
+  margin: 0.5em 0;
+  padding: 0.25em 0 0.25em 0.9em;
+  border-left: 3px solid var(--border);
+  color: var(--text-dim);
+}
+.chat-bbl hr, .answer-text hr, .md-content hr {
+  margin: 0.85em 0;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+.chat-bbl-q {
+  background: #f0f4ff; border: 1px solid #dde3f8;
+  border-top-left-radius: 4px;
+}
+.chat-bbl-a {
+  background: #f0fdf4; border: 1px solid #dcfce7;
+  border-top-left-radius: 4px;
+}
+
+.chat-bbl-a .answer-block {
+  background: transparent; padding: 0; margin-top: 0;
+  border-left: none; border-radius: 0;
+}
+.chat-bbl-a .answer-label {
+  font-size: .64rem; margin-bottom: 2px; color: #6b7280;
+  text-transform: uppercase; letter-spacing: .05em; font-weight: 600;
+}
+.chat-bbl-a .answer-text { font-size: .88rem; font-weight: 500; }
+.chat-bbl-a .md-truncate {
+  position: relative;
+}
+.chat-bbl-a .md-truncate::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3em; background: linear-gradient(transparent, #f0fdf4);
+  pointer-events: none; border-radius: 0 0 8px 8px;
+}
+.chat-bbl-a .md-truncate.expanded::after { display: none; }
+.chat-bbl-a .expand-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 8px; padding: 4px 12px;
+  background: rgba(16,185,129,.08); border: 1px solid #d1fae5;
+  border-radius: 6px; color: #059669; font-size: .78rem; font-weight: 500;
+}
+.chat-bbl-a .expand-btn:hover { background: rgba(16,185,129,.14); }
+.chat-bbl-q .md-truncate { position: relative; }
+.chat-bbl-q .md-truncate::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3em; background: linear-gradient(transparent, #f0f4ff);
+  pointer-events: none; border-radius: 0 0 8px 8px;
+}
+.chat-bbl-q .md-truncate.expanded::after { display: none; }
+.chat-bbl-q .expand-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 8px; padding: 4px 12px;
+  background: rgba(99,102,241,.06); border: 1px solid #dde3f8;
+  border-radius: 6px; color: #6366f1; font-size: .78rem; font-weight: 500;
+}
+.chat-bbl-q .expand-btn:hover { background: rgba(99,102,241,.12); }
+.chat-bbl-a .answer-block + .answer-block {
+  margin-top: 8px; padding-top: 8px; border-top: 1px dashed #d1fae5;
+}
+.chat-bbl-a .answer-hidden { color: #9ca3af; font-style: italic; font-weight: 400; }
+
+.chat-conv .choices-list { margin-left: var(--chat-inset); }
+
+.card-details-sec { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+
+.img-err-ph {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px; background: var(--surface2); border: 2px dashed var(--border);
+  border-radius: 10px; min-width: 160px; min-height: 100px; gap: 8px;
+}
+.img-err-ph .ie-icon { font-size: 1.8rem; opacity: .3; }
+.img-retry-btn {
+  padding: 5px 12px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--accent-light); font-family: inherit;
+  font-size: .76rem; cursor: pointer; transition: all .2s;
+}
+.img-retry-btn:hover { border-color: var(--accent-light); background: rgba(99,102,241,.05); }
+
+@media (max-width: 768px) {
+  .dataset-title { font-size: 1.5rem; }
+  .card-content { flex-direction: column; }
+  .case-image { max-width: 100%; }
+  .images-row .case-image { max-width: 140px; max-height: 140px; }
+  .classify-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .page-header { padding: 20px 16px; }
+  .card-header { padding-left: 18px; padding-right: 18px; }
+  .card-body { padding: 16px 18px; }
+  .cases-wrap { padding: 16px; }
+  .subtask-bar { padding: 14px 16px 0; }
+  .subtask-bar .cases-info { margin-bottom: 8px; }
+  .subtask-tabs { gap: 5px 6px; margin-bottom: 6px; }
+  .tab-btn { padding: 6px 11px; font-size: 0.72rem; }
+  .chat-conv { --chat-ava-size: 26px; }
+  .chat-ava { font-size: .66rem; }
+  .chat-bbl { padding: 11px 14px; font-size: .84rem; border-radius: 11px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <a href="index.html" class="brand-link">
+        <img src=".assets/logo_transparent.png" alt="VLM Benchmark Explorer" width="36" height="36">
+        <span>VLM Benchmark Explorer</span>
+      </a>
+    </div>
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to list
+    </a>
+    <div id="headerContent">
+      <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
+    </div>
+  </div>
+</div>
+
+<div id="tabsContainer"></div>
+<div class="cases-wrap" id="casesContainer">
+  <div class="loading-state"><div class="spinner"></div><p>Loading samples…</p></div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" alt="Preview">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
+<script>
+const CAT_COLORS = {
+  'OCR/Doc/Chart':           { bg: '#dbeafe', text: '#1e40af', border: '#93c5fd' },
+  'Spatial Intelligence':    { bg: '#d1fae5', text: '#065f46', border: '#6ee7b7' },
+  'Knowledge':               { bg: '#ede9fe', text: '#5b21b6', border: '#c4b5fd' },
+  'Reasoning & Logic':       { bg: '#fef3c7', text: '#92400e', border: '#fcd34d' },
+  'Math':                    { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'STEM':                    { bg: '#ccfbf1', text: '#115e59', border: '#5eead4' },
+  'Perception':              { bg: '#fce7f3', text: '#9d174d', border: '#f9a8d4' },
+  'Grounding':               { bg: '#fef9c3', text: '#854d0e', border: '#fde047' },
+  'Video / Knowledge':       { bg: '#dbeafe', text: '#1e40af', border: '#93c5fd' },
+  'Video / Reasoning':       { bg: '#e0e7ff', text: '#3730a3', border: '#a5b4fc' },
+  'Video / Motion':          { bg: '#ede9fe', text: '#5b21b6', border: '#c4b5fd' },
+  'Video / Long-form':       { bg: '#e0e7ff', text: '#3730a3', border: '#a5b4fc' },
+  'Video / Multiple':        { bg: '#e0e7ff', text: '#3730a3', border: '#a5b4fc' },
+  'Video / Streaming':       { bg: '#cffafe', text: '#155e75', border: '#67e8f9' },
+  'Video / Multi-task':      { bg: '#ddd6fe', text: '#5b21b6', border: '#a78bfa' },
+  'Video / General':         { bg: '#dbeafe', text: '#1e40af', border: '#93c5fd' },
+  'Agent':                   { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Computer)':        { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Mobile)':          { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Browser)':         { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Visual Search)':   { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Agent (Tool)':            { bg: '#fee2e2', text: '#991b1b', border: '#fca5a5' },
+  'Coding':                  { bg: '#dcfce7', text: '#166534', border: '#86efac' },
+  'Medical':                 { bg: '#fef9c3', text: '#854d0e', border: '#fde047' },
+};
+
+const ARC_COLORS = [
+  '#000000','#0074D9','#FF4136','#2ECC40','#FFDC00',
+  '#AAAAAA','#F012BE','#FF851B','#7FDBFF','#870C25'
+];
+
+function parseTextGrid(text) {
+  const lines = text.trim().split('\n').map(l => l.trim()).filter(l => /^\d/.test(l));
+  if (lines.length === 0) return null;
+  return lines.map(l => l.split(/\s+/).map(Number));
+}
+
+function parseArcPuzzleText(text) {
+  const result = { train: [], testInputs: [] };
+  const trainPattern = /### Training example \d+\s*\n\s*Input:\s*\n([\s\S]*?)\n\s*Output:\s*\n([\s\S]*?)(?=\n\s*### |\n\s*## |\n\s*# [A-Z]|$)/g;
+  let m;
+  while ((m = trainPattern.exec(text)) !== null) {
+    const inp = parseTextGrid(m[1]);
+    const out = parseTextGrid(m[2]);
+    if (inp && out) result.train.push({ input: inp, output: out });
+  }
+  const testPattern = /### Test \d+\s*\n\s*Input:\s*\n([\s\S]*?)(?=\n\s*### |\n\s*## |\n\s*# [A-Z]|$)/g;
+  while ((m = testPattern.exec(text)) !== null) {
+    const grid = parseTextGrid(m[1]);
+    if (grid) result.testInputs.push(grid);
+  }
+  if (result.testInputs.length === 0) {
+    const single = text.match(/## Test\s*\n\s*Input:\s*\n([\s\S]*?)(?=\n\s*# [A-Z]|$)/);
+    if (single) { const g = parseTextGrid(single[1]); if (g) result.testInputs.push(g); }
+  }
+  return result;
+}
+
+const BADGE_FIELDS = ['category','difficulty','sub_task','type','question_type','task_tag','answer_format','medical_task','body_system','l2-category','class'];
+const SKIP_FIELDS = new Set([
+  'image','image_1','image_2','image_3','image_4','images',
+  'decoded_image','question_images_decoded','question_images','Figure_path',
+  'solution_image','answer_image','ground_truth_image','expected_output_image',
+  'video','video A','video B','video_path','videos',
+  'question','Question','question_text','reasoning_q','query','prompt',
+  'choices','candidates','options','option','option_A','option_B','option_C','option_D',
+  'answer','answers','label','reasoning_a','reference',
+  'ground_truth','blankAns','choiceAns','question_answer','Answer','Answer_label','mc_answer',
+  'coT','cot','reasoning','query_cot','query_wo','question_for_eval',
+  'explanation','scoring_points',
+  'event_asr','preasr',
+  'idx','id','index','question_id',
+  'clip_start','clip_end',
+  'original_figure_path','original_id','figure_path','path',
+  'imgname','image_name','image_url','img_url','image_base64','image_path',
+  'video_path','video_id','video_uid','video_url','link_selected','video_source_url','youtube_url','media_url',
+  'clip_id',
+  'vid',
+  'additional_qa',
+  'multi-choice options','target_instances',
+  'A','B','C','D','E','F','G','H','I','J','K',
+  ...BADGE_FIELDS
+]);
+
+let manifest = {};
+let siteData = [];
+let datasetName = '';
+let subtasks = [];
+let currentSubtask = '';
+let dataCache = {};
+
+function esc(str) {
+  if (typeof str !== 'string') return String(str ?? '');
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/** When local/direct MP4 fails, show a hint (static site often omits large video files). */
+function onCaseVideoErr(el) {
+  if (!el || !el.parentNode) return;
+  var src = '';
+  try {
+    var s = el.querySelector('source');
+    src = (s && s.src) || el.currentSrc || el.src || '';
+  } catch (e) {}
+  var tvHint = '';
+  if (datasetName === 'TVBench') {
+    tvHint = '<p class="ve-note"><strong>TVBench</strong>: 若只有 <code>data.json</code> 没有同目录下的视频文件，播放器会 404。请在仓库根目录执行 <code>python3 scripts/download_tvbench_hf_videos.py</code>（需能直连 HF、建议 unset 代理），会把 <strong>FunAILab/TVBench</strong> 的 zip 解压到 <code>samples/TVBench/&lt;子任务&gt;/</code>。<strong>Action Antonym</strong> 在 HF 上无视频包（JSON 为 <code>.avi</code>）；Chrome 等对 AVI 支持差，可转 MP4 后放到同目录并改 JSON 或保持文件名一致用可解码浏览器试播。</p>';
+  }
+  var crossVidHint = '';
+  if (datasetName === 'CrossVid') {
+    crossVidHint = '<p class="ve-note"><strong>CrossVid</strong>: Hugging Face <code>resolve</code> MP4 links often fail inside <code>&lt;video&gt;</code> (CDN / byte-range). Run <code>python3 scripts/download_crossvid_media.py</code> to mirror into <code>samples/CrossVid/' + esc(currentSubtask) + '/media/</code> (uses direct HF HTTP with <code>trust_env=False</code> if your proxy blocks HF). <strong>MOC / MSR</strong> have no MP4 on the card—use the <strong>uav_preview</strong> stills (two views).</p>';
+  }
+  var vsqHint = '';
+  if (datasetName === 'VideoSimpleQA') {
+    vsqHint = '<p class="ve-note"><strong>VideoSimpleQA</strong>: <code>.webm</code> 应与 <code>data.json</code> 同目录（<code>samples/VideoSimpleQA/' + esc(currentSubtask) + '/</code>）。请用本地 HTTP 打开站点（勿用 <code>file://</code>）。旧版 Safari 可能无法播放 WebM，可换 Chrome/Firefox 或将片段转码为 MP4。</p>';
+  }
+  el.outerHTML = '<div class="video-err-box">Could not load video.<p class="ve-line">Requested URL: <code>' + esc(src) + '</code></p><p class="ve-line">Static builds usually omit large MP4s. Put official media under <code>samples/&lt;dataset&gt;/&lt;subtask&gt;/</code> so paths in JSON resolve.</p>' + tvHint + crossVidHint + vsqHint + '<p class="ve-note"><strong>OVO-Bench</strong>: from Hugging Face <strong>JoeLeelyf/OVO-Bench</strong>, fetch <code>src_videos</code> / <code>chunked_videos</code> and align paths (e.g. <code>AutoEvalMetaData/49.mp4</code>).</p></div>';
+}
+
+/** ContPhy: MP4 can be built from keyframes via script; on failure show keyframe + hint. */
+function onContPhyVideoErr(el) {
+  if (!el || !el.parentNode) return;
+  var fb = el.getAttribute('data-fallback-img');
+  if (!fb) {
+    onCaseVideoErr(el);
+    return;
+  }
+  el.outerHTML = '<div class="contphy-media-fallback"><img class="case-image" src="' + esc(fb) + '" alt="Simulation keyframe" loading="lazy" onclick="openLightbox(this.src)" data-orig="' + esc(fb) + '"><p class="contphy-fallback-hint">No local short clip (<code>*_clip.mp4</code>). ContPhy is video-based; this repo may only ship keyframe JPGs. From the repo root run <code>python3 scripts/contphy_jpeg_to_clip.py</code> (needs <strong>ffmpeg</strong>) to build ~2s MP4s in <code>samples/</code>. Full data: Hugging Face <strong>zzcnewly/ContPhy_Dataset</strong> <code>contphy_mini.zip</code>.</p></div>';
+}
+
+function renderMd(text) {
+  if (!text || typeof text !== 'string') return esc(text);
+  let s = text;
+  s = s.replace(/\\boxed\{\$([^$]*)\$\}/g, (_, inner) => '$\\boxed{' + inner + '}$');
+  s = s.replace(/\\boxed\{([^}$]*)\}/g, m => '$' + m + '$');
+  const store = [];
+  s = s.replace(/\$\$([\s\S]*?)\$\$/g, m => { store.push(m); return '\x00M' + (store.length-1) + '\x00'; });
+  s = s.replace(/\$([^\$\n]+?)\$/g, m => { store.push(m); return '\x00M' + (store.length-1) + '\x00'; });
+  s = s.replace(/\\\([\s\S]*?\\\)/g, m => { store.push(m); return '\x00M' + (store.length-1) + '\x00'; });
+  s = s.replace(/\\\[[\s\S]*?\\\]/g, m => { store.push(m); return '\x00M' + (store.length-1) + '\x00'; });
+  let html;
+  if (typeof marked !== 'undefined') {
+    html = marked.parse(s, { breaks: true });
+  } else {
+    html = '<p>' + esc(s).replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+  }
+  for (let i = 0; i < store.length; i++) {
+    html = html.split('\x00M' + i + '\x00').join(store[i]);
+  }
+  return html;
+}
+
+function mdBlock(text, extraCls) {
+  extraCls = extraCls || '';
+  if (text.length > 600) {
+    return '<div class="md-content md-truncate ' + extraCls + '">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+  }
+  return '<div class="md-content ' + extraCls + '">' + renderMd(text) + '</div>';
+}
+
+function doMath(el) {
+  if (typeof renderMathInElement !== 'function') return;
+  try {
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true},
+      ],
+      throwOnError: false,
+    });
+  } catch(e) {}
+}
+
+function isBase64Image(str) {
+  if (typeof str !== 'string' || str.length < 100) return false;
+  if (str.startsWith('data:image/')) return true;
+  if (str.startsWith('/9j/')) return true;
+  if (str.startsWith('iVBOR')) return true;
+  return false;
+}
+
+function base64ToDataUri(str) {
+  if (str.startsWith('data:image/')) return str;
+  if (str.startsWith('/9j/')) return 'data:image/jpeg;base64,' + str;
+  if (str.startsWith('iVBOR')) return 'data:image/png;base64,' + str;
+  return 'data:image/jpeg;base64,' + str;
+}
+
+function catBadge(cat) {
+  const c = CAT_COLORS[cat] || { bg:'#e2e8f0', text:'#334155', border:'#94a3b8' };
+  return `<span class="cat-badge" style="background:${c.bg};color:${c.text};border:1px solid ${c.border}">${esc(cat)}</span>`;
+}
+
+function resolveMedia(rawPath) {
+  if (!rawPath || typeof rawPath !== 'string') return null;
+  if (rawPath.startsWith("b'") || rawPath.startsWith('b"')) return null;
+  if (/^https?:\/\//.test(rawPath)) return rawPath;
+  if (rawPath.startsWith('samples/')) return rawPath;
+  if (rawPath.startsWith('data/')) return 'samples/' + rawPath.slice(5);
+  return `samples/${encodeURIComponent(datasetName)}/${encodeURIComponent(currentSubtask)}/${rawPath}`;
+}
+
+function formatSubtask(name) {
+  if (name === 'default') return 'Default';
+  if (datasetName === 'ZEROBench') {
+    if (name === 'main') return 'Main (main)';
+    if (name === 'subquestions') return 'Sub-questions (subquestions)';
+  }
+  if (datasetName === 'MVBench' && name === 'episodic_reasoning') return 'Reasoning & Logic';
+  return name.replace(/[_-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function detectFormat(rawItems) {
+  const arcPuzzleItems = rawItems.filter(s =>
+    Array.isArray(s.train) && s.train.length > 0 &&
+    s.train[0] && typeof s.train[0] === 'object' &&
+    Array.isArray(s.train[0].input) && Array.isArray(s.train[0].output)
+  );
+  if (arcPuzzleItems.length > 0) {
+    return { type: 'arc-puzzle', items: arcPuzzleItems };
+  }
+
+  const arcAttemptItems = rawItems.filter(s =>
+    Object.keys(s).some(k => /^[0-9a-f]{6,}$/.test(k) && Array.isArray(s[k]) &&
+      s[k].length > 0 && typeof s[k][0] === 'object')
+  );
+  if (arcAttemptItems.length > 0) {
+    const arcSubmissionItems = rawItems.filter(s => s.submission_id && s.puzzle_id);
+    const puzzleDataMap = {};
+    for (const item of rawItems) {
+      if (item._puzzle_prompt && item._puzzle_id) {
+        puzzleDataMap[item._puzzle_id] = parseArcPuzzleText(item._puzzle_prompt);
+      }
+    }
+    if (Object.keys(puzzleDataMap).length === 0) {
+      for (const item of rawItems) {
+        if (Array.isArray(item.input)) {
+          for (const msg of item.input) {
+            if (msg && msg.role === 'user' && typeof msg.content === 'string' && msg.content.includes('Training example')) {
+              const pd = parseArcPuzzleText(msg.content);
+              for (const si of arcSubmissionItems) puzzleDataMap[si.puzzle_id] = pd;
+              break;
+            }
+          }
+          if (Object.keys(puzzleDataMap).length > 0) break;
+        }
+      }
+    }
+    return { type: 'arc-submission', items: rawItems, arcAttemptItems, arcSubmissionItems, puzzleDataMap };
+  }
+
+  const items = rawItems.filter(item => {
+    const keys = Object.keys(item);
+    if (keys.length <= 1) return false;
+    if (keys.length === 1 && (keys[0] === 'max_context' || keys[0] === 'text')) return false;
+    return true;
+  });
+  if (items.length === 0) return { type: 'empty', items: [] };
+
+  const samples = items.slice(0, 5);
+  const allKeys = [...new Set(items.flatMap(Object.keys))];
+
+  /* 字符串虽像图片路径，但是上游/HF 元数据，站点内实际资源一般在 image 等字段 */
+  const IMG_META_FIELDS = new Set([
+    'imgname', 'image_name', 'image_url', 'original_figure_path', 'img_url', 'figure_path',
+    'filename', 'source_filename', 'path',
+  ]);
+  const SOLUTION_IMG_FIELDS = new Set(['solution_image','answer_image','ground_truth_image','expected_output_image']);
+  let imageFields = allKeys.filter(k =>
+    !IMG_META_FIELDS.has(k) && !SOLUTION_IMG_FIELDS.has(k) &&
+    samples.some(s => typeof s[k] === 'string' && /\.(jpg|jpeg|png|gif|webp)$/i.test(s[k]))
+  );
+  /* 与 decoded_image 并存时，image 多为 HF 原始相对路径（如 images/1.jpg），本地静态站只打包了 decoded_image */
+  if (imageFields.includes('decoded_image') && imageFields.includes('image')) {
+    imageFields = imageFields.filter(k => k !== 'image');
+  }
+  const base64ImageFields = allKeys.filter(k =>
+    !IMG_META_FIELDS.has(k) && !SOLUTION_IMG_FIELDS.has(k) &&
+    !imageFields.includes(k) &&
+    samples.some(s => isBase64Image(s[k]))
+  );
+  const solutionImageFields = allKeys.filter(k =>
+    SOLUTION_IMG_FIELDS.has(k) &&
+    samples.some(s => typeof s[k] === 'string' && /\.(jpg|jpeg|png|gif|webp)$/i.test(s[k]))
+  );
+  const imageArrayFields = allKeys.filter(k =>
+    samples.some(s => Array.isArray(s[k]) && s[k].length > 0 && typeof s[k][0] === 'string' && /\.(jpg|jpeg|png|gif|webp)$/i.test(s[k][0]))
+  );
+  const VIDEO_FIELD_NAMES = new Set(['video','video_path','video_id','video_uid','video_url','link_selected','video_source_url','youtube_url','url','clip_id']);
+  const videoFields = allKeys.filter(k =>
+    samples.some(s => {
+      const v = s[k];
+      if (typeof v !== 'string' || !v.trim()) return false;
+      if (/\.(mp4|avi|webm|mkv|ogv)$/i.test(v)) return true;
+      if (VIDEO_FIELD_NAMES.has(k)) return true;
+      return false;
+    })
+  );
+  const videoArrayFields = allKeys.filter(k =>
+    samples.some(s => Array.isArray(s[k]) && s[k].length > 0 && typeof s[k][0] === 'string' && /\.(mp4|avi|webm|mkv|ogv)$/i.test(s[k][0]))
+  );
+
+  /* ContPhy：含 video_path 时由 <video poster=关键帧> 展示，不再走 image-qa 双轨 */
+  if (datasetName === 'ContPhy' && items.some(s =>
+    typeof s.video_path === 'string' && /\.(mp4|webm|mkv|ogv)$/i.test(s.video_path.trim())
+  )) {
+    imageFields = imageFields.filter(k => k !== 'image');
+  }
+
+  let questionField = null;
+  for (const f of ['question','Question','question_text','reasoning_q','query','prompt','text']) {
+    if (samples.some(s => {
+      if (!s[f]) return false;
+      if (typeof s[f] === 'string') return true;
+      if (Array.isArray(s[f]) && s[f].length > 0 && typeof s[f][0] === 'string') return true;
+      return false;
+    })) { questionField = f; break; }
+  }
+
+  let choicesField = null, choicesType = 'array';
+  for (const s of samples) {
+    if (Array.isArray(s.choices) && s.choices.length > 0) { choicesField = 'choices'; break; }
+    if (Array.isArray(s.candidates) && s.candidates.length > 0) { choicesField = 'candidates'; break; }
+    if (s.options && !Array.isArray(s.options) && typeof s.options === 'object' && Object.keys(s.options).length > 0) {
+      choicesField = 'options'; choicesType = 'object'; break;
+    }
+    if (Array.isArray(s.options) && s.options.length > 0) { choicesField = 'options'; break; }
+  }
+
+  if (!choicesField) {
+    const hasWeMathStyle = samples.some(s =>
+      typeof s.option === 'string' && parseSemicolonMcOptionString(s.option)
+    );
+    if (hasWeMathStyle) {
+      choicesField = 'option';
+      choicesType = 'optionString';
+    }
+  }
+
+  const LETTER_OPTION_KEYS = 'ABCDEFGHIJK'.split('');
+  if (!choicesField) {
+    const hasLetterOpts = samples.some(s =>
+      LETTER_OPTION_KEYS.filter(k => s[k] !== undefined && s[k] !== null && typeof s[k] === 'string' && s[k].trim()).length >= 2
+    );
+    if (hasLetterOpts) {
+      choicesField = '_letterOptions';
+      choicesType = 'letter';
+    }
+  }
+
+  let answerField = null;
+  const ANSWER_CANDIDATES = ['answer','answers','reference','ground_truth','blankAns','choiceAns','question_answer','Answer','mc_answer','label','reasoning_a','number'];
+  for (const f of ANSWER_CANDIDATES) {
+    if (samples.some(s => s[f] !== undefined && s[f] !== null)) { answerField = f; break; }
+  }
+  if (!answerField) {
+    for (const f of ANSWER_CANDIDATES) {
+      if (samples.some(s => f in s)) { answerField = f; break; }
+    }
+  }
+  const answerFields = ANSWER_CANDIDATES.filter(f => items.some(s => f in s));
+
+  const COT_CANDIDATES = ['coT','cot','reasoning','query_cot'];
+  const cotFields = COT_CANDIDATES.filter(f => items.some(s => s[f] !== undefined && s[f] !== null));
+
+  const gridFields = allKeys.filter(k =>
+    samples.some(s => {
+      const v = s[k];
+      return Array.isArray(v) && v.length > 0 && Array.isArray(v[0]) && v[0].length > 0 && typeof v[0][0] === 'number';
+    })
+  );
+
+  const hasImg = imageFields.length > 0 || imageArrayFields.length > 0 || base64ImageFields.length > 0;
+  const hasVid = videoFields.length > 0 || videoArrayFields.length > 0;
+  const hasQ = questionField !== null;
+
+  let type = 'generic';
+  if (hasImg && hasQ) type = 'image-qa';
+  else if (hasImg && !hasQ && !choicesField && (!answerField || answerField === 'label')) type = 'image-classification';
+  else if (hasVid && hasQ) type = 'video-qa';
+  else if (hasQ) type = 'text-qa';
+  else if (gridFields.length > 0) type = 'grid-puzzle';
+  else if (hasImg) type = 'image-only';
+  else if (hasVid) type = 'video-only';
+
+  return { type, imageFields, imageArrayFields, base64ImageFields, videoFields, videoArrayFields, solutionImageFields, questionField, choicesField, choicesType, answerField, answerFields, cotFields, gridFields, items };
+}
+
+const IMAGE_LABEL_MAP = {
+  'mask': 'Ground Truth', 'ground_truth_mask': 'Ground Truth',
+  'solution_image': 'Solution', 'reference_image': 'Reference',
+  'output_image': 'Output', 'target_image': 'Target',
+};
+
+function collectImages(item, fmt) {
+  const imgs = [];
+  for (const f of fmt.imageFields) {
+    const p = item[f];
+    if (p) { const r = resolveMedia(p); if (r) imgs.push({ path: r, label: IMAGE_LABEL_MAP[f] || f }); }
+  }
+  for (const f of fmt.imageArrayFields) {
+    const arr = item[f];
+    if (Array.isArray(arr)) arr.forEach((p, i) => {
+      const r = resolveMedia(p);
+      if (!r) return;
+      let label = `${f}[${i}]`;
+      if (f === 'uav_preview') label = i === 0 ? 'UAV view A (mid frame)' : 'UAV view B (mid frame)';
+      imgs.push({ path: r, label });
+    });
+  }
+  if (fmt.base64ImageFields) {
+    for (const f of fmt.base64ImageFields) {
+      const v = item[f];
+      if (v && isBase64Image(v)) {
+        imgs.push({ path: base64ToDataUri(v), label: IMAGE_LABEL_MAP[f] || f });
+      }
+    }
+  }
+  return imgs;
+}
+
+function collectVideos(item, fmt) {
+  const vids = [];
+  const seen = new Set();
+  const seenPaths = new Set();
+  function pushVid(path, label) {
+    const t = (path && String(path).trim()) || '';
+    if (!t || seenPaths.has(t)) return;
+    seenPaths.add(t);
+    vids.push({ path: t, label: label || 'video' });
+  }
+  const ytUrl = (item.youtube_url || item.url || '').trim();
+  const hasYT = /youtu/.test(ytUrl);
+  if (hasYT) {
+    pushVid(ytUrl, 'video');
+    return vids;
+  }
+  for (const f of fmt.videoFields) {
+    if (seen.has(f)) continue;
+    const val = item[f];
+    if (!val || typeof val !== 'string') continue;
+    if (/youtu/.test(val)) {
+      vids.length = 0;
+      seenPaths.clear();
+      pushVid(val, f);
+      return vids;
+    }
+    pushVid(val, f);
+    seen.add(f);
+  }
+  if (!seen.has('video A') && item['video A']) pushVid(item['video A'], 'Video A');
+  if (!seen.has('video B') && item['video B']) pushVid(item['video B'], 'Video B');
+  for (const f of (fmt.videoArrayFields || [])) {
+    const arr = item[f];
+    if (Array.isArray(arr)) arr.forEach((p, i) => {
+      if (typeof p === 'string') pushVid(p, `Video ${i + 1}`);
+    });
+  }
+  if (vids.length === 0) {
+    const mediaEx = /\.(mp4|avi|webm|mkv|ogv)$/i;
+    for (const key of ['video', 'video_path', 'video_source_url']) {
+      const v = item[key];
+      if (typeof v === 'string' && mediaEx.test(v.trim())) {
+        pushVid(v.trim(), key);
+        break;
+      }
+    }
+  }
+  const out = vids.slice(0, 6);
+  if (datasetName === 'ContPhy' && item.image) {
+    const pr = resolveMedia(item.image);
+    if (pr) {
+      for (let i = 0; i < out.length; i++) out[i].poster = pr;
+    }
+  }
+  return out;
+}
+
+function renderImagesHtml(images) {
+  if (images.length === 0) return '';
+  if (images.length === 1) {
+    return `<img class="case-image" src="${esc(images[0].path)}" alt="${esc(images[0].label)}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(images[0].path)}">`;
+  }
+  let html = '<div class="images-row">';
+  for (const img of images) {
+    const showLabel = img.label && !/\[\d+\]/.test(img.label) && !img.label.includes('_');
+    const isGT = /ground.truth|answer/i.test(img.label);
+    html += `<div class="img-wrap">
+      <img class="case-image" src="${esc(img.path)}" alt="${esc(img.label)}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(img.path)}">
+      ${showLabel ? `<div class="image-label${isGT ? ' gt-label' : ''}">${esc(img.label)}</div>` : ''}
+    </div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+const SOLUTION_IMG_LABELS = {
+  solution_image: 'Solution', answer_image: 'Answer',
+  ground_truth_image: 'Ground Truth', expected_output_image: 'Expected Output'
+};
+
+function renderSolutionImagesHtml(item, fmt) {
+  if (!fmt.solutionImageFields || fmt.solutionImageFields.length === 0) return '';
+  let html = '';
+  for (const f of fmt.solutionImageFields) {
+    const p = item[f];
+    if (!p) continue;
+    const r = resolveMedia(p);
+    if (!r) continue;
+    const label = SOLUTION_IMG_LABELS[f] || f;
+    html += `<div class="answer-block" style="border-left-color:var(--green);margin-top:12px">
+      <div class="answer-label">${esc(label)}</div>
+      <img class="case-image" src="${esc(r)}" alt="${esc(label)}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(r)}" style="margin-top:8px;max-width:400px;max-height:400px">
+    </div>`;
+  }
+  return html;
+}
+
+/** 仅 EgoTempo：元数据里是 Ego4D 切片 id，无可嵌入 mp4。MotionBench 等同名格式下为 HF 上的真实文件名，勿误判。 */
+function isLikelyEgo4dClipRef(s) {
+  if (typeof s !== 'string') return false;
+  if (datasetName !== 'EgoTempo') return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}_/i.test(s.trim());
+}
+
+function renderVideosHtml(videos) {
+  if (videos.length === 0) return '';
+  const paths = videos.map(v => v.path).filter(p => typeof p === 'string');
+  const bvidFromFullUrl = new Set();
+  const ytIdFromFullUrl = new Set();
+  for (const p of paths) {
+    if (/bilibili\.com/.test(p)) {
+      const bm = p.match(/\/video\/(BV[\w]+)/i) || p.match(/[?&]bvid=(BV[\w]+)/i);
+      if (bm) bvidFromFullUrl.add(bm[1]);
+    }
+    if (/youtu\.?be[./]/.test(p) || /youtube\.com/.test(p)) {
+      const ym = p.match(/(?:v=|youtu\.be\/)([^&?\s]+)/);
+      if (ym) ytIdFromFullUrl.add(ym[1]);
+    }
+  }
+  let html = '<div class="chat-media" style="margin-bottom:10px">';
+  const renderedBvid = new Set();
+  for (const v of videos) {
+    const p = v.path;
+    if (typeof p !== 'string') continue;
+    const trim = p.trim();
+    if (isLikelyEgo4dClipRef(trim)) {
+      const isEgoTempo = datasetName === 'EgoTempo';
+      const title = isEgoTempo ? 'EgoTempo · clip id only' : 'Clip id (Ego4D-style)';
+      html += `<div class="ego4d-clip-banner" role="note"><div class="ego4d-clip-title">${esc(title)}</div><p class="ego4d-clip-desc">There is no embedded MP4 here or in the <strong>lmms-lab-eval/egotempo</strong> card—only identifiers. Full video is distributed via <strong>Ego4D</strong> under its own terms. After you obtain clips locally, point <code>EGOTEMPO_VIDEO_DIR</code> (or your evaluator&rsquo;s media root) at that folder.</p><p class="ego4d-clip-meta"><span class="ego4d-clip-label">${esc(v.label)}:</span> <code class="ego4d-clip-id">${esc(trim)}</code></p><p class="ego4d-clip-links"><a href="https://ego4d-data.org/" target="_blank" rel="noopener">Ego4D</a> · <a href="https://huggingface.co/datasets/lmms-lab-eval/egotempo" target="_blank" rel="noopener">Hugging Face dataset</a></p></div>`;
+      continue;
+    }
+    const bvOnly = trim.match(/^BV[\w]+$/i);
+    if (bvOnly) {
+      const bid = bvOnly[0];
+      if (bvidFromFullUrl.has(bid)) continue;
+      if (renderedBvid.has(bid)) continue;
+      renderedBvid.add(bid);
+      html += `<iframe src="https://player.bilibili.com/player.html?bvid=${esc(bid)}&autoplay=0&high_quality=1" class="case-video" style="border:none;border-radius:8px" allowfullscreen></iframe>`;
+      continue;
+    }
+    if (/^[A-Za-z0-9_-]{11}$/.test(trim) && ytIdFromFullUrl.has(trim)) continue;
+
+    const isYT = /youtu\.?be[./]/.test(p) || /youtube\.com/.test(p);
+    const isBili = /bilibili\.com/.test(p);
+    const isURL = /^https?:\/\//.test(p);
+    /* .avi：部分浏览器无法硬解，但仍走本地 <video>，失败时由 onCaseVideoErr 提示 */
+    const isLocal = /\.(mp4|webm|mkv|ogv|avi)$/i.test(p) && !isURL;
+    const fname = p.split('/').pop();
+    if (isLocal) {
+      const resolved = resolveMedia(p);
+      if (resolved) {
+        const posterAttr = v.poster ? ` poster="${esc(v.poster)}"` : '';
+        const dataFb = v.poster ? ` data-fallback-img="${esc(v.poster)}"` : '';
+        const errFn = (datasetName === 'ContPhy' && v.poster) ? 'onContPhyVideoErr' : 'onCaseVideoErr';
+        const mimeLocal = /\.webm$/i.test(resolved) ? 'video/webm' : /\.ogv$/i.test(resolved) ? 'video/ogg' : /\.avi$/i.test(resolved) ? 'video/x-msvideo' : 'video/mp4';
+        html += `<video class="case-video" controls preload="metadata" playsinline${posterAttr}${dataFb} onerror="${errFn}(this)"><source src="${esc(resolved)}" type="${mimeLocal}"></video>`;
+      } else {
+        html += `<span class="video-ref">🎬 <strong>${esc(v.label)}:</strong> ${esc(fname)}</span>`;
+      }
+    } else if (isBili) {
+      const bvMatch = p.match(/video\/(BV[\w]+)/);
+      if (bvMatch) {
+        html += `<iframe src="https://player.bilibili.com/player.html?bvid=${esc(bvMatch[1])}&autoplay=0&high_quality=1" class="case-video" style="border:none;border-radius:8px" allowfullscreen></iframe>`;
+      } else {
+        html += `<span class="video-ref" style="cursor:pointer" onclick="window.open('${esc(p)}','_blank')">▶ Bilibili</span>`;
+      }
+    } else if (isYT) {
+      const ytId = p.match(/(?:v=|youtu\.be\/)([^&?\s]+)/);
+      if (ytId) {
+        html += `<div class="video-poster" onclick="this.outerHTML='<iframe src=\\'https://www.youtube.com/embed/${esc(ytId[1])}?autoplay=1\\' class=\\'case-video\\' style=\\'border:none;border-radius:8px\\' allow=\\'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture\\' allowfullscreen></iframe>'"><img src="https://img.youtube.com/vi/${esc(ytId[1])}/hqdefault.jpg" onerror="this.style.background='#111'" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;border:1px solid var(--border);display:block"><div class="play-btn"></div></div>`;
+      } else {
+        html += `<span class="video-ref" style="cursor:pointer" onclick="window.open('${esc(p)}','_blank')">▶ YouTube</span>`;
+      }
+    } else if (isURL && /\.(mp4|webm|ogv|avi)$/i.test(p)) {
+      const mime = /\.webm$/i.test(p) ? 'video/webm' : /\.ogv$/i.test(p) ? 'video/ogg' : /\.avi$/i.test(p) ? 'video/x-msvideo' : 'video/mp4';
+      html += `<video class="case-video" controls preload="metadata" playsinline onerror="onCaseVideoErr(this)"><source src="${esc(p)}" type="${mime}"></video>`;
+    } else if (isURL) {
+      html += `<span class="video-ref" style="cursor:pointer" onclick="window.open('${esc(p)}','_blank')">▶ ${esc(fname)}</span>`;
+    } else {
+      html += `<span class="video-ref">▶ ${esc(fname)}</span>`;
+    }
+  }
+  html += '</div>';
+  return html;
+}
+
+function parseAnswerLetters(answer) {
+  if (!answer || answer === 'hidden') return new Set();
+  const s = String(answer);
+  const listMatch = s.match(/^\[([^\]]*)\]$/);
+  if (listMatch) {
+    return new Set(listMatch[1].replace(/['"]/g, '').split(/,\s*/).map(x => x.trim()).filter(Boolean));
+  }
+  return new Set([s]);
+}
+
+/**
+ * 数组选项 + 数值型 answer：若唯一某选项文案与数字相同（如选项 "2"）则按文案匹配，否则按 0-based 下标（如 TOMATO direction）。
+ */
+function resolveMcArrayChoiceIndex(answer, raw) {
+  if (!Array.isArray(raw) || raw.length === 0) return null;
+  if (answer === undefined || answer === null || answer === 'hidden') return null;
+  let num;
+  if (typeof answer === 'number' && Number.isFinite(answer)) {
+    num = Math.trunc(answer);
+  } else if (typeof answer === 'string') {
+    const t = answer.trim();
+    if (!/^\d+$/.test(t)) return null;
+    num = parseInt(t, 10);
+  } else {
+    return null;
+  }
+  if (!Number.isInteger(num)) return null;
+  const matches = [];
+  for (let i = 0; i < raw.length; i++) {
+    const cell = raw[i];
+    const ts = typeof cell === 'string' ? cell.trim() : String(cell ?? '').trim();
+    if (ts === String(num)) matches.push(i);
+  }
+  if (matches.length === 1) return matches[0];
+  if (num >= 0 && num < raw.length) return num;
+  return null;
+}
+
+/** 选项为数组、answer 为数值/数字串时，答案区只显示正确选项字母（如 D） */
+function formatMcAnswerFromNumericIndex(val, item, fmt) {
+  if (!item || !fmt || !fmt.choicesField) return null;
+  const raw = item[fmt.choicesField];
+  if (!Array.isArray(raw) || raw.length === 0) return null;
+  if (val === null || val === undefined) return null;
+  const idx = resolveMcArrayChoiceIndex(val, raw);
+  if (idx === null) return null;
+  return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.charAt(idx);
+}
+
+function renderChoicesHtml(item, fmt, embeddedOptions) {
+  const answerRaw = item[fmt.answerField];
+  const answer = Array.isArray(answerRaw) ? answerRaw[0] : answerRaw;
+  const answerHidden = answer === undefined || answer === null || answer === 'hidden';
+  const answerSet = parseAnswerLetters(answer);
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let html = '<div class="choices-list">';
+
+  if (fmt.choicesType === 'letter' && !embeddedOptions) {
+    const LETTER_KEYS = 'ABCDEFGHIJK'.split('');
+    let hasAny = false;
+    for (const letter of LETTER_KEYS) {
+      const text = item[letter];
+      if (!text || typeof text !== 'string' || !text.trim()) continue;
+      hasAny = true;
+      const isAns = !answerHidden && (answerSet.has(letter) || answerSet.has(`(${letter})`));
+      html += `<div class="choice-item ${isAns ? 'is-answer' : ''}">
+        <span class="choice-letter">${letter}:</span>
+        <span class="choice-text">${renderMd(text.trim())}</span>
+      </div>`;
+    }
+    if (!hasAny) return '';
+    html += '</div>';
+    return html;
+  }
+
+  if (fmt.choicesType === 'optionString' && !embeddedOptions) {
+    const optStr = item[fmt.choicesField];
+    const parsed = typeof optStr === 'string' ? parseSemicolonMcOptionString(optStr) : null;
+    if (!parsed) return '';
+    for (const { letter, text } of parsed) {
+      const isAns = !answerHidden && (answerSet.has(letter) || answerSet.has(`(${letter})`));
+      html += `<div class="choice-item ${isAns ? 'is-answer' : ''}">
+        <span class="choice-letter">${letter}:</span>
+        <span class="choice-text">${renderMd(text)}</span>
+      </div>`;
+    }
+    html += '</div>';
+    return html;
+  }
+
+  const raw = embeddedOptions || item[fmt.choicesField];
+  if (!raw) return '';
+
+  if (embeddedOptions || (fmt.choicesType === 'object' && typeof raw === 'object' && !Array.isArray(raw))) {
+    for (const [key, text] of Object.entries(raw)) {
+      const isAns = !answerHidden && (answerSet.has(key) || answerSet.has(`(${key})`) || answer === key || (typeof answer === 'string' && (answer.startsWith(`(${key}) `) || answer.startsWith(`${key}. `) || answer.startsWith(`${key}: `))));
+      html += `<div class="choice-item ${isAns ? 'is-answer' : ''}">
+        <span class="choice-letter">(${esc(key)})</span>
+        <span class="choice-text">${renderMd(text)}</span>
+      </div>`;
+    }
+  } else if (Array.isArray(raw)) {
+    const resolvedIdx = resolveMcArrayChoiceIndex(answer, raw);
+    raw.forEach((text, i) => {
+      const letter = letters[i] || String(i + 1);
+      const isAns = !answerHidden && (
+        (resolvedIdx !== null && i === resolvedIdx) ||
+        answerSet.has(letter) ||
+        answerSet.has(`(${letter})`) ||
+        answer === letter ||
+        answer === text ||
+        String(answer) === String(text) ||
+        answer === `(${letter})` ||
+        (typeof answer === 'string' && (answer.startsWith(`(${letter}) `) || answer.startsWith(`${letter}. `) || answer.startsWith(`${letter}: `)))
+      );
+      html += `<div class="choice-item ${isAns ? 'is-answer' : ''}">
+        <span class="choice-letter">${letter}:</span>
+        <span class="choice-text">${renderMd(typeof text === 'string' ? text : String(text ?? ''))}</span>
+      </div>`;
+    });
+  }
+  html += '</div>';
+  return html;
+}
+
+const ANSWER_LABELS = {
+  answer:'Answer', answers:'Answers', ground_truth:'Ground Truth',
+  blankAns:'Answer (Fill-in)', choiceAns:'Answer (Choice)',
+  question_answer:'Answer', Answer:'Answer', Answer_label:'Answer Label',
+  mc_answer:'Answer (MC)', label:'Label', reasoning_a:'Answer', number:'Number'
+};
+
+function renderOneAnswerBlock(fieldName, val, item, fmt) {
+  if (val === undefined) return '';
+  const label = ANSWER_LABELS[fieldName] || fieldName;
+  let html = '<div class="answer-block">';
+  html += `<div class="answer-label">${esc(label)}</div>`;
+  if (val === null) {
+    html += `<div class="answer-text answer-hidden">Not provided (test split)</div>`;
+  } else if (val === 'hidden') {
+    html += `<div class="answer-text answer-hidden">Answer hidden</div>`;
+  } else {
+    let text;
+    if (Array.isArray(val)) {
+      const filtered = val.filter(v => v !== null && v !== undefined);
+      if (filtered.length === 0) { html += `<div class="answer-text answer-hidden">Not provided</div></div>`; return html; }
+      text = filtered.join('; ');
+    } else {
+      text = typeof val === 'string' ? val : JSON.stringify(val);
+    }
+    const mapped = item && fmt ? formatMcAnswerFromNumericIndex(val, item, fmt) : null;
+    if (mapped) text = mapped;
+    const looksLikeCode = /^(import |from |#\s*=|def |class |\/\/|package |using )/.test(text.trim()) &&
+      text.split('\n').length > 3;
+    if (looksLikeCode) {
+      const wrapped = '```python\n' + text + '\n```';
+      html += '<div class="answer-text md-truncate">' + renderMd(wrapped) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+    } else if (text.length > 150) {
+      html += '<div class="answer-text md-truncate">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+    } else {
+      html += '<div class="answer-text">' + renderMd(text) + '</div>';
+    }
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderAnswerHtml(item, fmt) {
+  let html = '';
+  const rendered = new Set();
+  const fields = fmt.answerFields || [];
+  const hasAnyNonNull = fields.some(f => f in item && item[f] !== null && item[f] !== undefined);
+
+  if (fmt.answerField) {
+    const val = item[fmt.answerField];
+    if (val !== null && val !== undefined || !hasAnyNonNull) {
+      html += renderOneAnswerBlock(fmt.answerField, val, item, fmt);
+    }
+    rendered.add(fmt.answerField);
+  }
+  for (const f of fields) {
+    if (rendered.has(f)) continue;
+    if (!(f in item)) continue;
+    const val = item[f];
+    if (val === null || val === undefined) continue;
+    html += renderOneAnswerBlock(f, val, item, fmt);
+    rendered.add(f);
+  }
+  return html;
+}
+
+function renderExplanationHtml(item) {
+  if (!item.explanation || typeof item.explanation !== 'string' || !item.explanation.trim()) return '';
+  const text = item.explanation;
+  let html = '<div class="answer-block" style="border-left-color:var(--accent);margin-top:8px">';
+  html += '<div class="answer-label">Explanation</div>';
+  if (text.length > 400) {
+    html += '<div class="answer-text md-truncate">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+  } else {
+    html += '<div class="answer-text">' + renderMd(text) + '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+const COT_LABELS = { coT:'Chain of Thought', cot:'Chain of Thought', reasoning:'Reasoning', query_cot:'CoT Query' };
+const COT_COLORS = { coT:'var(--orange)', cot:'var(--orange)', reasoning:'var(--cyan)', query_cot:'var(--pink)' };
+
+function renderCotHtml(item, fmt) {
+  let html = '';
+  for (const f of (fmt.cotFields || [])) {
+    const val = item[f];
+    if (val === undefined || val === null) continue;
+    const label = COT_LABELS[f] || f;
+    const color = COT_COLORS[f] || 'var(--cyan)';
+    let text;
+    if (Array.isArray(val)) {
+      text = val.filter(v => v !== null).join('\n');
+    } else {
+      text = typeof val === 'string' ? val : JSON.stringify(val);
+    }
+    if (!text.trim()) continue;
+    html += `<div class="answer-block" style="border-left-color:${color};margin-top:12px">`;
+    html += `<div class="answer-label">${esc(label)}</div>`;
+    if (text.length > 400) {
+      html += '<div class="answer-text md-truncate" style="font-size:0.84rem">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+    } else {
+      html += '<div class="answer-text" style="font-size:0.84rem">' + renderMd(text) + '</div>';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+function renderAdditionalQA(item) {
+  const qa = item.additional_qa;
+  if (!Array.isArray(qa) || qa.length === 0) return '';
+  let inner = '';
+  for (const pair of qa) {
+    const q = pair.q || pair.question || '';
+    const a = pair.a || pair.answer || '';
+    const qs = typeof q === 'string' ? q : String(q ?? '');
+    const as = typeof a === 'string' ? a : String(a ?? '');
+    if (!qs.trim() && !as.trim()) continue;
+    if (qs.trim()) {
+      inner += '<div class="chat-row"><div class="chat-ava chat-ava-q">Q</div>';
+      inner += '<div class="chat-bbl chat-bbl-q">' + renderMd(qs) + '</div></div>';
+    }
+    if (as.trim()) {
+      inner += '<div class="chat-row"><div class="chat-ava chat-ava-a">A</div>';
+      inner += '<div class="chat-bbl chat-bbl-a">' + renderMd(as) + '</div></div>';
+    }
+  }
+  if (!inner) return '';
+  return '<div class="qa-pairs-section"><div class="qa-pairs-title">Additional Q&amp;A</div><div class="chat-conv">' + inner + '</div></div>';
+}
+
+function renderGridHtml(grid, label) {
+  if (!Array.isArray(grid) || !Array.isArray(grid[0])) return '';
+  const maxDim = Math.max(grid.length, grid[0].length);
+  const cellSize = maxDim > 20 ? 12 : maxDim > 12 ? 16 : 22;
+  const borderW = cellSize <= 12 ? '0.3px' : '0.5px';
+  let html = '';
+  if (label) html += `<div class="grid-label">${esc(label)}</div>`;
+  html += '<div class="grid-container">';
+  for (const row of grid) {
+    html += '<div class="grid-row">';
+    for (const cell of row) {
+      const color = ARC_COLORS[cell] || ARC_COLORS[0];
+      html += `<div class="grid-cell" style="background:${color};width:${cellSize}px;height:${cellSize}px;border-width:${borderW}" title="${cell}"></div>`;
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function getQuestionText(item, fmt) {
+  const v = item[fmt.questionField];
+  if (typeof v === 'string') return v;
+  if (Array.isArray(v) && v.length > 0) return v.join('\n');
+  return String(v ?? '');
+}
+
+/** We-Math 等：整段字符串 "A. 45; B. 60; C. 72; D. 90; E. No correct answer" */
+function parseSemicolonMcOptionString(str) {
+  if (typeof str !== 'string' || !str.trim()) return null;
+  const parts = str.split(/;\s+(?=[A-Z]\.)/);
+  const out = [];
+  for (const p of parts) {
+    const m = p.trim().match(/^([A-Z])\.\s*(.*)$/s);
+    if (!m) return null;
+    out.push({ letter: m[1], text: m[2].trim() });
+  }
+  return out.length >= 2 ? out : null;
+}
+
+/** MMStar 等：题干与选项挤在同一字段，形如 "\\nOptions: A: ..., B: ..." */
+function parseOptionsLine(optsStr) {
+  const trimmed = String(optsStr).trim();
+  if (!trimmed) return null;
+  const pieces = trimmed.split(/,\s*(?=[A-Z]\s*:)/);
+  const map = {};
+  for (const p of pieces) {
+    const mm = p.trim().match(/^([A-Z])\s*:\s*(.*)$/s);
+    if (!mm) return null;
+    map[mm[1]] = mm[2].trim();
+  }
+  return Object.keys(map).length >= 2 ? map : null;
+}
+
+function parseEmbeddedMcOptions(text) {
+  if (typeof text !== 'string') return null;
+  const m = text.match(/^([\s\S]*?)\s*(?:\r?\n|\r)\s*Options:\s*(.+)$/i);
+  if (!m) return null;
+  const stem = m[1].trim();
+  if (!stem) return null;
+  const options = parseOptionsLine(m[2]);
+  if (!options) return null;
+  return { stem, options };
+}
+
+function trySplitQuestionWithEmbeddedOptions(item, fmt) {
+  if (!fmt.questionField || fmt.choicesField) return null;
+  return parseEmbeddedMcOptions(getQuestionText(item, fmt));
+}
+
+function getYouTubeId(item) {
+  if (typeof item.videoID === 'string' && item.videoID) return item.videoID;
+  for (const f of ['url', 'video_url', 'youtube_url']) {
+    const v = item[f];
+    if (typeof v === 'string') {
+      const m = v.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+      if (m) return m[1];
+    }
+  }
+  return null;
+}
+
+function getExtraFields(item, fmt) {
+  return Object.entries(item).filter(([k, v]) => {
+    if (SKIP_FIELDS.has(k)) return false;
+    if (datasetName === 'CGBench' && (k === 'sub_category' || k === 'duration')) return false;
+    if (fmt.questionField && k === fmt.questionField) return false;
+    if (fmt.answerFields && fmt.answerFields.includes(k)) return false;
+    if (fmt.imageFields && fmt.imageFields.includes(k)) return false;
+    if (fmt.imageArrayFields && fmt.imageArrayFields.includes(k)) return false;
+    if (fmt.base64ImageFields && fmt.base64ImageFields.includes(k)) return false;
+    if (fmt.videoFields.includes(k)) return false;
+    if (v === null || v === undefined) return false;
+    if (typeof v === 'object') return false;
+    if (typeof v === 'string' && v.length > 120) return false;
+    return true;
+  });
+}
+
+function getLongTextFields(item, fmt) {
+  return Object.entries(item).filter(([k, v]) => {
+    if (SKIP_FIELDS.has(k)) return false;
+    if (fmt.questionField && k === fmt.questionField) return false;
+    if (fmt.answerFields && fmt.answerFields.includes(k)) return false;
+    if (fmt.videoFields.includes(k)) return false;
+    if (fmt.base64ImageFields && fmt.base64ImageFields.includes(k)) return false;
+    if (v === null || v === undefined) return false;
+    if (typeof v !== 'string') return false;
+    if (isBase64Image(v)) return false;
+    return v.length > 120;
+  });
+}
+
+function renderCard(item, fmt, idx) {
+  const d = Math.min(idx * 0.05, 0.4);
+  let html = `<div class="case-card" style="animation-delay:${d}s"><div class="card-header"><span class="card-num">#${idx + 1}</span>`;
+  const seenBadges = new Set();
+  for (const f of BADGE_FIELDS) {
+    if (item[f] && typeof item[f] === 'string' && !seenBadges.has(item[f])) {
+      seenBadges.add(item[f]);
+      html += ` <span class="card-badge">${esc(item[f])}</span>`;
+    }
+  }
+  const itemId = item.idx || item.id;
+  if (itemId !== undefined) html += `<span class="card-id">${esc(String(itemId))}</span>`;
+  html += '</div><div class="card-body"><div class="chat-conv">';
+
+  const images = collectImages(item, fmt);
+  const videos = collectVideos(item, fmt);
+  const hasQ = fmt.questionField && item[fmt.questionField];
+  const hasAns = (fmt.answerFields && fmt.answerFields.some(f => f in item)) || (fmt.answerField && item[fmt.answerField] === null);
+
+  if (videos.length > 0) html += renderVideosHtml(videos);
+  if (images.length > 0) html += '<div class="chat-media">' + renderImagesHtml(images) + '</div>';
+
+  const embeddedMc = trySplitQuestionWithEmbeddedOptions(item, fmt);
+
+  if (hasQ) {
+    html += '<div class="chat-row"><div class="chat-ava chat-ava-q">Q</div>';
+    const qBody = embeddedMc ? embeddedMc.stem : getQuestionText(item, fmt);
+    html += '<div class="chat-bbl chat-bbl-q">' + renderMd(qBody) + '</div></div>';
+  }
+
+  if (fmt.choicesField) html += renderChoicesHtml(item, fmt);
+  else if (embeddedMc) html += renderChoicesHtml(item, fmt, embeddedMc.options);
+
+  if (hasAns) {
+    const ac = renderAnswerHtml(item, fmt);
+    if (ac) {
+      html += '<div class="chat-row"><div class="chat-ava chat-ava-a">A</div>';
+      html += '<div class="chat-bbl chat-bbl-a">' + ac + '</div></div>';
+    }
+  }
+
+  html += '</div>';
+
+  const ex = renderExplanationHtml(item);
+  const si = renderSolutionImagesHtml(item, fmt);
+  const co = renderCotHtml(item, fmt);
+  const aq = renderAdditionalQA(item);
+  if (ex || si || co || aq) {
+    html += '<div class="card-details-sec">' + ex + si + co + aq + '</div>';
+  }
+
+  if (item.prompt && fmt.questionField !== 'prompt' && typeof item.prompt === 'string') {
+    const qText = item[fmt.questionField] || '';
+    const pText = item.prompt;
+    let showPrompt = true;
+    if (qText) {
+      if (pText.includes(qText)) {
+        showPrompt = false;
+      } else {
+        const qWords = qText.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+        if (qWords.length > 0) {
+          const pLower = pText.toLowerCase();
+          const matched = qWords.filter(w => pLower.includes(w)).length;
+          if (matched / qWords.length > 0.6) showPrompt = false;
+        }
+      }
+    }
+    if (showPrompt) {
+      let promptHtml;
+      if (pText.length > 400) {
+        promptHtml = '<div class="md-truncate">' + renderMd(pText) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+      } else {
+        promptHtml = renderMd(pText);
+      }
+      html += '<div class="answer-block" style="border-left-color:var(--blue);margin-top:12px"><div class="answer-label">Prompt</div><div class="answer-text" style="font-size:0.82rem">' + promptHtml + '</div></div>';
+    }
+  }
+  if (Array.isArray(item.scoring_points) && item.scoring_points.length > 0) {
+    html += '<div class="scoring-section"><div class="scoring-title">Scoring Points</div><div class="scoring-list">';
+    for (const p of item.scoring_points) {
+      html += '<div class="scoring-point"><span class="scoring-dot" aria-hidden="true"></span><div class="scoring-point-md">' + renderMd(p) + '</div></div>';
+    }
+    html += '</div></div>';
+  }
+
+  const gridKeys = Object.keys(item).filter(k => {
+    const v = item[k];
+    return Array.isArray(v) && v.length > 0 && Array.isArray(v[0]) && v[0].length > 0 && typeof v[0][0] === 'number';
+  });
+  if (gridKeys.length > 0) {
+    html += '<div class="grids-row" style="margin-top:12px">';
+    for (const k of gridKeys) html += renderGridHtml(item[k], k);
+    html += '</div>';
+  }
+
+  const extra = getExtraFields(item, fmt);
+  if (extra.length > 0) {
+    html += '<div class="extra-fields">';
+    for (const [k, v] of extra) {
+      const display = typeof v === 'number' ? v.toLocaleString() : String(v);
+      if (typeof v === 'string' && /^https?:\/\//.test(v)) {
+        html += `<span class="extra-field"><strong>${esc(k)}:</strong> <a href="${esc(v)}" target="_blank" rel="noopener" style="color:var(--accent-light);text-decoration:none">${esc(display.length > 60 ? display.slice(0,57) + '...' : display)}</a></span>`;
+      } else {
+        html += `<span class="extra-field"><strong>${esc(k)}:</strong> ${esc(display)}</span>`;
+      }
+    }
+    html += '</div>';
+  }
+
+  const longTexts = getLongTextFields(item, fmt);
+  if (longTexts.length > 0) {
+    for (const [k, v] of longTexts) {
+      html += '<div class="answer-block" style="border-left-color:var(--text-muted);margin-top:12px">';
+      html += `<div class="answer-label">${esc(k)}</div>`;
+      if (v.length > 300) {
+        html += '<div class="answer-text md-truncate" style="font-size:0.82rem">' + renderMd(v) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+      } else {
+        html += '<div class="answer-text" style="font-size:0.82rem">' + renderMd(v) + '</div>';
+      }
+      html += '</div>';
+    }
+  }
+
+  html += '</div></div>';
+  return html;
+}
+
+function renderClassificationGrid(items, fmt) {
+  let html = '<div class="classify-grid">';
+  items.forEach((item, i) => {
+    const images = collectImages(item, fmt);
+    const imgSrc = images.length > 0 ? images[0].path : null;
+    html += `<div class="classify-item">`;
+    if (imgSrc) html += `<img src="${esc(imgSrc)}" alt="Case ${i+1}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(imgSrc)}">`;
+
+    let label = '';
+    if (fmt.answerField) label = item[fmt.answerField] ?? '';
+    if (!label && item.label !== undefined && item.label !== null) label = item.label;
+    if (label !== '') {
+      html += `<div class="classify-label">Label: ${esc(String(label))}</div>`;
+    }
+
+    const infoFields = Object.entries(item).filter(([k, v]) => {
+      if (k === fmt.answerField || k === 'label') return false;
+      if (SKIP_FIELDS.has(k)) return false;
+      if (fmt.imageFields.includes(k) || fmt.imageArrayFields.includes(k)) return false;
+      if (v === null || v === undefined) return false;
+      if (typeof v === 'object') return false;
+      if (typeof v === 'string' && v.length > 150) return false;
+      return true;
+    });
+    for (const [k, v] of infoFields) {
+      const display = typeof v === 'number' ? v.toLocaleString() : String(v);
+      html += `<div style="font-size:0.78rem;color:var(--text-dim);margin-top:3px;text-align:left;line-height:1.5"><strong>${esc(k)}:</strong> ${esc(display)}</div>`;
+    }
+
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderGenericCard(item, idx) {
+  let html = `<div class="case-card"><div class="card-header"><span class="card-num">#${idx + 1}</span></div>`;
+  html += `<div class="card-body"><div class="json-display">${esc(JSON.stringify(item, null, 2))}</div></div></div>`;
+  return html;
+}
+
+function renderArcPuzzleCard(item, idx) {
+  let html = `<div class="case-card"><div class="card-header">`;
+  html += `<span class="card-num">#${idx + 1}</span>`;
+  html += `<span class="card-badge" style="background:rgba(99,102,241,.1);color:var(--accent-light);border:1px solid rgba(99,102,241,.3)">ARC Puzzle</span>`;
+  if (item.id) html += `<span class="card-id">${esc(item.id)}</span>`;
+  html += '</div><div class="card-body">';
+  html += '<div class="arc-section"><div class="arc-section-title">Training Examples</div>';
+  for (let i = 0; i < item.train.length; i++) {
+    html += '<div class="arc-example">';
+    html += `<div class="arc-pair">${renderGridHtml(item.train[i].input, 'Input ' + (i+1))}</div>`;
+    html += '<div class="arc-arrow">\u2192</div>';
+    html += `<div class="arc-pair">${renderGridHtml(item.train[i].output, 'Output ' + (i+1))}</div>`;
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '<div class="arc-section"><div class="arc-section-title">Test</div>';
+  for (let i = 0; i < item.test.length; i++) {
+    html += '<div class="arc-example">';
+    html += `<div class="arc-pair">${renderGridHtml(item.test[i].input, 'Test Input')}</div>`;
+    html += '<div class="arc-arrow">\u2192</div>';
+    if (item.test[i].output) {
+      html += `<div class="arc-pair">${renderGridHtml(item.test[i].output, 'Expected Output')}</div>`;
+    } else {
+      html += '<div class="arc-pair"><div class="grid-label">Output</div><div class="arc-unknown">?</div></div>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderArcSubmissionCard(puzzleId, attempts, subInfo, idx, puzzleData) {
+  let html = `<div class="case-card"><div class="card-header">`;
+  html += `<span class="card-num">#${idx + 1}</span>`;
+  html += `<span class="card-badge" style="background:rgba(99,102,241,.1);color:var(--accent-light);border:1px solid rgba(99,102,241,.3)">ARC Submission</span>`;
+  if (subInfo && subInfo.status) {
+    const isOk = subInfo.status === 'success';
+    html += `<span class="card-badge" style="background:${isOk?'rgba(5,150,105,.1)':'rgba(239,68,68,.1)'};color:${isOk?'var(--green)':'var(--red)'};border:1px solid ${isOk?'rgba(5,150,105,.3)':'rgba(239,68,68,.3)'}">${esc(subInfo.status)}</span>`;
+  }
+  html += `<span class="card-id">${esc(puzzleId)}</span>`;
+  html += '</div><div class="card-body">';
+  if (subInfo) {
+    html += '<div class="arc-meta">';
+    if (subInfo.submission_id) html += `<span class="arc-meta-item"><strong>Submission:</strong> ${esc(subInfo.submission_id)}</span>`;
+    if (subInfo.duration_seconds != null) html += `<span class="arc-meta-item"><strong>Duration:</strong> ${subInfo.duration_seconds.toFixed(1)}s</span>`;
+    html += '</div>';
+  }
+  if (puzzleData && puzzleData.train.length > 0) {
+    html += '<div class="arc-section"><div class="arc-section-title">Training Examples</div>';
+    for (let i = 0; i < puzzleData.train.length; i++) {
+      html += '<div class="arc-example">';
+      html += `<div class="arc-pair">${renderGridHtml(puzzleData.train[i].input, 'Input ' + (i+1))}</div>`;
+      html += '<div class="arc-arrow">\u2192</div>';
+      html += `<div class="arc-pair">${renderGridHtml(puzzleData.train[i].output, 'Output ' + (i+1))}</div>`;
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  html += '<div class="arc-section"><div class="arc-section-title">Test & Model Attempt</div>';
+  const testInputs = (puzzleData && puzzleData.testInputs) || [];
+  const numTests = Math.max(testInputs.length, attempts.length);
+  for (let t = 0; t < numTests; t++) {
+    html += '<div class="arc-example">';
+    if (testInputs[t]) {
+      html += `<div class="arc-pair">${renderGridHtml(testInputs[t], 'Test Input' + (numTests > 1 ? ' ' + (t+1) : ''))}</div>`;
+      html += '<div class="arc-arrow">\u2192</div>';
+    }
+    const att = attempts[t];
+    if (att) {
+      for (const [key, grid] of Object.entries(att)) {
+        if (Array.isArray(grid) && grid.length > 0 && Array.isArray(grid[0])) {
+          html += `<div class="arc-pair">${renderGridHtml(grid, key.replace(/_/g, ' '))}</div>`;
+        }
+      }
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderCases(fmt) {
+  const container = document.getElementById('casesContainer');
+  if (fmt.type === 'empty') {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><h3>No samples</h3><p>Sample data for this dataset has not been added yet.</p></div>';
+    return;
+  }
+
+  let html = '';
+
+  if (fmt.type === 'arc-puzzle') {
+    html += `<div class="cases-info">${fmt.items.length} puzzles · ARC Puzzle</div>`;
+    for (let i = 0; i < fmt.items.length; i++) html += renderArcPuzzleCard(fmt.items[i], i);
+  } else if (fmt.type === 'arc-submission') {
+    let count = 0;
+    let cardsHtml = '';
+    for (const attemptItem of fmt.arcAttemptItems) {
+      for (const [puzzleId, attempts] of Object.entries(attemptItem)) {
+        if (!/^[0-9a-f]{6,}$/.test(puzzleId)) continue;
+        const subInfo = (fmt.arcSubmissionItems || []).find(s => s.puzzle_id === puzzleId);
+        const pzData = (fmt.puzzleDataMap || {})[puzzleId] || null;
+        cardsHtml += renderArcSubmissionCard(puzzleId, attempts, subInfo, count++, pzData);
+      }
+    }
+    html += `<div class="cases-info">${count} puzzle submissions · ARC Submission</div>` + cardsHtml;
+  } else {
+    html += `<div class="cases-info">${fmt.items.length} samples · format: ${fmt.type}</div>`;
+    if (fmt.type === 'image-classification') {
+      html += renderClassificationGrid(fmt.items, fmt);
+    } else if (fmt.type === 'generic') {
+      for (let i = 0; i < fmt.items.length; i++) html += renderGenericCard(fmt.items[i], i);
+    } else {
+      for (let i = 0; i < fmt.items.length; i++) html += renderCard(fmt.items[i], fmt, i);
+    }
+  }
+  container.innerHTML = html;
+  doMath(container);
+}
+
+function renderHeader(info) {
+  const el = document.getElementById('headerContent');
+  let html = `<div class="dataset-title">${esc(datasetName)}</div>`;
+  if (info) {
+    if (info.brief) html += `<div class="dataset-brief">${esc(info.brief)}</div>`;
+    html += '<div class="dataset-meta">';
+    if (info.category) html += catBadge(info.category);
+    if (subtasks.length === 1) html += `<span class="card-badge">1 subtask</span>`;
+    html += '</div>';
+  }
+  el.innerHTML = html;
+  document.title = `${datasetName} - Samples`;
+}
+
+function renderTabs() {
+  const container = document.getElementById('tabsContainer');
+  if (subtasks.length <= 1) { container.innerHTML = ''; return; }
+  const curLabel = esc(formatSubtask(currentSubtask));
+  let html = `<div class="subtask-bar"><p class="cases-info">${subtasks.length} subtasks · ${curLabel}</p><div class="subtask-tabs" role="tablist">`;
+  subtasks.forEach((sub, i) => {
+    const on = sub === currentSubtask;
+    html += `<button type="button" role="tab" aria-selected="${on}" class="tab-btn${on ? ' active' : ''}" onclick="switchTab(${i})">${esc(formatSubtask(sub))}</button>`;
+  });
+  html += '</div></div>';
+  container.innerHTML = html;
+}
+
+async function loadSubtask(subtask) {
+  currentSubtask = subtask;
+  renderTabs();
+  const container = document.getElementById('casesContainer');
+
+  if (dataCache[subtask]) {
+    renderCases(dataCache[subtask]);
+    return;
+  }
+
+  container.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading samples…</p></div>';
+
+  try {
+    const url = `samples/${encodeURIComponent(datasetName)}/${encodeURIComponent(subtask)}/data.json?t=${Date.now()}`;
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const raw = await resp.json();
+    const items = Array.isArray(raw) ? raw : [raw];
+    const fmt = detectFormat(items);
+    dataCache[subtask] = fmt;
+    renderCases(fmt);
+  } catch (e) {
+    container.innerHTML = `<div class="error-state"><h3>Failed to load</h3><p>${esc(e.message)}</p><button class="retry-btn" onclick="loadSubtask('${esc(subtask)}')">Retry</button></div>`;
+  }
+}
+
+function switchTab(idx) {
+  loadSubtask(subtasks[idx]);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+function toggleExpand(btn) {
+  const target = btn.previousElementSibling;
+  if (target.classList.contains('md-truncate')) {
+    if (target.classList.toggle('expanded')) {
+      btn.textContent = 'Collapse';
+    } else {
+      btn.textContent = 'Expand';
+    }
+  } else if (target.style.display === 'none') {
+    target.style.display = '';
+    btn.textContent = 'Collapse';
+  } else {
+    target.style.display = 'none';
+    btn.textContent = 'Expand';
+  }
+}
+
+function handleImgErr(img) {
+  var r = parseInt(img.dataset.retry || '0');
+  if (r < 3) {
+    img.dataset.retry = r + 1;
+    var s = img.dataset.orig || img.src.split('?')[0];
+    setTimeout(function() { img.src = s + (s.indexOf('?') >= 0 ? '&' : '?') + '_r=' + Date.now(); }, 600 * (r + 1));
+  } else {
+    img.style.display = 'none';
+    var ph = document.createElement('div');
+    ph.className = 'img-err-ph';
+    ph.innerHTML = '<div class="ie-icon">\u{1F5BC}\uFE0F</div><div style="font-size:.76rem;color:var(--text-muted)">Image failed to load</div><button class="img-retry-btn" onclick="retryImg(this)">Retry</button>';
+    ph.dataset.src = img.dataset.orig || img.src.split('?')[0];
+    img.parentNode.insertBefore(ph, img.nextSibling);
+  }
+}
+
+function retryImg(btn) {
+  var ph = btn.closest('.img-err-ph');
+  var img = ph.previousElementSibling;
+  if (img && img.tagName === 'IMG') {
+    img.dataset.retry = '0';
+    img.style.display = '';
+    img.src = ph.dataset.src + '?' + Date.now();
+    ph.remove();
+  }
+}
+
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  datasetName = params.get('name');
+  if (!datasetName) {
+    document.getElementById('headerContent').innerHTML = '<div class="dataset-title">No dataset selected</div>';
+    document.getElementById('casesContainer').innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><h3>Pick a dataset from the list</h3><p><a href="index.html" style="color:var(--accent-light)">Back to list</a></p></div>';
+    return;
+  }
+
+  try {
+    const cacheBust = `?t=${Date.now()}`;
+    const [manifestResp, siteResp] = await Promise.all([
+      fetch('data/cases-manifest.json' + cacheBust, { cache: 'no-store' }),
+      fetch('data/benchmarks.json' + cacheBust, { cache: 'no-store' })
+    ]);
+    manifest = await manifestResp.json();
+    siteData = await siteResp.json();
+  } catch (e) {
+    document.getElementById('headerContent').innerHTML = `<div class="dataset-title">${esc(datasetName)}</div>`;
+    document.getElementById('casesContainer').innerHTML = `<div class="error-state"><h3>Failed to load config</h3><p>${esc(e.message)}</p><button class="retry-btn" onclick="init()">Retry</button></div>`;
+    return;
+  }
+
+  const info = siteData.find(d => d.name === datasetName);
+  subtasks = manifest[datasetName] || [];
+
+  renderHeader(info);
+
+  if (subtasks.length === 0) {
+    document.getElementById('casesContainer').innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><h3>No samples</h3><p>Sample data for this dataset has not been added yet.</p></div>';
+    return;
+  }
+
+  renderTabs();
+  loadSubtask(subtasks[0]);
+}
+
+init();
+</script>
+<footer style="text-align:center;padding:24px 16px 32px;color:var(--text-muted);font-size:0.75rem;letter-spacing:0.02em">&copy; 2026. All rights reserved.</footer>
+</body>
+</html>

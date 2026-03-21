@@ -1,0 +1,479 @@
+{
+  "AI2D_TEST": [
+    "default"
+  ],
+  "All-Angles": [
+    "default"
+  ],
+  "ArcAG2-Image": [
+    "default"
+  ],
+  "ArcAGI1-Image": [
+    "default"
+  ],
+  "BLINK": [
+    "Art_Style",
+    "Counting",
+    "Forensic_Detection",
+    "Functional_Correspondence",
+    "IQ_Test",
+    "Jigsaw",
+    "Multi-view_Reasoning",
+    "Object_Localization",
+    "Relative_Depth",
+    "Relative_Reflectance",
+    "Semantic_Correspondence",
+    "Spatial_Relation",
+    "Visual_Correspondence",
+    "Visual_Similarity"
+  ],
+  "BabyVision": [
+    "default"
+  ],
+  "CC-OCR": [
+    "doc_parsing",
+    "kie",
+    "multi_lan_ocr",
+    "multi_scene_ocr"
+  ],
+  "CGBench": [
+    "cg-bench",
+    "cg-bench-mini"
+  ],
+  "CV-Bench": [
+    "2D",
+    "3D",
+    "default"
+  ],
+  "CharXiv(DQ)": [
+    "default"
+  ],
+  "CharXiv(RQ)": [
+    "default"
+  ],
+  "ChartMimic": [
+    "chartmimic"
+  ],
+  "ChartQA": [
+    "default"
+  ],
+  "ChartQAPro": [
+    "default"
+  ],
+  "ChartX": [
+    "default"
+  ],
+  "ContPhy": [
+    "default"
+  ],
+  "CountBench": [
+    "default"
+  ],
+  "CrossVid": [
+    "BU",
+    "CC",
+    "CCQA",
+    "FSA",
+    "MOC",
+    "MSR",
+    "NC",
+    "PEA",
+    "PI",
+    "PSS"
+  ],
+  "DA-2K": [
+    "default"
+  ],
+  "DUDE": [
+    "default"
+  ],
+  "Design2Code": [
+    "default"
+  ],
+  "DocVQA": [
+    "DocVQA",
+    "InfographicVQA"
+  ],
+  "DynaMath": [
+    "default"
+  ],
+  "EMMA": [
+    "Chemistry",
+    "Coding",
+    "Math",
+    "Physics"
+  ],
+  "ERQA": [
+    "default"
+  ],
+  "EgoTempo": [
+    "default"
+  ],
+  "EmbSpatialBench": [
+    "default"
+  ],
+  "FSC-147": [
+    "default"
+  ],
+  "FronTalk": [
+    "default"
+  ],
+  "HRBench4K/8K": [
+    "hrbench_version_split"
+  ],
+  "HRBench4K_8K": [
+    "hrbench_version_split"
+  ],
+  "HallusionBench": [
+    "default"
+  ],
+  "HiPho": [
+    "default"
+  ],
+  "InfoVQA": [
+    "default"
+  ],
+  "LVBench": [
+    "default"
+  ],
+  "LiveSports-3k": [
+    "LiveSports_3K_CC",
+    "LiveSports_3K_QA"
+  ],
+  "LogicVista": [
+    "default"
+  ],
+  "LongDocURL": [
+    "default"
+  ],
+  "MLVU": [
+    "default"
+  ],
+  "MM-BrowseComp": [
+    "default"
+  ],
+  "MM-CondChain": [
+    "default"
+  ],
+  "MMBench-V1.1-CN": [
+    "default"
+  ],
+  "MMBench-V1.1-EN": [
+    "default"
+  ],
+  "MME-CC": [
+    "default"
+  ],
+  "MMLongBench-Doc": [
+    "default"
+  ],
+  "MMLongBnech": [
+    "default"
+  ],
+  "MMMU": [
+    "Accounting",
+    "Agriculture",
+    "Architecture_and_Engineering",
+    "Art",
+    "Art_Theory",
+    "Basic_Medical_Science",
+    "Biology",
+    "Chemistry",
+    "Clinical_Medicine",
+    "Computer_Science",
+    "Design",
+    "Diagnostics_and_Laboratory_Medicine",
+    "Economics",
+    "Electronics",
+    "Energy_and_Power",
+    "Finance",
+    "Geography",
+    "History",
+    "Literature",
+    "Manage",
+    "Marketing",
+    "Materials",
+    "Math",
+    "Mechanical_Engineering",
+    "Music",
+    "Pharmacy",
+    "Physics",
+    "Psychology",
+    "Public_Health",
+    "Sociology"
+  ],
+  "MMMU-Pro": [
+    "standard (10 options)",
+    "standard (4 options)",
+    "vision"
+  ],
+  "MMSI-Bench": [
+    "default"
+  ],
+  "MMStar": [
+    "val"
+  ],
+  "MMVP": [
+    "default"
+  ],
+  "MMVU": [
+    "default"
+  ],
+  "MMVet": [
+    "default"
+  ],
+  "MTVQA": [
+    "default"
+  ],
+  "MUIRBench": [
+    "default"
+  ],
+  "MVBench": [
+    "action_antonym",
+    "action_count",
+    "action_localization",
+    "action_prediction",
+    "action_sequence",
+    "character_order",
+    "counterfactual_inference",
+    "egocentric_navigation",
+    "episodic_reasoning",
+    "fine_grained_action",
+    "fine_grained_pose",
+    "moving_attribute",
+    "moving_count",
+    "moving_direction",
+    "object_existence",
+    "object_interaction",
+    "object_shuffle",
+    "scene_transition",
+    "state_change",
+    "unexpected_action"
+  ],
+  "Math-VR": [
+    "default"
+  ],
+  "MathCanvas": [
+    "Algebra",
+    "Analytic_Geometry",
+    "Calculus_and_Vector"
+  ],
+  "MathKangaroo": [
+    "default"
+  ],
+  "MathVerse": [
+    "testmini",
+    "testmini_text_only"
+  ],
+  "MathVision": [
+    "default"
+  ],
+  "MathVista": [
+    "default"
+  ],
+  "MedXpertQA-MM": [
+    "MM",
+    "Text"
+  ],
+  "Minedojo Verified": [
+    "default"
+  ],
+  "Minera": [
+    "default"
+  ],
+  "Mores-500": [
+    "default"
+  ],
+  "MotionBench": [
+    "default"
+  ],
+  "OCRBench": [
+    "default"
+  ],
+  "OCRBench-v2": [
+    "default"
+  ],
+  "ODInW13": [
+    "default"
+  ],
+  "ODVBench": [
+    "odvbench"
+  ],
+  "OSWorld-Verified": [
+    "default"
+  ],
+  "OVBench": [
+    "ovbench"
+  ],
+  "OVOBench": [
+    "default",
+    "preview"
+  ],
+  "OlympiadBench": [
+    "default"
+  ],
+  "OminiMMI": [
+    "default"
+  ],
+  "OmniDocBench": [
+    "default"
+  ],
+  "OmniDocBench1.5": [
+    "default"
+  ],
+  "Online-Mind2web": [
+    "default"
+  ],
+  "PMC-VQA": [
+    "default"
+  ],
+  "PhyX(openeded)": [
+    "data_for_llms_eval",
+    "default",
+    "multilingual",
+    "with_steps"
+  ],
+  "Point-Bench": [
+    "default"
+  ],
+  "Real5-OmniDocBench": [
+    "default"
+  ],
+  "RealWorldQA": [
+    "default"
+  ],
+  "RefCOCO(avg)": [
+    "default"
+  ],
+  "RefSpatialBench": [
+    "SubsetVisualization"
+  ],
+  "RoboSpatialHome": [
+    "default"
+  ],
+  "SFE": [
+    "default"
+  ],
+  "SLAKE": [
+    "default"
+  ],
+  "ScreenSpot Pro": [
+    "default"
+  ],
+  "SimpleVQA": [
+    "default"
+  ],
+  "StreamingBench": [
+    "Contextual_Understanding",
+    "Omni_Source_Understanding",
+    "Proactive_Output",
+    "Real_Time_Visual_Understanding",
+    "Sequential_Question_Answering"
+  ],
+  "TOMATO": [
+    "default"
+  ],
+  "TVBench": [
+    "action_antonym",
+    "action_count",
+    "action_localization",
+    "action_sequence",
+    "egocentric_sequence",
+    "moving_direction",
+    "object_count",
+    "object_shuffle",
+    "scene_transition",
+    "unexpected_action"
+  ],
+  "TableVQA": [
+    "default"
+  ],
+  "TempCompass": [
+    "caption_matching",
+    "captioning",
+    "multi-choice",
+    "yes_no"
+  ],
+  "TextVQA": [
+    "default"
+  ],
+  "TreeBench": [
+    "default"
+  ],
+  "UniSVG": [
+    "default"
+  ],
+  "V*": [
+    "default"
+  ],
+  "VCRBench": [
+    "vcrbench"
+  ],
+  "VLMsAreBiased": [
+    "default"
+  ],
+  "VLMsAreBlind": [
+    "default"
+  ],
+  "VPCT": [
+    "default"
+  ],
+  "VSI-Bench": [
+    "default",
+    "debiased",
+    "full",
+    "pruned"
+  ],
+  "ViVerBench": [
+    "default"
+  ],
+  "VibeEval": [
+    "default"
+  ],
+  "VideoEval-Pro": [
+    "default"
+  ],
+  "VideoHolmes": [
+    "default"
+  ],
+  "VideoMME": [
+    "videomme"
+  ],
+  "VideoMMMU": [
+    "Adaptation",
+    "Comprehension",
+    "Perception"
+  ],
+  "VideoReasonBench": [
+    "default"
+  ],
+  "VideoSimpleQA": [
+    "default"
+  ],
+  "VideoThinkBench": [
+    "ARC_AGI_2",
+    "Eyeballing_Puzzles",
+    "Mazes",
+    "Text_Centric_Tasks",
+    "Visual_Puzzles"
+  ],
+  "VisuLogic": [
+    "default"
+  ],
+  "VisualPuzzles": [
+    "default"
+  ],
+  "We-Math": [
+    "default"
+  ],
+  "WorldVQA": [
+    "default"
+  ],
+  "XLRS-Bench(macro)": [
+    "default"
+  ],
+  "ZEROBench": [
+    "main",
+    "subquestions"
+  ]
+}
