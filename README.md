@@ -255,7 +255,7 @@ awesome-mllm-benchmarks/
 
 ### Video
 
-**Video / Knowledge** (4 benchmarks)
+**Video / Knowledge**
 
 
 | Benchmark         | Paper                                                                                                                                                                    | Date    | Organization |
@@ -268,7 +268,7 @@ awesome-mllm-benchmarks/
 
 
 
-**Video / Reasoning** (4 benchmarks)
+**Video / Reasoning**
 
 
 | Benchmark            | Paper                                                                                                                                                                | Date    | Organization |
@@ -281,7 +281,7 @@ awesome-mllm-benchmarks/
 
 
 
-**Video / Motion** (8 benchmarks)
+**Video / Motion**
 
 
 | Benchmark           | Paper                                                                                                                                                                     | Date    | Organization |
@@ -298,7 +298,7 @@ awesome-mllm-benchmarks/
 
 
 
-**Video / Long-form** (6 benchmarks)
+**Video / Long-form**
 
 
 | Benchmark          | Paper                                                                                                                                                                        | Date    | Organization |
@@ -313,7 +313,7 @@ awesome-mllm-benchmarks/
 
 
 
-**Video / Streaming** (7 benchmarks)
+**Video / Streaming**
 
 
 | Benchmark          | Paper                                                                                                                                                            | Date    | Organization |
@@ -329,7 +329,7 @@ awesome-mllm-benchmarks/
 
 
 
-**Video / Multi-task & Multiple** (2 benchmarks)
+**Video / Multi-task & Multiple**
 
 
 | Benchmark    | Paper                                                                                                                                                       | Date    | Organization    |
@@ -342,7 +342,7 @@ awesome-mllm-benchmarks/
 
 ### Agent
 
-**Agent / General** (2 benchmarks)
+**Agent / General**
 
 
 | Benchmark             | Paper                                                                                                                                                                              | Date    | Organization    |
@@ -353,7 +353,7 @@ awesome-mllm-benchmarks/
 
 
 
-**Agent / Computer** (2 benchmarks)
+**Agent / Computer**
 
 
 | Benchmark            | Paper                                                                                                                                             | Date    | Organization |
@@ -364,7 +364,7 @@ awesome-mllm-benchmarks/
 
 
 
-**Agent / Browser** (2 benchmarks)
+**Agent / Browser**
 
 
 | Benchmark           | Paper                                                                                                                                                          | Date    | Organization |
@@ -375,7 +375,7 @@ awesome-mllm-benchmarks/
 
 
 
-**Agent / Mobile** (1 benchmark)
+**Agent / Mobile**
 
 
 | Benchmark        | Paper                                                                                                  | Date    | Organization |
@@ -385,7 +385,7 @@ awesome-mllm-benchmarks/
 
 
 
-**Agent / Visual Search** (3 benchmarks)
+**Agent / Visual Search**
 
 
 | Benchmark         | Paper                                                                                                                                                                 | Date    | Organization |
@@ -419,11 +419,4 @@ If you find this project useful for your research, please consider citing:
 }
 ```
 
----
-
-<p align="center">
-  <a href="https://star-history.com/#lchen1019/awesome-mllm-benchmarks&Date">
-    <img src="https://api.star-history.com/svg?repos=lchen1019/awesome-mllm-benchmarks&type=Date" width="600" alt="Star History">
-  </a>
-</p>
 

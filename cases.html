@@ -764,9 +764,7 @@ const SKIP_FIELDS = new Set([
   ...BADGE_FIELDS
 ]);
 
-const SAMPLES_LOCAL = 'samples';
-const SAMPLES_HF = 'https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples/resolve/main';
-let samplesBase = SAMPLES_LOCAL;
+const SAMPLES_BASE = 'https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples/resolve/main';
 
 let manifest = {};
 let siteData = [];
@@ -883,9 +881,9 @@ function resolveMedia(rawPath) {
   if (!rawPath || typeof rawPath !== 'string') return null;
   if (rawPath.startsWith("b'") || rawPath.startsWith('b"')) return null;
   if (/^https?:\/\//.test(rawPath)) return rawPath;
-  if (rawPath.startsWith('samples/')) return `${samplesBase}/${rawPath.slice(8)}`;
-  if (rawPath.startsWith('data/')) return `${samplesBase}/${rawPath.slice(5)}`;
-  return `${samplesBase}/${encodeURIComponent(datasetName)}/${encodeURIComponent(currentSubtask)}/${rawPath}`;
+  if (rawPath.startsWith('samples/')) return `${SAMPLES_BASE}/${rawPath.slice(8)}`;
+  if (rawPath.startsWith('data/')) return `${SAMPLES_BASE}/${rawPath.slice(5)}`;
+  return `${SAMPLES_BASE}/${encodeURIComponent(datasetName)}/${encodeURIComponent(currentSubtask)}/${rawPath}`;
 }
 
 function formatSubtask(name) {
@@ -1991,25 +1989,10 @@ async function loadSubtask(subtask) {
 
   container.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading samples…</p></div>';
 
-  const path = `${encodeURIComponent(datasetName)}/${encodeURIComponent(subtask)}/data.json`;
-  const sources = [SAMPLES_LOCAL, SAMPLES_HF];
-
-  let resp = null;
-  let lastErr = null;
-  for (const base of sources) {
-    try {
-      resp = await fetch(`${base}/${path}`);
-      if (resp.ok) { samplesBase = base; break; }
-      resp = null;
-    } catch (e) { lastErr = e; resp = null; }
-  }
-
-  if (!resp) {
-    container.innerHTML = `<div class="error-state"><h3>Failed to load</h3><p>${esc(lastErr ? lastErr.message : 'All sources unavailable')}</p><button class="retry-btn" onclick="loadSubtask('${esc(subtask)}')">Retry</button></div>`;
-    return;
-  }
-
   try {
+    const url = `${SAMPLES_BASE}/${encodeURIComponent(datasetName)}/${encodeURIComponent(subtask)}/data.json`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const raw = await resp.json();
     const items = Array.isArray(raw) ? raw : [raw];
     const fmt = detectFormat(items);
@@ -2054,21 +2037,8 @@ function toggleExpand(btn) {
 }
 
 function handleImgErr(img) {
-  if (!img.dataset.triedFallback) {
-    img.dataset.triedFallback = '1';
-    var orig = img.dataset.orig || img.src.split('?')[0];
-    var alt = (samplesBase === SAMPLES_LOCAL) ? SAMPLES_HF : SAMPLES_LOCAL;
-    var localPrefix = SAMPLES_LOCAL + '/';
-    var hfPrefix = SAMPLES_HF + '/';
-    if (orig.startsWith(localPrefix)) {
-      img.src = alt + '/' + orig.slice(localPrefix.length);
-    } else if (orig.startsWith(hfPrefix)) {
-      img.src = alt + '/' + orig.slice(hfPrefix.length);
-    }
-    return;
-  }
   var r = parseInt(img.dataset.retry || '0');
-  if (r < 2) {
+  if (r < 3) {
     img.dataset.retry = r + 1;
     var s = img.dataset.orig || img.src.split('?')[0];
     setTimeout(function() { img.src = s + (s.indexOf('?') >= 0 ? '&' : '?') + '_r=' + Date.now(); }, 600 * (r + 1));
