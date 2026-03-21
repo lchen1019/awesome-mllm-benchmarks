@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src=".assets/logo_transparent.png" width="120" alt="Awesome MLLM Benchmarks">
+  <img src="assets/logo_transparent.png" width="120" alt="Awesome MLLM Benchmarks">
 </p>
 <h1 align="center">Awesome MLLM Benchmarks</h1>
 <p align="center">
@@ -28,7 +28,7 @@ We collect **130+ VLM benchmarks** across **20+ categories** (OCR, Math, Video, 
 
 <p align="center">
   <a href="https://lchen1019.github.io/awesome-mllm-benchmarks/">
-    <img src=".assets/index.png" width="90%" alt="Dashboard Screenshot">
+    <img src="assets/index.png" width="90%" alt="Dashboard Screenshot">
   </a>
 </p>
 
@@ -80,7 +80,7 @@ awesome-mllm-benchmarks/
 │   ├── model-matrix.json       # Model × Benchmark coverage data
 │   └── cases-manifest.json     # Sample viewer config
 ├── samples/                    # Benchmark sample data (images, per-benchmark data.json)
-├── .assets/                    # Static assets (logo, favicon, screenshots)
+├── assets/                     # Static assets (logo, favicon, screenshots)
 ├── serve.py                    # Dev server with no-cache headers
 └── .github/workflows/pages.yml # GitHub Pages deployment
 ```
