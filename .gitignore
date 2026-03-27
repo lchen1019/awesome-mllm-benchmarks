@@ -6,3 +6,4 @@ __pycache__/
 # Sample data is too large for git (~675MB)
 # Download separately or host on external storage (e.g. Hugging Face)
 samples/
+papers/

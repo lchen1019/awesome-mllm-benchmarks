@@ -188,6 +188,15 @@ body {
 }
 .img-wrap { display: flex; flex-direction: column; align-items: center; }
 
+.bbox-overlay-wrap {
+  position: relative; display: inline-block;
+}
+.bbox-overlay-wrap canvas {
+  position: absolute; top: 0; left: 0;
+  pointer-events: none;
+  width: 100%; height: 100%;
+}
+
 .classify-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px;
 }
@@ -656,7 +665,7 @@ body {
         <span>VLM Benchmark Explorer</span>
       </a>
     </div>
-    <a href="index.html" class="back-link">
+    <a href="index.html" class="back-link" onclick="if(history.length>1){history.back();return false;}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Back to list
     </a>
@@ -740,7 +749,7 @@ function parseArcPuzzleText(text) {
 
 const BADGE_FIELDS = ['category','difficulty','sub_task','type','question_type','task_tag','answer_format','medical_task','body_system','l2-category','class'];
 const SKIP_FIELDS = new Set([
-  'image','image_1','image_2','image_3','image_4','images',
+  'image','image_1','image_2','image_3','image_4','image_5','image_6','image_7','image_8','images',
   'decoded_image','question_images_decoded','question_images','Figure_path',
   'solution_image','answer_image','ground_truth_image','expected_output_image',
   'video','video A','video B','video_path','videos',
@@ -760,6 +769,7 @@ const SKIP_FIELDS = new Set([
   'vid',
   'additional_qa',
   'multi-choice options','target_instances',
+  'segmentation','bbox','file_name',
   'A','B','C','D','E','F','G','H','I','J','K',
   ...BADGE_FIELDS
 ]);
@@ -772,6 +782,7 @@ let datasetName = '';
 let subtasks = [];
 let currentSubtask = '';
 let dataCache = {};
+let localDatasetName = ''; // actual local directory name (may differ from datasetName when name contains '/')
 
 function esc(str) {
   if (typeof str !== 'string') return String(str ?? '');
@@ -881,6 +892,11 @@ function resolveMedia(rawPath) {
   if (!rawPath || typeof rawPath !== 'string') return null;
   if (rawPath.startsWith("b'") || rawPath.startsWith('b"')) return null;
   if (/^https?:\/\//.test(rawPath)) return rawPath;
+  if (localDatasetName) {
+    if (rawPath.startsWith('samples/')) return '/' + rawPath;
+    if (rawPath.startsWith('data/')) return '/samples/' + rawPath.slice(5);
+    return `/samples/${encodeURIComponent(localDatasetName)}/${encodeURIComponent(currentSubtask)}/${rawPath}`;
+  }
   if (rawPath.startsWith('samples/')) return `${SAMPLES_BASE}/${rawPath.slice(8)}`;
   if (rawPath.startsWith('data/')) return `${SAMPLES_BASE}/${rawPath.slice(5)}`;
   return `${SAMPLES_BASE}/${encodeURIComponent(datasetName)}/${encodeURIComponent(currentSubtask)}/${rawPath}`;
@@ -949,7 +965,7 @@ function detectFormat(rawItems) {
   /* 字符串虽像图片路径，但是上游/HF 元数据，站点内实际资源一般在 image 等字段 */
   const IMG_META_FIELDS = new Set([
     'imgname', 'image_name', 'image_url', 'original_figure_path', 'img_url', 'figure_path',
-    'filename', 'source_filename', 'path',
+    'filename', 'file_name', 'source_filename', 'path',
   ]);
   const SOLUTION_IMG_FIELDS = new Set(['solution_image','answer_image','ground_truth_image','expected_output_image']);
   let imageFields = allKeys.filter(k =>
@@ -1661,6 +1677,62 @@ function getLongTextFields(item, fmt) {
   });
 }
 
+/**
+ * Detect image-based MC options: items that have multiple image_N fields but no
+ * textual options/choices.  question may reference some images via <image_N>;
+ * the remaining image_N fields are the option images (A, B, C, D…).
+ */
+function detectImageOptions(item, fmt) {
+  const CHOICE_KEYS = ['choices', 'candidates', 'options'];
+  const itemHasTextChoices = fmt.choicesField
+    ? (Array.isArray(item[fmt.choicesField]) ? item[fmt.choicesField].length > 0
+       : typeof item[fmt.choicesField] === 'object' && Object.keys(item[fmt.choicesField]).length > 0)
+    : false;
+  if (itemHasTextChoices) return null;
+  if (!fmt.choicesField) {
+    if (CHOICE_KEYS.some(k => Array.isArray(item[k]) && item[k].length > 0)) return null;
+  }
+  const typeVal = (item.type || '').toLowerCase();
+  if (!typeVal.includes('choice')) return null;
+
+  const imgKeys = Object.keys(item)
+    .filter(k => /^image_\d+$/.test(k) && typeof item[k] === 'string')
+    .sort((a, b) => parseInt(a.split('_')[1]) - parseInt(b.split('_')[1]));
+  if (imgKeys.length < 2) return null;
+
+  const qText = (fmt.questionField && item[fmt.questionField]) || '';
+  const referencedInQ = new Set();
+  const refRe = /<image_(\d+)>/g;
+  let m;
+  while ((m = refRe.exec(typeof qText === 'string' ? qText : '')) !== null) {
+    referencedInQ.add('image_' + m[1]);
+  }
+
+  const questionImgs = imgKeys.filter(k => referencedInQ.has(k));
+  const optionImgs = imgKeys.filter(k => !referencedInQ.has(k));
+  if (optionImgs.length < 2) return null;
+
+  return { questionImgs, optionImgs };
+}
+
+function renderImageChoices(item, optionImgKeys, answerRaw) {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const answerHidden = answerRaw === undefined || answerRaw === null || answerRaw === 'hidden';
+  const answerNorm = answerHidden ? '' : String(answerRaw).trim().toUpperCase().replace(/[().\s]/g, '');
+  let html = '<div class="choices-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">';
+  optionImgKeys.forEach((k, i) => {
+    const letter = letters[i] || String(i + 1);
+    const isAns = !answerHidden && answerNorm === letter;
+    const src = resolveMedia(item[k]);
+    html += `<div class="choice-item ${isAns ? 'is-answer' : ''}" style="flex-direction:column;align-items:center;padding:10px;text-align:center">
+      <span class="choice-letter" style="margin-bottom:6px">${letter}</span>
+      ${src ? `<img class="case-image" src="${esc(src)}" alt="Option ${letter}" loading="lazy" onclick="event.stopPropagation();openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(src)}" style="max-width:100%;max-height:180px;border-radius:6px">` : ''}
+    </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
 function renderCard(item, fmt, idx) {
   const d = Math.min(idx * 0.05, 0.4);
   let html = `<div class="case-card" style="animation-delay:${d}s"><div class="card-header"><span class="card-num">#${idx + 1}</span>`;
@@ -1675,23 +1747,53 @@ function renderCard(item, fmt, idx) {
   if (itemId !== undefined) html += `<span class="card-id">${esc(String(itemId))}</span>`;
   html += '</div><div class="card-body"><div class="chat-conv">';
 
+  const imgOpts = detectImageOptions(item, fmt);
+
   const images = collectImages(item, fmt);
   const videos = collectVideos(item, fmt);
   const hasQ = fmt.questionField && item[fmt.questionField];
   const hasAns = (fmt.answerFields && fmt.answerFields.some(f => f in item)) || (fmt.answerField && item[fmt.answerField] === null);
 
   if (videos.length > 0) html += renderVideosHtml(videos);
-  if (images.length > 0) html += '<div class="chat-media">' + renderImagesHtml(images) + '</div>';
+
+  const hasBbox = Array.isArray(item.bbox) && item.bbox.length === 4;
+  const hasSeg = Array.isArray(item.segmentation) && item.segmentation.length >= 6;
+
+  if (imgOpts) {
+    const qImages = imgOpts.questionImgs.map(k => {
+      const r = resolveMedia(item[k]);
+      return r ? { path: r, label: k } : null;
+    }).filter(Boolean);
+    if (qImages.length > 0) html += '<div class="chat-media">' + renderImagesHtml(qImages) + '</div>';
+  } else if ((hasBbox || hasSeg) && images.length > 0) {
+    const mainImg = images[0];
+    const bboxJson = hasBbox ? esc(JSON.stringify(item.bbox)) : '';
+    const segJson = hasSeg ? esc(JSON.stringify(item.segmentation)) : '';
+    html += `<div class="chat-media"><div class="bbox-overlay-wrap">
+      <img class="case-image" src="${esc(mainImg.path)}" alt="${esc(mainImg.label)}" loading="lazy"
+        onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(mainImg.path)}"
+        onload="drawBboxOverlay(this)"
+        data-bbox="${bboxJson}" data-seg="${segJson}">
+      <canvas></canvas>
+    </div></div>`;
+  } else {
+    if (images.length > 0) html += '<div class="chat-media">' + renderImagesHtml(images) + '</div>';
+  }
 
   const embeddedMc = trySplitQuestionWithEmbeddedOptions(item, fmt);
 
   if (hasQ) {
     html += '<div class="chat-row"><div class="chat-ava chat-ava-q">Q</div>';
-    const qBody = embeddedMc ? embeddedMc.stem : getQuestionText(item, fmt);
+    let qBody = embeddedMc ? embeddedMc.stem : getQuestionText(item, fmt);
+    if (imgOpts) qBody = qBody.replace(/<image_\d+>/g, '').trim();
     html += '<div class="chat-bbl chat-bbl-q">' + renderMd(qBody) + '</div></div>';
   }
 
-  if (fmt.choicesField) html += renderChoicesHtml(item, fmt);
+  if (imgOpts) {
+    const answerRaw = item[fmt.answerField];
+    const answer = Array.isArray(answerRaw) ? answerRaw[0] : answerRaw;
+    html += renderImageChoices(item, imgOpts.optionImgs, answer);
+  } else if (fmt.choicesField) html += renderChoicesHtml(item, fmt);
   else if (embeddedMc) html += renderChoicesHtml(item, fmt, embeddedMc.options);
 
   if (hasAns) {
@@ -1989,18 +2091,36 @@ async function loadSubtask(subtask) {
 
   container.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading samples…</p></div>';
 
-  try {
-    const url = `${SAMPLES_BASE}/${encodeURIComponent(datasetName)}/${encodeURIComponent(subtask)}/data.json`;
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const raw = await resp.json();
-    const items = Array.isArray(raw) ? raw : [raw];
-    const fmt = detectFormat(items);
-    dataCache[subtask] = fmt;
-    renderCases(fmt);
-  } catch (e) {
-    container.innerHTML = `<div class="error-state"><h3>Failed to load</h3><p>${esc(e.message)}</p><button class="retry-btn" onclick="loadSubtask('${esc(subtask)}')">Retry</button></div>`;
+  // Try local paths first (exact name, then '/' replaced with '_'), then fall back to HuggingFace
+  const localName2 = datasetName.replace(/\//g, '_');
+  const localCandidates = [...new Set([datasetName, localName2])].map(n =>
+    `/samples/${encodeURIComponent(n)}/${encodeURIComponent(subtask)}/data.json`
+  );
+  const hfUrl = `${SAMPLES_BASE}/${encodeURIComponent(datasetName)}/${encodeURIComponent(subtask)}/data.json`;
+  const allUrls = [...localCandidates, hfUrl];
+
+  let lastErr = null;
+  for (const url of allUrls) {
+    try {
+      const resp = await fetch(url);
+      if (!resp.ok) { lastErr = new Error(`HTTP ${resp.status}`); continue; }
+      const raw = await resp.json();
+      if (url.startsWith('/samples/')) {
+        localDatasetName = decodeURIComponent(url.split('/')[2]);
+      } else {
+        localDatasetName = '';
+      }
+      const items = Array.isArray(raw) ? raw : [raw];
+      const fmt = detectFormat(items);
+      dataCache[subtask] = fmt;
+      renderCases(fmt);
+      return;
+    } catch (e) {
+      lastErr = e;
+    }
   }
+
+  container.innerHTML = `<div class="error-state"><h3>Failed to load</h3><p>${esc(lastErr ? lastErr.message : 'Unknown error')}</p><button class="retry-btn" onclick="loadSubtask('${esc(subtask)}')">Retry</button></div>`;
 }
 
 function switchTab(idx) {
@@ -2049,6 +2169,53 @@ function handleImgErr(img) {
     ph.innerHTML = '<div class="ie-icon">\u{1F5BC}\uFE0F</div><div style="font-size:.76rem;color:var(--text-muted)">Image failed to load</div><button class="img-retry-btn" onclick="retryImg(this)">Retry</button>';
     ph.dataset.src = img.dataset.orig || img.src.split('?')[0];
     img.parentNode.insertBefore(ph, img.nextSibling);
+  }
+}
+
+function drawBboxOverlay(img) {
+  var wrap = img.closest('.bbox-overlay-wrap');
+  if (!wrap) return;
+  var canvas = wrap.querySelector('canvas');
+  if (!canvas) return;
+  var natW = img.naturalWidth, natH = img.naturalHeight;
+  if (!natW || !natH) return;
+  canvas.width = natW;
+  canvas.height = natH;
+  var ctx = canvas.getContext('2d');
+
+  var segStr = img.dataset.seg;
+  if (segStr) {
+    try {
+      var seg = JSON.parse(segStr);
+      if (seg.length >= 6) {
+        ctx.beginPath();
+        ctx.moveTo(seg[0], seg[1]);
+        for (var i = 2; i < seg.length; i += 2) {
+          ctx.lineTo(seg[i], seg[i + 1]);
+        }
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(99, 102, 241, 0.7)';
+        ctx.lineWidth = Math.max(2, natW / 200);
+        ctx.stroke();
+      }
+    } catch (e) {}
+  }
+
+  var bboxStr = img.dataset.bbox;
+  if (bboxStr) {
+    try {
+      var bbox = JSON.parse(bboxStr);
+      if (bbox.length === 4) {
+        var lw = Math.max(2, natW / 150);
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = lw;
+        ctx.setLineDash([lw * 3, lw * 2]);
+        ctx.strokeRect(bbox[0], bbox[1], bbox[2], bbox[3]);
+        ctx.setLineDash([]);
+      }
+    } catch (e) {}
   }
 }
 

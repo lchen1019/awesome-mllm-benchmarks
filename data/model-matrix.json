@@ -102,6 +102,422 @@
   ],
   "benchmarks": [
     {
+      "name": "AI2D",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "internvl35",
+        "gpt4",
+        "seed15vl",
+        "step3vl",
+        "claude4",
+        "kimivl",
+        "minimaxvl",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "ARKitScenes",
+      "models": [
+        "qwen3vl"
+      ]
+    },
+    {
+      "name": "All-Angles",
+      "category": "Spatial Intelligence",
+      "in_project": true,
+      "models": [
+        "seed15vl",
+        "step3vl"
+      ]
+    },
+    {
+      "name": "AndroidWorld",
+      "category": "Agent (Mobile)",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "seed15vl",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "BLINK",
+      "category": "Spatial Intelligence",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "internvl35",
+        "seed15vl",
+        "step3vl",
+        "kimivl",
+        "glm4v",
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "CC-OCR",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "step3vl"
+      ]
+    },
+    {
+      "name": "CGBench",
+      "category": "Video / Long-form",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "CV-Bench",
+      "category": "Spatial Intelligence",
+      "in_project": true,
+      "models": [
+        "step3vl"
+      ]
+    },
+    {
+      "name": "CharXiv(DQ)",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "gpt4",
+        "seed15vl",
+        "claude4",
+        "qwen25vl",
+        "internvl35"
+      ]
+    },
+    {
+      "name": "CharXiv(RQ)",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "gpt4",
+        "seed15vl",
+        "step3vl",
+        "claude4",
+        "qwen25vl",
+        "internvl35"
+      ]
+    },
+    {
+      "name": "CharadesSTA",
+      "category": "Video / General",
+      "in_project": false,
+      "models": [
+        "qwen25vl",
+        "seed15vl"
+      ]
+    },
+    {
+      "name": "ChartMimic",
+      "category": "Coding",
+      "in_project": true,
+      "models": [
+        "qwen3vl"
+      ]
+    },
+    {
+      "name": "ChartQA",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": [
+        "qwen25vl",
+        "gpt4",
+        "seed15vl",
+        "claude4",
+        "minimaxvl",
+        "qwen3vl",
+        "internvl35",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "CountBench",
+      "category": "Grounding",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "seed15vl",
+        "step3vl",
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "CountQA",
+      "category": "Grounding",
+      "in_project": false,
+      "models": [
+        "step3vl"
+      ]
+    },
+    {
+      "name": "DA-2K",
+      "category": "Spatial Intelligence",
+      "in_project": true,
+      "models": [
+        "seed15vl"
+      ]
+    },
+    {
+      "name": "Design2Code",
+      "category": "Coding",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "step3vl",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "DocVQA",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "gpt4",
+        "seed15vl",
+        "claude4",
+        "gemini25",
+        "minimaxvl",
+        "internvl35",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "Dream-1K",
+      "category": "Video / General",
+      "in_project": false,
+      "models": [
+        "seed15vl"
+      ]
+    },
+    {
+      "name": "DynaMath",
+      "category": "Math",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "internvl35",
+        "step3vl"
+      ]
+    },
+    {
+      "name": "ERQA",
+      "category": "Spatial Intelligence",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "internvl35",
+        "step3vl"
+      ]
+    },
+    {
+      "name": "EgoSchema",
+      "category": "Video / General",
+      "in_project": false,
+      "models": [
+        "qwen25vl",
+        "seed15vl",
+        "kimivl"
+      ]
+    },
+    {
+      "name": "EmbSpatialBench",
+      "category": "Spatial Intelligence",
+      "in_project": true,
+      "models": [
+        "qwen3vl"
+      ]
+    },
+    {
+      "name": "FSC-147",
+      "category": "Grounding",
+      "in_project": true,
+      "models": [
+        "seed15vl"
+      ]
+    },
+    {
+      "name": "HLE",
+      "category": "STEM",
+      "in_project": false,
+      "models": [
+        "step3vl",
+        "claude4"
+      ]
+    },
+    {
+      "name": "HRBench4K/8K",
+      "category": "Agent (Tool)",
+      "in_project": true,
+      "models": [
+        "qwen3vl"
+      ]
+    },
+    {
+      "name": "HallusionBench",
+      "category": "Knowledge",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "internvl35",
+        "seed15vl",
+        "step3vl"
+      ]
+    },
+    {
+      "name": "HumanEval-V",
+      "category": "Coding",
+      "in_project": false,
+      "models": [
+        "step3vl"
+      ]
+    },
+    {
+      "name": "InfoVQA",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "seed15vl",
+        "kimivl",
+        "internvl35"
+      ]
+    },
+    {
+      "name": "LAB-Bench FigQA",
+      "category": "STEM",
+      "in_project": false,
+      "models": [
+        "claude4"
+      ]
+    },
+    {
+      "name": "LVBench",
+      "category": "Video / Long-form",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "seed15vl",
+        "glm4v",
+        "gemini25"
+      ]
+    },
+    {
+      "name": "LogicVista",
+      "category": "Reasoning & Logic",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "internvl35",
+        "step3vl"
+      ]
+    },
+    {
+      "name": "LongVideoBench",
+      "category": "Video / Long-form",
+      "in_project": true,
+      "models": [
+        "qwen25vl",
+        "seed15vl",
+        "kimivl",
+        "internvl35"
+      ]
+    },
+    {
+      "name": "M3Exam",
+      "category": "STEM",
+      "in_project": false,
+      "models": [
+        "gpt4"
+      ]
+    },
+    {
+      "name": "MLVU",
+      "category": "Video / Long-form",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "seed15vl",
+        "kimivl",
+        "internvl35"
+      ]
+    },
+    {
+      "name": "MMBench-V1.1-CN",
+      "category": "Knowledge",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "seed15vl",
+        "step3vl",
+        "glm4v",
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "MMBench-V1.1-EN",
+      "category": "Knowledge",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "internvl35",
+        "seed15vl",
+        "step3vl",
+        "kimivl",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "MMBench-Video",
+      "category": "Video / General",
+      "in_project": false,
+      "models": [
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "MME",
+      "category": "Knowledge",
+      "in_project": false,
+      "models": []
+    },
+    {
+      "name": "MME-RealWorld",
+      "category": "Knowledge",
+      "in_project": false,
+      "models": [
+        "internvl35"
+      ]
+    },
+    {
+      "name": "MMLongBench-Doc",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "kimivl",
+        "glm4v",
+        "minimaxvl"
+      ]
+    },
+    {
       "name": "MMMU",
       "category": "STEM",
       "in_project": true,
@@ -134,6 +550,127 @@
       ]
     },
     {
+      "name": "MMStar",
+      "category": "Knowledge",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "internvl35",
+        "seed15vl",
+        "step3vl",
+        "kimivl",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "MMVP",
+      "category": "Perception",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "seed15vl",
+        "step3vl",
+        "internvl35"
+      ]
+    },
+    {
+      "name": "MMVU",
+      "category": "Video / Knowledge",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "seed15vl",
+        "gemini25",
+        "kimivl",
+        "glm4v",
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "MMVet",
+      "category": "Knowledge",
+      "in_project": true,
+      "models": [
+        "qwen25vl",
+        "internvl35",
+        "kimivl",
+        "qwen3vl",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "MMVet-v2",
+      "category": "Knowledge",
+      "in_project": false,
+      "models": []
+    },
+    {
+      "name": "MTVQA",
+      "category": "Knowledge",
+      "in_project": true,
+      "models": [
+        "internvl35",
+        "qwen3vl",
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "MUIRBench",
+      "category": "Knowledge",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "glm4v",
+        "qwen25vl",
+        "internvl35"
+      ]
+    },
+    {
+      "name": "MVBench",
+      "category": "Video / Multi-task",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "internvl35",
+        "seed15vl",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "Math-VR",
+      "category": "Math",
+      "in_project": true,
+      "models": [
+        "qwen3vl"
+      ]
+    },
+    {
+      "name": "MathVerse",
+      "category": "Math",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "internvl35",
+        "step3vl",
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "MathVision",
+      "category": "Math",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "internvl35",
+        "seed15vl",
+        "step3vl",
+        "kimivl"
+      ]
+    },
+    {
       "name": "MathVista",
       "category": "Math",
       "in_project": true,
@@ -151,156 +688,12 @@
       ]
     },
     {
-      "name": "MathVision",
-      "category": "Math",
+      "name": "MotionBench",
+      "category": "Video / Motion",
       "in_project": true,
       "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "internvl35",
         "seed15vl",
-        "step3vl",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "MathVerse",
-      "category": "Math",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "internvl35",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "DynaMath",
-      "category": "Math",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "internvl35",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "We-Math",
-      "category": "Math",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "internvl35",
-        "step3vl",
         "glm4v"
-      ]
-    },
-    {
-      "name": "Math-VR",
-      "category": "Math",
-      "in_project": true,
-      "models": [
-        "qwen3vl"
-      ]
-    },
-    {
-      "name": "LogicVista",
-      "category": "Reasoning & Logic",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "internvl35",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "VisuLogic",
-      "category": "Reasoning & Logic",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "VisualPuzzles",
-      "category": "Reasoning & Logic",
-      "in_project": true,
-      "models": [
-        "qwen3vl"
-      ]
-    },
-    {
-      "name": "ZEROBench",
-      "category": "Reasoning & Logic",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "VLMsAreBlind",
-      "category": "Perception",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "AI2D",
-      "category": "OCR/Doc/Chart",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "internvl35",
-        "gpt4",
-        "seed15vl",
-        "step3vl",
-        "claude4",
-        "kimivl",
-        "minimaxvl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "ChartQA",
-      "category": "OCR/Doc/Chart",
-      "in_project": true,
-      "models": [
-        "qwen25vl",
-        "gpt4",
-        "seed15vl",
-        "claude4",
-        "minimaxvl"
-      ]
-    },
-    {
-      "name": "DocVQA",
-      "category": "OCR/Doc/Chart",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "gpt4",
-        "seed15vl",
-        "claude4",
-        "gemini25",
-        "minimaxvl"
-      ]
-    },
-    {
-      "name": "InfoVQA",
-      "category": "OCR/Doc/Chart",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "seed15vl",
-        "kimivl"
       ]
     },
     {
@@ -328,36 +721,43 @@
       ]
     },
     {
-      "name": "CC-OCR",
-      "category": "OCR/Doc/Chart",
+      "name": "OSWorld-Verified",
+      "category": "Agent (Computer)",
       "in_project": true,
       "models": [
         "qwen3vl",
         "qwen25vl",
-        "step3vl"
+        "seed15vl",
+        "claude4",
+        "kimivl",
+        "glm4v",
+        "internvl35"
       ]
     },
     {
-      "name": "CharXiv(RQ)",
-      "category": "OCR/Doc/Chart",
+      "name": "OVBench",
+      "category": "Video / Streaming",
       "in_project": true,
       "models": [
-        "qwen3vl",
-        "gpt4",
-        "seed15vl",
-        "step3vl",
-        "claude4"
+        "seed15vl"
       ]
     },
     {
-      "name": "CharXiv(DQ)",
-      "category": "OCR/Doc/Chart",
+      "name": "OVOBench",
+      "category": "Video / Streaming",
       "in_project": true,
       "models": [
-        "qwen3vl",
-        "gpt4",
-        "seed15vl",
-        "claude4"
+        "seed15vl"
+      ]
+    },
+    {
+      "name": "OlympiadBench",
+      "category": "Math",
+      "in_project": true,
+      "models": [
+        "minimaxvl",
+        "internvl35",
+        "seed15vl"
       ]
     },
     {
@@ -366,42 +766,56 @@
       "in_project": true,
       "models": [
         "qwen3vl",
+        "step3vl",
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "OmniOCR",
+      "category": "OCR/Doc/Chart",
+      "in_project": false,
+      "models": [
         "step3vl"
       ]
     },
     {
-      "name": "MMLongBench-Doc",
-      "category": "OCR/Doc/Chart",
-      "in_project": true,
+      "name": "OmniSpatial",
+      "category": "Spatial Intelligence",
+      "in_project": false,
       "models": [
-        "qwen3vl",
-        "kimivl",
-        "glm4v"
+        "internvl35",
+        "step3vl"
       ]
     },
     {
-      "name": "MMStar",
-      "category": "Knowledge",
+      "name": "Online-Mind2web",
+      "category": "Agent (Browser)",
       "in_project": true,
       "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "internvl35",
-        "seed15vl",
-        "step3vl",
-        "kimivl",
-        "glm4v"
+        "seed15vl"
       ]
     },
     {
-      "name": "HallusionBench",
-      "category": "Knowledge",
+      "name": "PerceptionTest",
+      "category": "Video / General",
+      "in_project": false,
+      "models": [
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "PhyX(openeded)",
+      "category": "STEM",
       "in_project": true,
       "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "internvl35",
-        "seed15vl",
+        "step3vl"
+      ]
+    },
+    {
+      "name": "PixMo-Count",
+      "category": "Grounding",
+      "in_project": false,
+      "models": [
         "step3vl"
       ]
     },
@@ -413,57 +827,9 @@
         "qwen3vl",
         "seed15vl",
         "step3vl",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "SimpleVQA",
-      "category": "Knowledge",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "MMVP",
-      "category": "Perception",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "MUIRBench",
-      "category": "Knowledge",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "MTVQA",
-      "category": "Knowledge",
-      "in_project": true,
-      "models": [
-        "internvl35"
-      ]
-    },
-    {
-      "name": "BLINK",
-      "category": "Spatial Intelligence",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "internvl35",
-        "seed15vl",
-        "step3vl",
         "kimivl",
-        "glm4v"
+        "qwen25vl",
+        "internvl35"
       ]
     },
     {
@@ -473,70 +839,9 @@
       "models": [
         "qwen3vl",
         "seed15vl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "VSI-Bench",
-      "category": "Spatial Intelligence",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "internvl35",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "ERQA",
-      "category": "Spatial Intelligence",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "internvl35",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "DA-2K",
-      "category": "Spatial Intelligence",
-      "in_project": true,
-      "models": [
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "All-Angles",
-      "category": "Spatial Intelligence",
-      "in_project": true,
-      "models": [
-        "seed15vl",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "V*",
-      "category": "Spatial Intelligence",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl",
-        "step3vl"
-      ]
-    },
-    {
-      "name": "CV-Bench",
-      "category": "Spatial Intelligence",
-      "in_project": true,
-      "models": [
-        "step3vl"
-      ]
-    },
-    {
-      "name": "EmbSpatialBench",
-      "category": "Spatial Intelligence",
-      "in_project": true,
-      "models": [
-        "qwen3vl"
+        "glm4v",
+        "qwen25vl",
+        "internvl35"
       ]
     },
     {
@@ -556,8 +861,39 @@
       ]
     },
     {
-      "name": "CountBench",
-      "category": "Grounding",
+      "name": "SGP-Bench",
+      "category": "Spatial Intelligence",
+      "in_project": false,
+      "models": [
+        "internvl35"
+      ]
+    },
+    {
+      "name": "ScreenSpot Pro",
+      "category": "Agent",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "seed15vl",
+        "step3vl",
+        "kimivl",
+        "internvl35"
+      ]
+    },
+    {
+      "name": "ScreenSpot-V2",
+      "category": "Agent",
+      "in_project": false,
+      "models": [
+        "seed15vl",
+        "step3vl",
+        "kimivl"
+      ]
+    },
+    {
+      "name": "SimpleVQA",
+      "category": "Knowledge",
       "in_project": true,
       "models": [
         "qwen3vl",
@@ -566,150 +902,19 @@
       ]
     },
     {
-      "name": "FSC-147",
-      "category": "Grounding",
+      "name": "SpaCE-10",
+      "category": "Spatial Intelligence",
+      "in_project": false,
+      "models": [
+        "internvl35"
+      ]
+    },
+    {
+      "name": "StreamingBench",
+      "category": "Video / Streaming",
       "in_project": true,
       "models": [
         "seed15vl"
-      ]
-    },
-    {
-      "name": "PhyX(openeded)",
-      "category": "STEM",
-      "in_project": true,
-      "models": [
-        "step3vl"
-      ]
-    },
-    {
-      "name": "MMBench-V1.1-EN",
-      "category": "Knowledge",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "internvl35",
-        "seed15vl",
-        "step3vl",
-        "kimivl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "MMBench-V1.1-CN",
-      "category": "Knowledge",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl",
-        "step3vl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "VideoMME",
-      "category": "Video / Long-form",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "internvl35",
-        "gpt4",
-        "seed15vl",
-        "gemini25",
-        "kimivl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "MVBench",
-      "category": "Video / Multi-task",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "internvl35",
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "MLVU",
-      "category": "Video / Long-form",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "seed15vl",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "LVBench",
-      "category": "Video / Long-form",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "seed15vl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "LongVideoBench",
-      "category": "Video / Long-form",
-      "in_project": true,
-      "models": [
-        "qwen25vl",
-        "seed15vl",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "TempCompass",
-      "category": "Video / Motion",
-      "in_project": true,
-      "models": [
-        "qwen25vl",
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "CGBench",
-      "category": "Video / Long-form",
-      "in_project": true,
-      "models": []
-    },
-    {
-      "name": "VideoMMMU",
-      "category": "Video / Knowledge",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl",
-        "gemini25",
-        "kimivl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "MMVU",
-      "category": "Video / Knowledge",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl",
-        "gemini25",
-        "kimivl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "MotionBench",
-      "category": "Video / Motion",
-      "in_project": true,
-      "models": [
-        "seed15vl",
-        "glm4v"
       ]
     },
     {
@@ -730,213 +935,9 @@
       ]
     },
     {
-      "name": "OVBench",
-      "category": "Video / Streaming",
+      "name": "TempCompass",
+      "category": "Video / Motion",
       "in_project": true,
-      "models": [
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "OVOBench",
-      "category": "Video / Streaming",
-      "in_project": true,
-      "models": [
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "StreamingBench",
-      "category": "Video / Streaming",
-      "in_project": true,
-      "models": [
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "ScreenSpot Pro",
-      "category": "Agent",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "seed15vl",
-        "step3vl",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "OSWorld-Verified",
-      "category": "Agent (Computer)",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "seed15vl",
-        "claude4",
-        "kimivl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "AndroidWorld",
-      "category": "Agent (Mobile)",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "qwen25vl",
-        "seed15vl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "WindowsAA",
-      "category": "Agent (Computer)",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "seed15vl",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "Online-Mind2web",
-      "category": "Agent (Browser)",
-      "in_project": true,
-      "models": [
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "Design2Code",
-      "category": "Coding",
-      "in_project": true,
-      "models": [
-        "qwen3vl",
-        "step3vl",
-        "glm4v"
-      ]
-    },
-    {
-      "name": "ChartMimic",
-      "category": "Coding",
-      "in_project": true,
-      "models": [
-        "qwen3vl"
-      ]
-    },
-    {
-      "name": "UniSVG",
-      "category": "Coding",
-      "in_project": true,
-      "models": [
-        "qwen3vl"
-      ]
-    },
-    {
-      "name": "HRBench4K/8K",
-      "category": "Agent (Tool)",
-      "in_project": true,
-      "models": [
-        "qwen3vl"
-      ]
-    },
-    {
-      "name": "MMVet",
-      "category": "Knowledge",
-      "in_project": true,
-      "models": [
-        "qwen25vl",
-        "internvl35",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "MMVet-v2",
-      "category": "Knowledge",
-      "in_project": false,
-      "models": []
-    },
-    {
-      "name": "TextVQA",
-      "category": "OCR/Doc/Chart",
-      "in_project": true,
-      "models": [
-        "qwen25vl",
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "MME",
-      "category": "Knowledge",
-      "in_project": false,
-      "models": []
-    },
-    {
-      "name": "MME-RealWorld",
-      "category": "Knowledge",
-      "in_project": false,
-      "models": [
-        "internvl35"
-      ]
-    },
-    {
-      "name": "EgoSchema",
-      "category": "Video / General",
-      "in_project": false,
-      "models": [
-        "qwen25vl",
-        "seed15vl",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "MMBench-Video",
-      "category": "Video / General",
-      "in_project": false,
-      "models": [
-        "qwen25vl"
-      ]
-    },
-    {
-      "name": "PerceptionTest",
-      "category": "Video / General",
-      "in_project": false,
-      "models": [
-        "qwen25vl"
-      ]
-    },
-    {
-      "name": "ScreenSpot-V2",
-      "category": "Agent",
-      "in_project": false,
-      "models": [
-        "seed15vl",
-        "step3vl",
-        "kimivl"
-      ]
-    },
-    {
-      "name": "HLE",
-      "category": "STEM",
-      "in_project": false,
-      "models": [
-        "step3vl",
-        "claude4"
-      ]
-    },
-    {
-      "name": "OlympiadBench",
-      "category": "Math",
-      "in_project": true,
-      "models": [
-        "minimaxvl"
-      ]
-    },
-    {
-      "name": "CharadesSTA",
-      "category": "Video / General",
-      "in_project": false,
       "models": [
         "qwen25vl",
         "seed15vl"
@@ -951,12 +952,110 @@
       ]
     },
     {
-      "name": "OmniSpatial",
-      "category": "Spatial Intelligence",
-      "in_project": false,
+      "name": "TextVQA",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
       "models": [
+        "qwen25vl",
+        "seed15vl",
+        "qwen3vl",
         "internvl35",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "UniSVG",
+      "category": "Coding",
+      "in_project": true,
+      "models": [
+        "qwen3vl"
+      ]
+    },
+    {
+      "name": "V*",
+      "category": "Spatial Intelligence",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "seed15vl",
+        "step3vl",
+        "kimivl"
+      ]
+    },
+    {
+      "name": "VLMsAreBlind",
+      "category": "Perception",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "seed15vl"
+      ]
+    },
+    {
+      "name": "VSI-Bench",
+      "category": "Spatial Intelligence",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "internvl35",
+        "kimivl"
+      ]
+    },
+    {
+      "name": "VideoMME",
+      "category": "Video / Long-form",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "qwen25vl",
+        "internvl35",
+        "gpt4",
+        "seed15vl",
+        "gemini25",
+        "kimivl",
+        "glm4v"
+      ]
+    },
+    {
+      "name": "VideoMMMU",
+      "category": "Video / Knowledge",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "seed15vl",
+        "gemini25",
+        "kimivl",
+        "glm4v",
+        "qwen25vl"
+      ]
+    },
+    {
+      "name": "VisuLogic",
+      "category": "Reasoning & Logic",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "seed15vl",
         "step3vl"
+      ]
+    },
+    {
+      "name": "VisualPuzzles",
+      "category": "Reasoning & Logic",
+      "in_project": true,
+      "models": [
+        "qwen3vl"
+      ]
+    },
+    {
+      "name": "We-Math",
+      "category": "Math",
+      "in_project": true,
+      "models": [
+        "qwen3vl",
+        "internvl35",
+        "step3vl",
+        "glm4v"
       ]
     },
     {
@@ -968,75 +1067,25 @@
       ]
     },
     {
-      "name": "LAB-Bench FigQA",
-      "category": "STEM",
-      "in_project": false,
+      "name": "WindowsAA",
+      "category": "Agent (Computer)",
+      "in_project": true,
       "models": [
-        "claude4"
-      ]
-    },
-    {
-      "name": "SGP-Bench",
-      "category": "Spatial Intelligence",
-      "in_project": false,
-      "models": [
+        "qwen3vl",
+        "seed15vl",
+        "kimivl",
         "internvl35"
       ]
     },
     {
-      "name": "SpaCE-10",
-      "category": "Spatial Intelligence",
-      "in_project": false,
+      "name": "ZEROBench",
+      "category": "Reasoning & Logic",
+      "in_project": true,
       "models": [
-        "internvl35"
-      ]
-    },
-    {
-      "name": "Dream-1K",
-      "category": "Video / General",
-      "in_project": false,
-      "models": [
-        "seed15vl"
-      ]
-    },
-    {
-      "name": "HumanEval-V",
-      "category": "Coding",
-      "in_project": false,
-      "models": [
-        "step3vl"
-      ]
-    },
-    {
-      "name": "CountQA",
-      "category": "Grounding",
-      "in_project": false,
-      "models": [
-        "step3vl"
-      ]
-    },
-    {
-      "name": "PixMo-Count",
-      "category": "Grounding",
-      "in_project": false,
-      "models": [
-        "step3vl"
-      ]
-    },
-    {
-      "name": "OmniOCR",
-      "category": "OCR/Doc/Chart",
-      "in_project": false,
-      "models": [
-        "step3vl"
-      ]
-    },
-    {
-      "name": "M3Exam",
-      "category": "STEM",
-      "in_project": false,
-      "models": [
-        "gpt4"
+        "qwen3vl",
+        "seed15vl",
+        "step3vl",
+        "gemini25"
       ]
     }
   ]

@@ -225,7 +225,7 @@ col.col-org { width: 115px; }
 col.col-date { width: 72px; }
 col.col-stars { width: 64px; }
 col.col-dl { width: 120px; }
-col.col-likes { width: 56px; }
+col.col-score { width: 72px; }
 col.col-models { width: 130px; }
 col.col-links { width: 76px; }
 col.col-samples { width: 95px; }
@@ -561,6 +561,116 @@ tbody td:last-child, tbody td:nth-last-child(2) { overflow: visible; text-overfl
 .mtag-kimi { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
 .mtag-minimax { background: #fff7ed; color: #9a3412; border: 1px solid #fdba74; }
 .mtag-glm { background: #cffafe; color: #0e7490; border: 1px solid #22d3ee; }
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.06));
+  border: 1px solid rgba(99,102,241,.2);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all .2s;
+  font-variant-numeric: tabular-nums;
+}
+.score-badge:hover {
+  background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(168,85,247,.12));
+  border-color: rgba(99,102,241,.4);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(99,102,241,.15);
+}
+.score-badge svg { width: 12px; height: 12px; flex-shrink: 0; opacity: .6; }
+
+.chart-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15,23,42,.18);
+  backdrop-filter: blur(12px);
+  justify-content: center;
+  align-items: start;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
+.chart-overlay.open { display: flex; }
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 960px;
+  padding: 0;
+  box-shadow: 0 25px 50px rgba(0,0,0,.12);
+  position: relative;
+  animation: slideUp .25s ease;
+  overflow: hidden;
+}
+.chart-header {
+  padding: 24px 28px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.chart-header h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+.chart-header .chart-sub { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+.chart-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: none; border: 1px solid var(--border); border-radius: 8px;
+  width: 36px; height: 36px; color: var(--text-dim); font-size: 1.2rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .2s; z-index: 2;
+}
+.chart-close:hover { color: var(--text); border-color: var(--border-hover); }
+.chart-container {
+  width: 100%; height: 480px; position: relative;
+  background: var(--surface);
+  padding: 16px 14px 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.chart-bottom { padding: 0 28px 28px; }
+.chart-legend {
+  display: flex; flex-wrap: wrap; gap: 6px 14px;
+  padding: 12px 28px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.chart-legend-item {
+  display: flex; align-items: center; gap: 5px; font-size: 0.74rem; color: var(--text-dim);
+}
+.chart-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.score-table { width: 100%; margin-top: 16px; border-collapse: collapse; }
+.score-table th {
+  text-align: left; padding: 8px 10px; font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);
+  border-bottom: 2px solid var(--border); background: var(--surface2);
+  position: sticky; top: 0; z-index: 1;
+}
+.score-table td {
+  padding: 7px 10px; font-size: 0.82rem; border-bottom: 1px solid var(--border);
+}
+.score-table tbody tr { transition: background .12s; cursor: pointer; }
+.score-table tbody tr:hover { background: rgba(99,102,241,.07) !important; }
+.score-table tbody tr.row-highlight { background: rgba(99,102,241,.12) !important; }
+.score-bar-wrap {
+  position: relative; height: 8px; background: var(--surface2);
+  border-radius: 4px; overflow: visible; min-width: 100px;
+}
+.score-bar {
+  height: 100%; border-radius: 4px; transition: width .5s ease;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+.score-bar-100 {
+  position: absolute; right: 0; top: -3px; bottom: -3px;
+  width: 2px; background: var(--text-muted); opacity: .35;
+}
+.score-bar-100-label {
+  position: absolute; right: -2px; top: -16px;
+  font-size: .6rem; color: var(--text-muted); white-space: nowrap;
+}
 .model-filter-bar { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; flex: 1; }
 .mf-btn {
   display: inline-flex; align-items: center; gap: 4px;
@@ -639,7 +749,7 @@ tbody td:last-child, tbody td:nth-last-child(2) { overflow: visible; text-overfl
   <table>
     <colgroup>
       <col class="col-num"><col class="col-name"><col class="col-cat"><col class="col-org">
-      <col class="col-date"><col class="col-stars"><col class="col-dl"><col class="col-likes">
+      <col class="col-date"><col class="col-stars"><col class="col-dl"><col class="col-score">
       <col class="col-models"><col class="col-links"><col class="col-samples">
     </colgroup>
     <thead>
@@ -651,7 +761,7 @@ tbody td:last-child, tbody td:nth-last-child(2) { overflow: visible; text-overfl
         <th data-sort="paper_published">Date <span class="sort-arrow">↕</span></th>
         <th data-sort="stars">Stars <span class="sort-arrow">↕</span></th>
         <th data-sort="downloads">Downloads <span class="sort-arrow">↕</span></th>
-        <th data-sort="likes">Likes <span class="sort-arrow">↕</span></th>
+        <th data-sort="top_score">Top Score <span class="sort-arrow">↕</span></th>
         <th data-sort="model_count">Evaluated By <span class="sort-arrow">↕</span></th>
         <th class="no-sort">Links</th>
         <th class="no-sort">Samples</th>
@@ -664,6 +774,12 @@ tbody td:last-child, tbody td:nth-last-child(2) { overflow: visible; text-overfl
 <div class="detail-overlay" id="detailOverlay">
   <div class="detail-card" id="detailCard"></div>
 </div>
+
+<div class="chart-overlay" id="chartOverlay">
+  <div class="chart-card" id="chartCard"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
 <script>
 const CAT_COLORS = {
@@ -734,6 +850,8 @@ const svgEye = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strok
 let allData = [];
 let currentSort = { key: 'downloads', dir: 'desc' };
 let modelCoverage = {};
+let benchScores = {};
+let chartInstance = null;
 
 const MODEL_GROUPS = [
   { key: 'qwen', label: 'Qwen', ids: ['qwen3vl', 'qwen25vl'], css: 'mtag-qwen' },
@@ -831,15 +949,22 @@ function buildMajorCategoryFilters(catCounts) {
 
 async function init() {
   const bust = '?v=' + Date.now();
-  const [resp, matrixResp] = await Promise.all([
+  const [resp, matrixResp, scoresResp] = await Promise.all([
     fetch('data/benchmarks.json' + bust),
-    fetch('data/model-matrix.json' + bust).catch(() => null)
+    fetch('data/model-matrix.json' + bust).catch(() => null),
+    fetch('data/benchmark-scores.json' + bust).catch(() => null)
   ]);
   allData = await resp.json();
   if (matrixResp && matrixResp.ok) {
     const matrix = await matrixResp.json();
     for (const b of matrix.benchmarks) {
       modelCoverage[b.name] = b.models;
+    }
+  }
+  if (scoresResp && scoresResp.ok) {
+    const sd = await scoresResp.json();
+    for (const b of (sd.benchmarks || [])) {
+      benchScores[b.name] = b;
     }
   }
 
@@ -886,10 +1011,16 @@ async function init() {
   document.getElementById('detailOverlay').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) closeDetail();
   });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDetail(); });
+  document.getElementById('chartOverlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeChart();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeDetail(); closeChart(); }
+  });
 
   updateSortUI();
   render();
+  restorePageState();
 }
 
 let activeCatList = null;
@@ -948,7 +1079,7 @@ function getFiltered() {
     paper_published: d => d.paper_published || '',
     stars: d => d.github_stars || 0,
     downloads: d => hfDownloadsUnified(d) || 0,
-    likes: d => d.hf_likes || 0,
+    top_score: d => benchScores[d.name] ? benchScores[d.name].top_score : 0,
     model_count: d => getMatchedGroups(d.name).length,
   };
   const getter = sortMap[currentSort.key] || sortMap.name;
@@ -979,7 +1110,7 @@ function render() {
       <td>${d.paper_published ? `<span style="font-size:0.78rem;color:var(--text-dim);white-space:nowrap">${d.paper_published.slice(0,7)}</span>` : '<span class="no-data">-</span>'}</td>
       <td>${d.github_stars != null ? `<div class="metric stars">${svgStar} ${fmtNum(d.github_stars)}</div>` : '<span class="no-data">-</span>'}</td>
       <td>${hfDl != null ? `<div class="metric downloads">${svgDownload} ${fmtNum(hfDl)}</div>` : '<span class="no-data">-</span>'}</td>
-      <td>${d.hf_likes != null ? `<div class="metric likes">${svgHeart} ${fmtNum(d.hf_likes)}</div>` : '<span class="no-data">-</span>'}</td>
+      <td>${benchScores[d.name] ? `<span class="score-badge" onclick="event.stopPropagation(); openChart('${escHtml(d.name)}')">${benchScores[d.name].top_score.toFixed(1)} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>` : '<span class="no-data">-</span>'}</td>
       <td class="model-tags-cell">${renderModelTags(d.name)}</td>
       <td>
         <div class="link-icons">
@@ -998,8 +1129,43 @@ function render() {
   }).join('');
 }
 
+function savePageState() {
+  const state = {
+    scrollY: window.scrollY,
+    search: document.getElementById('searchInput').value,
+    sort: currentSort,
+    catList: activeCatList,
+    modelFilters: [...activeModelFilters],
+  };
+  sessionStorage.setItem('indexPageState', JSON.stringify(state));
+}
+
+function restorePageState() {
+  const raw = sessionStorage.getItem('indexPageState');
+  if (!raw) return;
+  sessionStorage.removeItem('indexPageState');
+  try {
+    const state = JSON.parse(raw);
+    if (state.search) document.getElementById('searchInput').value = state.search;
+    if (state.sort) { currentSort = state.sort; updateSortUI(); }
+    if (state.catList) {
+      activeCatList = state.catList;
+      updateFilters();
+    }
+    if (state.modelFilters && state.modelFilters.length > 0) {
+      activeModelFilters = new Set(state.modelFilters);
+      updateModelFilterUI();
+    }
+    render();
+    if (state.scrollY) {
+      requestAnimationFrame(() => window.scrollTo(0, state.scrollY));
+    }
+  } catch(e) {}
+}
+
 function viewCases(name) {
-  window.open('cases.html?name=' + encodeURIComponent(name), '_blank');
+  savePageState();
+  window.location.href = 'cases.html?name=' + encodeURIComponent(name);
 }
 
 function openDetail(idx) {
@@ -1017,7 +1183,7 @@ function openDetail(idx) {
       ${d.github_stars != null ? `<div class="detail-meta-item"><div class="label">GitHub Stars</div><div class="value" style="color:var(--orange)">${d.github_stars.toLocaleString()}</div></div>` : ''}
       ${d.github_forks != null ? `<div class="detail-meta-item"><div class="label">Forks</div><div class="value">${d.github_forks.toLocaleString()}</div></div>` : ''}
       ${hfDl != null ? `<div class="detail-meta-item"><div class="label">HF Downloads</div><div class="value" style="color:var(--blue)">${hfDl.toLocaleString()}</div></div>` : ''}
-      ${d.hf_likes != null ? `<div class="detail-meta-item"><div class="label">HF Likes</div><div class="value" style="color:var(--pink)">${d.hf_likes.toLocaleString()}</div></div>` : ''}
+      ${benchScores[d.name] ? `<div class="detail-meta-item"><div class="label">Top Score</div><div class="value" style="color:var(--accent);cursor:pointer" onclick="closeDetail();openChart('${escHtml(d.name)}')">${benchScores[d.name].top_score.toFixed(1)}</div></div>` : ''}
       ${d.hf_license || d.github_license ? `<div class="detail-meta-item"><div class="label">License</div><div class="value">${d.hf_license || d.github_license}</div></div>` : ''}
       ${d.paper_published ? `<div class="detail-meta-item"><div class="label">Published</div><div class="value">${d.paper_published}</div></div>` : ''}
       ${d.github_language ? `<div class="detail-meta-item"><div class="label">Language</div><div class="value">${d.github_language}</div></div>` : ''}
@@ -1060,6 +1226,362 @@ function openDetail(idx) {
 function closeDetail() {
   document.getElementById('detailOverlay').classList.remove('open');
   document.body.style.overflow = '';
+}
+
+const FAMILY_COLORS = {
+  'Qwen':     '#2563eb',
+  'InternVL': '#16a34a',
+  'GPT':      '#111111',
+  'Gemini':   '#ea580c',
+  'Claude':   '#dc2626',
+  'Seed':     '#ca8a04',
+  'Step':     '#7c3aed',
+  'Kimi':     '#0d9488',
+  'MiniMax':  '#e11d48',
+  'GLM':      '#0891b2',
+  'DeepSeek': '#6366f1',
+  'LLaVA':    '#d97706',
+  'Cambrian': '#a855f7',
+  'Other':    '#9ca3af',
+};
+
+function isMoE(p) {
+  if (!p) return false;
+  const s = String(p).toLowerCase();
+  return /a\d/.test(s) || /moe/i.test(s) || /\d+b[-_]a\d+b/i.test(p);
+}
+
+function parseParamSize(p) {
+  if (!p || p === 'closed' || p === 'Closed' || p === 'unknown') return null;
+  const raw = String(p);
+  const moe = raw.match(/(\d+\.?\d*)\s*[Bb][-_]?[Aa](\d+\.?\d*)\s*[Bb]/);
+  if (moe) return parseFloat(moe[2]);
+  if (/moe/i.test(raw)) {
+    const m = raw.match(/([\d.]+)\s*[Bb]/);
+    return m ? parseFloat(m[1]) : null;
+  }
+  const s = raw.toLowerCase().replace(/[-_\s]/g, '');
+  const m = s.match(/([\d.]+)\s*(b|m|k)?/);
+  if (!m) return null;
+  let v = parseFloat(m[1]);
+  const unit = m[2] || 'b';
+  if (unit === 'm') v /= 1000;
+  if (unit === 'k') v /= 1000000;
+  return v;
+}
+
+function parseTotalParams(p) {
+  if (!p) return null;
+  const raw = String(p);
+  const moe = raw.match(/(\d+\.?\d*)\s*[Bb][-_]?[Aa]/);
+  if (moe) return parseFloat(moe[1]);
+  return parseParamSize(p);
+}
+
+function openChart(benchName) {
+  const info = benchScores[benchName];
+  if (!info || !info.scores || info.scores.length === 0) return;
+
+  const card = document.getElementById('chartCard');
+  const scores = info.scores;
+
+  const families = [...new Set(scores.map(s => s.family))].sort((a, b) => {
+    const order = ['Qwen','InternVL','GPT','Gemini','Claude','DeepSeek','Seed','Step','Kimi','MiniMax','GLM','LLaVA','Cambrian','Other'];
+    return (order.indexOf(a) === -1 ? 99 : order.indexOf(a)) - (order.indexOf(b) === -1 ? 99 : order.indexOf(b));
+  });
+  let legendHtml = families.map(f => {
+    const c = FAMILY_COLORS[f]||FAMILY_COLORS.Other;
+    return `<span class="chart-legend-item"><span class="chart-legend-dot" style="background:${c};box-shadow:0 0 0 2px ${c}33"></span><strong style="color:${c}">${f}</strong></span>`;
+  }).join('');
+
+  const hasMoEData = scores.some(s => isMoE(s.params));
+  const hasDenseData = scores.some(s => parseParamSize(s.params) !== null && !isMoE(s.params));
+  if (hasMoEData && hasDenseData) {
+    legendHtml += '<span style="margin-left:12px;padding-left:12px;border-left:1px solid var(--border);display:inline-flex;align-items:center;gap:12px;font-size:0.74rem;color:var(--text-muted)">';
+    legendHtml += '<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:20px;height:0;border-top:2px solid var(--text-dim)"></span>● Dense</span>';
+    legendHtml += '<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:20px;height:0;border-top:2px dashed var(--text-dim)"></span>◆ MoE (activated)</span>';
+    legendHtml += '</span>';
+  }
+
+  const subBenchesLegend = [...new Set(scores.map(s => extractSubBench(s.model)).filter(Boolean))];
+  if (subBenchesLegend.length >= 2) {
+    legendHtml += '<span style="margin-left:12px;padding-left:12px;border-left:1px solid var(--border);display:inline-flex;align-items:center;gap:10px;font-size:0.74rem;color:var(--text-muted)">';
+    legendHtml += `<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:18px;height:0;border-top:2px solid var(--text-dim)"></span>${escHtml(subBenchesLegend[0])}</span>`;
+    legendHtml += `<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:18px;height:0;border-top:2px dashed var(--text-dim)"></span>${escHtml(subBenchesLegend[1])}</span>`;
+    legendHtml += '</span>';
+  }
+
+  const maxScore = Math.max(...scores.map(s => s.score));
+  const tableRows = scores.slice(0, 20).map((s, i) => {
+    const barW = maxScore > 0 ? (s.score / maxScore * 100) : 0;
+    const color = FAMILY_COLORS[s.family] || FAMILY_COLORS.Other;
+    const isTop = i === 0;
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+    return `<tr data-model="${escHtml(s.model)}" onmouseenter="highlightChartPoint('${escHtml(s.model)}')" onmouseleave="unhighlightChart()" style="${isTop ? 'background:rgba(99,102,241,.04)' : ''}">
+      <td style="font-weight:${isTop?700:400};color:${isTop?'var(--accent)':'var(--text-dim)'}; text-align:center">${medal || (i+1)}</td>
+      <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;box-shadow:0 0 0 2px ${color}22"></span><span style="font-weight:${isTop?700:500}">${escHtml(s.model)}</span></span></td>
+      <td><span style="color:${color};font-weight:600;font-size:0.76rem">${escHtml(s.family)}</span></td>
+      <td style="font-size:0.76rem;color:var(--text-dim);font-variant-numeric:tabular-nums">${escHtml(s.params || 'closed')}</td>
+      <td style="font-variant-numeric:tabular-nums;font-weight:${isTop?700:600};color:${isTop?'var(--accent)':'var(--text)'}">${s.score.toFixed(1)}</td>
+      <td style="width:130px"><div class="score-bar-wrap"><div class="score-bar" style="width:${barW}%"></div>${i===0?'<div class="score-bar-100"></div><div class="score-bar-100-label">'+maxScore.toFixed(1)+'</div>':''}</div></td>
+    </tr>`;
+  }).join('');
+
+  const hasScatter = scores.some(s => parseParamSize(s.params) !== null);
+  const chartHtml = hasScatter
+    ? `<div class="chart-container"><canvas id="perfChart"></canvas></div><div class="chart-legend">${legendHtml}</div>`
+    : '';
+  const tableMaxH = hasScatter ? '340px' : '500px';
+
+  card.innerHTML = `
+    <button class="chart-close" onclick="closeChart()">&times;</button>
+    <div class="chart-header">
+      <h2>${escHtml(benchName)}</h2>
+      <div class="chart-sub">Top score: <strong>${info.top_score.toFixed(1)}</strong> by ${escHtml(info.top_model)} · ${scores.length} models evaluated</div>
+    </div>
+    ${chartHtml}
+    <div class="chart-bottom">
+    <div style="max-height:${tableMaxH};overflow-y:auto;border:1px solid var(--border);border-radius:10px">
+    <table class="score-table">
+      <thead><tr><th style="width:40px;text-align:center">#</th><th>Model</th><th style="width:80px">Family</th><th style="width:80px">Params</th><th style="width:60px">Score</th><th style="width:130px"></th></tr></thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+    </div>
+    </div>
+  `;
+
+  document.getElementById('chartOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  if (hasScatter) requestAnimationFrame(() => buildChart(benchName, scores));
+}
+
+function getSeriesKey(model, family, params) {
+  const isThinking = /[-_\s]?[Tt]hinking/i.test(model);
+  const isInstruct = /[-_\s]?[Ii]nstruct/i.test(model);
+  const modeSuffix = isThinking ? ' (Thinking)' : isInstruct ? ' (Instruct)' : '';
+  const moeSuffix = isMoE(params) ? ' [MoE]' : '';
+  const m = model;
+  const patterns = [
+    /^(Qwen\d*\.?\d*-VL)/i,
+    /^(InternVL\d*\.?\d*)/i,
+    /^(Gemini[- ]\d+\.?\d*[- ]?\w*)/i,
+    /^(GPT-\d+\w*)/i,
+    /^(Claude[- ]\d*\.?\d*[- ]?\w*)/i,
+    /^(Seed[\d.]*-VL)/i,
+    /^(DeepSeek-VL\d*)/i,
+    /^(CogVLM\d*)/i,
+    /^(LLaVA[-\d.]*\w*)/i,
+    /^(Step\d*-VL)/i, /^(STEP\d*-VL)/i,
+    /^(Kimi-VL)/i,
+    /^(MiniMax-VL)/i, /^(MiniMax-\d+)/i,
+    /^(Cambrian[-\d]*)/i,
+  ];
+  for (const re of patterns) {
+    const match = m.match(re);
+    if (match) return match[1] + modeSuffix + moeSuffix;
+  }
+  return family + ':' + m.split('-').slice(0, 2).join('-') + modeSuffix + moeSuffix;
+}
+
+const POINT_SHAPES = ['circle', 'rect', 'triangle', 'rectRot', 'star', 'crossRot'];
+
+function shortLabel(model) {
+  return model
+    .replace(/-Instruct$/i, '')
+    .replace(/^Qwen(\d)/i, 'Q$1').replace(/^InternVL/i, 'IVL')
+    .replace(/^DeepSeek/i, 'DS').replace(/^Gemini[- ]?/i, 'Gem')
+    .replace(/^Claude[- ]?/i, 'Cl').replace(/^Cambrian/i, 'Camb');
+}
+
+const labelPlugin = {
+  id: 'scatterLabels',
+  afterDatasetsDraw(chart) {
+    const ctx = chart.ctx;
+    const all = [];
+    chart.data.datasets.forEach((ds, di) => {
+      const meta = chart.getDatasetMeta(di);
+      if (meta.hidden) return;
+      meta.data.forEach((pt, pi) => {
+        const raw = ds.data[pi];
+        if (!raw || !raw.label) return;
+        if ((ds._family || '') === 'Other') return;
+        all.push({ x: pt.x, y: pt.y, text: shortLabel(raw.label), color: ds.borderColor, score: raw.y });
+      });
+    });
+    all.sort((a, b) => b.score - a.score);
+    const shown = all.slice(0, 25);
+    const placed = [];
+    ctx.font = '600 9px Inter, -apple-system, sans-serif';
+    ctx.textBaseline = 'bottom';
+    for (const item of shown) {
+      const tw = ctx.measureText(item.text).width;
+      let lx = item.x + 7, ly = item.y - 7;
+      let collides = placed.some(p => Math.abs(lx - p.x) < (tw + p.w) / 2 + 6 && Math.abs(ly - p.y) < 13);
+      if (collides) { ly = item.y + 15; ctx.textBaseline = 'top'; }
+      ctx.fillStyle = item.color;
+      ctx.fillText(item.text, lx, ly);
+      placed.push({ x: lx + tw / 2, y: ly, w: tw });
+      ctx.textBaseline = 'bottom';
+    }
+  }
+};
+
+function extractSubBench(modelName) {
+  const m = modelName.match(/\((\d+[Kk])[,)]/);
+  return m ? m[1].toUpperCase() : null;
+}
+
+function stripSubBench(modelName) {
+  return modelName.replace(/\(\d+[Kk][^)]*\)/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function buildChart(benchName, scores) {
+  const canvas = document.getElementById('perfChart');
+  if (!canvas) return;
+  if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+
+  const gridColor = 'rgba(0,0,0,.06)';
+
+  const subBenches = [...new Set(scores.map(s => extractSubBench(s.model)).filter(Boolean))];
+  const hasSubBench = subBenches.length >= 2;
+
+  {
+    const seriesMap = {};
+    for (const s of scores) {
+      const pSize = parseParamSize(s.params);
+      if (pSize === null) continue;
+      const sub = hasSubBench ? extractSubBench(s.model) : null;
+      const subSuffix = sub ? ' [' + sub + ']' : '';
+      const baseModel = hasSubBench ? stripSubBench(s.model) : s.model;
+      const key = getSeriesKey(baseModel, s.family, s.params) + subSuffix;
+      if (!seriesMap[key]) seriesMap[key] = { family: s.family, sub: sub, points: [] };
+      seriesMap[key].points.push({ x: pSize, y: s.score, label: s.model, params: s.params });
+    }
+
+    const datasets = [];
+    for (const [seriesKey, series] of Object.entries(seriesMap)) {
+      const color = FAMILY_COLORS[series.family] || FAMILY_COLORS.Other;
+      const isOther = series.family === 'Other';
+      series.points.sort((a, b) => a.x - b.x);
+      const isMoeSeries = seriesKey.includes('[MoE]');
+      const isSubBenchDash = series.sub && series.sub !== subBenches[0];
+      let dash = [];
+      if (isMoeSeries) dash = [8, 4];
+      else if (isSubBenchDash) dash = [4, 3];
+
+      datasets.push({
+        label: seriesKey,
+        data: series.points,
+        _family: series.family,
+        backgroundColor: color + (isOther ? '44' : 'cc'),
+        borderColor: color + (isOther ? '66' : ''),
+        borderWidth: series.points.length > 1 ? (isOther ? 1 : 2) : 0,
+        borderDash: dash,
+        pointRadius: isOther ? 2.5 : (isMoeSeries ? 4.5 : 5),
+        pointHoverRadius: 9,
+        pointHoverBorderWidth: 2,
+        pointHoverBorderColor: color,
+        pointBackgroundColor: color + (isOther ? '66' : ''),
+        pointBorderColor: isOther ? 'transparent' : '#fff',
+        pointBorderWidth: isOther ? 0 : 1.5,
+        pointStyle: isMoeSeries ? 'rectRot' : 'circle',
+        showLine: series.points.length > 1,
+        tension: 0.25,
+        fill: false,
+        order: isOther ? 3 : 1,
+      });
+    }
+
+    chartInstance = new Chart(canvas, {
+      type: 'scatter',
+      data: { datasets },
+      plugins: [labelPlugin],
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        animation: { duration: 500, easing: 'easeOutQuart' },
+        interaction: { mode: 'nearest', intersect: false, axis: 'xy' },
+        onHover: (event, elements) => {
+          document.querySelectorAll('.score-table tbody tr.row-highlight').forEach(r => r.classList.remove('row-highlight'));
+          if (elements.length > 0) {
+            const el = elements[0];
+            const pt = chartInstance.data.datasets[el.datasetIndex].data[el.index];
+            if (pt && pt.label) {
+              const row = document.querySelector('.score-table tbody tr[data-model="' + CSS.escape(pt.label) + '"]');
+              if (row) { row.classList.add('row-highlight'); row.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+            }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(255,255,255,.96)',
+            titleColor: '#1a1f2e',
+            titleFont: { size: 13, weight: 700 },
+            bodyColor: '#5a6178',
+            bodyFont: { size: 12 },
+            borderColor: '#d1d5e0',
+            borderWidth: 1,
+            padding: { x: 14, y: 10 },
+            cornerRadius: 8,
+            displayColors: true,
+            boxWidth: 10, boxHeight: 10, boxPadding: 4,
+            callbacks: {
+              title: ctx => ctx[0].raw.label || '',
+              label: ctx => {
+                const p = ctx.raw.params || 'closed';
+                const tag = isMoE(p) ? ' (MoE)' : '';
+                return ` ${p}${tag}  →  ${ctx.raw.y.toFixed(1)}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            type: 'logarithmic',
+            title: { display: true, text: 'Parameters (B)', color: '#5a6178', font: { size: 11, weight: 600 } },
+            ticks: { color: '#5a6178', font: { size: 10 }, callback: v => v >= 1 ? v + 'B' : (v*1000).toFixed(0) + 'M' },
+            grid: { color: gridColor },
+          },
+          y: {
+            title: { display: true, text: 'Score', color: '#5a6178', font: { size: 11, weight: 600 } },
+            ticks: { color: '#5a6178', font: { size: 10 } },
+            beginAtZero: false,
+            grid: { color: gridColor },
+          }
+        }
+      }
+    });
+  }
+}
+
+function highlightChartPoint(modelName) {
+  if (!chartInstance) return;
+  const chart = chartInstance;
+  let found = false;
+  chart.data.datasets.forEach((ds, di) => {
+    ds.data.forEach((pt, pi) => {
+      if (pt.label === modelName) {
+        chart.setActiveElements([{ datasetIndex: di, index: pi }]);
+        chart.tooltip.setActiveElements([{ datasetIndex: di, index: pi }], { x: 0, y: 0 });
+        found = true;
+      }
+    });
+  });
+  if (found) chart.update('none');
+}
+
+function unhighlightChart() {
+  if (!chartInstance) return;
+  chartInstance.setActiveElements([]);
+  chartInstance.tooltip.setActiveElements([], { x: 0, y: 0 });
+  chartInstance.update('none');
+}
+
+function closeChart() {
+  document.getElementById('chartOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
 }
 
 init();
