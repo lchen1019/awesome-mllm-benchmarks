@@ -9,3 +9,4 @@ samples/
 papers/
 scraping_scripts/
 scripts/
+.cache_medical/
