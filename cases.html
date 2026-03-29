@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Samples - VLM Benchmark Explorer</title>
+<title>Samples - MLLM Benchmark Explorer</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -653,31 +653,100 @@ body {
   .chat-ava { font-size: .66rem; }
   .chat-bbl { padding: 11px 14px; font-size: .84rem; border-radius: 11px; }
 }
+.top-actions {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.github-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: all .2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.github-icon:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0,0,0,.1);
+}
+.github-icon svg { width: 18px; height: 18px; }
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  font-size: 0.78rem;
+  font-family: inherit;
+}
+.lang-toggle button {
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .15s;
+  font-weight: 500;
+}
+.lang-toggle button:hover:not(.active) { background: var(--surface2); color: var(--text); }
+.lang-toggle button.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-weight: 600;
+}
 </style>
 </head>
 <body>
+
+<div class="top-actions">
+  <a href="https://github.com/lchen1019/awesome-mllm-benchmarks" target="_blank" rel="noopener" class="github-icon" title="GitHub">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 17.07 3.633 16.7 3.633 16.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+  </a>
+  <div class="lang-toggle" id="langToggle">
+    <button onclick="setLang('en')" id="langBtnEn" class="active">EN</button>
+    <button onclick="setLang('zh')" id="langBtnZh">中文</button>
+  </div>
+</div>
 
 <div class="page-header">
   <div class="header-inner">
     <div class="header-brand">
       <a href="index.html" class="brand-link">
-        <img src="assets/logo_transparent.png" alt="VLM Benchmark Explorer" width="36" height="36">
-        <span>VLM Benchmark Explorer</span>
+        <img src="assets/logo_transparent.png" alt="MLLM Benchmark Explorer" width="36" height="36">
+        <span data-i18n="brandName">MLLM Benchmark Explorer</span>
       </a>
     </div>
     <a href="index.html" class="back-link" onclick="if(history.length>1){history.back();return false;}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      Back to list
+      <span data-i18n="backToList">Back to list</span>
     </a>
     <div id="headerContent">
-      <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
+      <div class="loading-state"><div class="spinner"></div><p data-i18n="loading">Loading…</p></div>
     </div>
   </div>
 </div>
 
 <div id="tabsContainer"></div>
 <div class="cases-wrap" id="casesContainer">
-  <div class="loading-state"><div class="spinner"></div><p>Loading samples…</p></div>
+  <div class="loading-state"><div class="spinner"></div><p data-i18n="loadingSamples">Loading samples…</p></div>
 </div>
 
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
@@ -688,6 +757,109 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
 <script>
+const I18N = {
+  en: {
+    brandName: 'MLLM Benchmark Explorer',
+    backToList: 'Back to list',
+    loading: 'Loading…',
+    loadingSamples: 'Loading samples…',
+    noSamples: 'No samples',
+    noSamplesDesc: 'Sample data for this dataset has not been added yet.',
+    noDataset: 'No dataset selected',
+    pickDataset: 'Pick a dataset from the list',
+    failedLoad: 'Failed to load',
+    failedLoadConfig: 'Failed to load config',
+    retry: 'Retry',
+    imgFailed: 'Image failed to load',
+    puzzles: 'puzzles',
+    arcPuzzle: 'ARC Puzzle',
+    samples: 'samples',
+    format: 'format',
+    subtask: 'subtask',
+    subtasks: 'subtasks',
+    trainingExamples: 'Training Examples',
+    test: 'Test',
+    testAndAttempt: 'Test & Model Attempt',
+    expand: 'Expand',
+    collapse: 'Collapse',
+    explanation: 'Explanation',
+    scoringPoints: 'Scoring Points',
+    additionalQA: 'Additional Q&A',
+    prompt: 'Prompt',
+    titleSuffix: 'Samples',
+    footer: '© 2026. All rights reserved.',
+  },
+  zh: {
+    brandName: 'MLLM 基准测试浏览器',
+    backToList: '返回列表',
+    loading: '加载中…',
+    loadingSamples: '正在加载样例…',
+    noSamples: '暂无样例',
+    noSamplesDesc: '该数据集的样例数据尚未添加。',
+    noDataset: '未选择数据集',
+    pickDataset: '请从列表中选择一个数据集',
+    failedLoad: '加载失败',
+    failedLoadConfig: '加载配置失败',
+    retry: '重试',
+    imgFailed: '图片加载失败',
+    puzzles: '个谜题',
+    arcPuzzle: 'ARC 谜题',
+    samples: '个样例',
+    format: '格式',
+    subtask: '个子任务',
+    subtasks: '个子任务',
+    trainingExamples: '训练示例',
+    test: '测试',
+    testAndAttempt: '测试 & 模型尝试',
+    expand: '展开',
+    collapse: '收起',
+    explanation: '解释',
+    scoringPoints: '评分要点',
+    additionalQA: '追加问答',
+    prompt: '提示词',
+    titleSuffix: '样例',
+    footer: '© 2026. 保留所有权利。',
+  }
+};
+
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function t(key) {
+  return (I18N[currentLang] && I18N[currentLang][key]) || I18N.en[key] || key;
+}
+
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.getElementById('langBtnEn').classList.toggle('active', lang === 'en');
+  document.getElementById('langBtnZh').classList.toggle('active', lang === 'zh');
+  applyI18n();
+  if (typeof datasetName !== 'undefined' && datasetName) {
+    document.title = `${datasetName} - ${t('titleSuffix')}`;
+    const info = siteData && siteData.find(d => d.name === datasetName);
+    renderHeader(info);
+    renderTabs();
+    if (currentSubtask && dataCache[currentSubtask]) renderCases(dataCache[currentSubtask]);
+  }
+}
+
+function initLang() {
+  const lang = localStorage.getItem('lang') || 'en';
+  currentLang = lang;
+  document.getElementById('langBtnEn').classList.toggle('active', lang === 'en');
+  document.getElementById('langBtnZh').classList.toggle('active', lang === 'zh');
+  applyI18n();
+}
+
 const CAT_COLORS = {
   'OCR/Doc/Chart':           { bg: '#dbeafe', text: '#1e40af', border: '#93c5fd' },
   'Spatial Intelligence':    { bg: '#d1fae5', text: '#065f46', border: '#6ee7b7' },
@@ -957,7 +1129,7 @@ function renderMd(text) {
 function mdBlock(text, extraCls) {
   extraCls = extraCls || '';
   if (text.length > 600) {
-    return '<div class="md-content md-truncate ' + extraCls + '">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+    return '<div class="md-content md-truncate ' + extraCls + '">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">' + t('expand') + '</button>';
   }
   return '<div class="md-content ' + extraCls + '">' + renderMd(text) + '</div>';
 }
@@ -1606,14 +1778,14 @@ function renderOneAnswerBlock(fieldName, val, item, fmt) {
   let html = '<div class="answer-block">';
   html += `<div class="answer-label">${esc(label)}</div>`;
   if (val === null) {
-    html += `<div class="answer-text answer-hidden">Not provided (test split)</div>`;
+    html += `<div class="answer-text answer-hidden">${currentLang === 'zh' ? '未提供（测试集）' : 'Not provided (test split)'}</div>`;
   } else if (val === 'hidden') {
-    html += `<div class="answer-text answer-hidden">Answer hidden</div>`;
+    html += `<div class="answer-text answer-hidden">${currentLang === 'zh' ? '答案已隐藏' : 'Answer hidden'}</div>`;
   } else {
     let text;
     if (Array.isArray(val)) {
       const filtered = val.filter(v => v !== null && v !== undefined);
-      if (filtered.length === 0) { html += `<div class="answer-text answer-hidden">Not provided</div></div>`; return html; }
+      if (filtered.length === 0) { html += `<div class="answer-text answer-hidden">${currentLang === 'zh' ? '未提供' : 'Not provided'}</div></div>`; return html; }
       text = filtered.join('; ');
     } else {
       text = typeof val === 'string' ? val : JSON.stringify(val);
@@ -1625,10 +1797,10 @@ function renderOneAnswerBlock(fieldName, val, item, fmt) {
       text.split('\n').length > 3;
     if (looksLikeCode) {
       const wrapped = '```python\n' + text + '\n```';
-      html += '<div class="answer-text md-truncate">' + renderMd(wrapped) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+      html += '<div class="answer-text md-truncate">' + renderMd(wrapped) + '</div><button class="expand-btn" onclick="toggleExpand(this)">' + t('expand') + '</button>';
     } else if (text.length > 150) {
       text = wrapEmbeddedCode(text);
-      html += '<div class="answer-text md-truncate">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+      html += '<div class="answer-text md-truncate">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">' + t('expand') + '</button>';
     } else {
       html += '<div class="answer-text">' + renderMd(text) + '</div>';
     }
@@ -1665,9 +1837,9 @@ function renderExplanationHtml(item) {
   if (!item.explanation || typeof item.explanation !== 'string' || !item.explanation.trim()) return '';
   const text = item.explanation;
   let html = '<div class="answer-block" style="border-left-color:var(--accent);margin-top:8px">';
-  html += '<div class="answer-label">Explanation</div>';
+  html += `<div class="answer-label">${t('explanation')}</div>`;
   if (text.length > 400) {
-    html += '<div class="answer-text md-truncate">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+    html += '<div class="answer-text md-truncate">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">' + t('expand') + '</button>';
   } else {
     html += '<div class="answer-text">' + renderMd(text) + '</div>';
   }
@@ -1695,7 +1867,7 @@ function renderCotHtml(item, fmt) {
     html += `<div class="answer-block" style="border-left-color:${color};margin-top:12px">`;
     html += `<div class="answer-label">${esc(label)}</div>`;
     if (text.length > 400) {
-      html += '<div class="answer-text md-truncate" style="font-size:0.84rem">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+      html += '<div class="answer-text md-truncate" style="font-size:0.84rem">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">' + t('expand') + '</button>';
     } else {
       html += '<div class="answer-text" style="font-size:0.84rem">' + renderMd(text) + '</div>';
     }
@@ -1724,7 +1896,7 @@ function renderAdditionalQA(item) {
     }
   }
   if (!inner) return '';
-  return '<div class="qa-pairs-section"><div class="qa-pairs-title">Additional Q&amp;A</div><div class="chat-conv">' + inner + '</div></div>';
+  return '<div class="qa-pairs-section"><div class="qa-pairs-title">' + t('additionalQA') + '</div><div class="chat-conv">' + inner + '</div></div>';
 }
 
 function renderGridHtml(grid, label) {
@@ -2028,15 +2200,15 @@ function renderCard(item, fmt, idx) {
     if (showPrompt) {
       let promptHtml;
       if (pText.length > 400) {
-        promptHtml = '<div class="md-truncate">' + renderMd(pText) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+        promptHtml = '<div class="md-truncate">' + renderMd(pText) + '</div><button class="expand-btn" onclick="toggleExpand(this)">' + t('expand') + '</button>';
       } else {
         promptHtml = renderMd(pText);
       }
-      html += '<div class="answer-block" style="border-left-color:var(--blue);margin-top:12px"><div class="answer-label">Prompt</div><div class="answer-text" style="font-size:0.82rem">' + promptHtml + '</div></div>';
+      html += '<div class="answer-block" style="border-left-color:var(--blue);margin-top:12px"><div class="answer-label">' + t('prompt') + '</div><div class="answer-text" style="font-size:0.82rem">' + promptHtml + '</div></div>';
     }
   }
   if (Array.isArray(item.scoring_points) && item.scoring_points.length > 0) {
-    html += '<div class="scoring-section"><div class="scoring-title">Scoring Points</div><div class="scoring-list">';
+    html += '<div class="scoring-section"><div class="scoring-title">' + t('scoringPoints') + '</div><div class="scoring-list">';
     for (const p of item.scoring_points) {
       html += '<div class="scoring-point"><span class="scoring-dot" aria-hidden="true"></span><div class="scoring-point-md">' + renderMd(p) + '</div></div>';
     }
@@ -2073,7 +2245,7 @@ function renderCard(item, fmt, idx) {
       html += '<div class="answer-block" style="border-left-color:var(--text-muted);margin-top:12px">';
       html += `<div class="answer-label">${esc(k)}</div>`;
       if (v.length > 300) {
-        html += '<div class="answer-text md-truncate" style="font-size:0.82rem">' + renderMd(v) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
+        html += '<div class="answer-text md-truncate" style="font-size:0.82rem">' + renderMd(v) + '</div><button class="expand-btn" onclick="toggleExpand(this)">' + t('expand') + '</button>';
       } else {
         html += '<div class="answer-text" style="font-size:0.82rem">' + renderMd(v) + '</div>';
       }
@@ -2133,7 +2305,7 @@ function renderArcPuzzleCard(item, idx) {
   html += `<span class="card-badge" style="background:rgba(99,102,241,.1);color:var(--accent-light);border:1px solid rgba(99,102,241,.3)">ARC Puzzle</span>`;
   if (item.id) html += `<span class="card-id">${esc(item.id)}</span>`;
   html += '</div><div class="card-body">';
-  html += '<div class="arc-section"><div class="arc-section-title">Training Examples</div>';
+  html += '<div class="arc-section"><div class="arc-section-title">' + t('trainingExamples') + '</div>';
   for (let i = 0; i < item.train.length; i++) {
     html += '<div class="arc-example">';
     html += `<div class="arc-pair">${renderGridHtml(item.train[i].input, 'Input ' + (i+1))}</div>`;
@@ -2142,7 +2314,7 @@ function renderArcPuzzleCard(item, idx) {
     html += '</div>';
   }
   html += '</div>';
-  html += '<div class="arc-section"><div class="arc-section-title">Test</div>';
+  html += '<div class="arc-section"><div class="arc-section-title">' + t('test') + '</div>';
   for (let i = 0; i < item.test.length; i++) {
     html += '<div class="arc-example">';
     html += `<div class="arc-pair">${renderGridHtml(item.test[i].input, 'Test Input')}</div>`;
@@ -2176,7 +2348,7 @@ function renderArcSubmissionCard(puzzleId, attempts, subInfo, idx, puzzleData) {
     html += '</div>';
   }
   if (puzzleData && puzzleData.train.length > 0) {
-    html += '<div class="arc-section"><div class="arc-section-title">Training Examples</div>';
+    html += '<div class="arc-section"><div class="arc-section-title">' + t('trainingExamples') + '</div>';
     for (let i = 0; i < puzzleData.train.length; i++) {
       html += '<div class="arc-example">';
       html += `<div class="arc-pair">${renderGridHtml(puzzleData.train[i].input, 'Input ' + (i+1))}</div>`;
@@ -2186,7 +2358,7 @@ function renderArcSubmissionCard(puzzleId, attempts, subInfo, idx, puzzleData) {
     }
     html += '</div>';
   }
-  html += '<div class="arc-section"><div class="arc-section-title">Test & Model Attempt</div>';
+  html += '<div class="arc-section"><div class="arc-section-title">' + t('testAndAttempt') + '</div>';
   const testInputs = (puzzleData && puzzleData.testInputs) || [];
   const numTests = Math.max(testInputs.length, attempts.length);
   for (let t = 0; t < numTests; t++) {
@@ -2213,14 +2385,14 @@ function renderArcSubmissionCard(puzzleId, attempts, subInfo, idx, puzzleData) {
 function renderCases(fmt) {
   const container = document.getElementById('casesContainer');
   if (fmt.type === 'empty') {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><h3>No samples</h3><p>Sample data for this dataset has not been added yet.</p></div>';
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><h3>${t('noSamples')}</h3><p>${t('noSamplesDesc')}</p></div>`;
     return;
   }
 
   let html = '';
 
   if (fmt.type === 'arc-puzzle') {
-    html += `<div class="cases-info">${fmt.items.length} puzzles · ARC Puzzle</div>`;
+    html += `<div class="cases-info">${fmt.items.length} ${t('puzzles')} · ${t('arcPuzzle')}</div>`;
     for (let i = 0; i < fmt.items.length; i++) html += renderArcPuzzleCard(fmt.items[i], i);
   } else if (fmt.type === 'arc-submission') {
     let count = 0;
@@ -2235,7 +2407,7 @@ function renderCases(fmt) {
     }
     html += `<div class="cases-info">${count} puzzle submissions · ARC Submission</div>` + cardsHtml;
   } else {
-    html += `<div class="cases-info">${fmt.items.length} samples · format: ${fmt.type}</div>`;
+    html += `<div class="cases-info">${fmt.items.length} ${t('samples')} · ${t('format')}: ${fmt.type}</div>`;
     if (fmt.type === 'image-classification') {
       html += renderClassificationGrid(fmt.items, fmt);
     } else if (fmt.type === 'generic') {
@@ -2255,18 +2427,18 @@ function renderHeader(info) {
     if (info.brief) html += `<div class="dataset-brief">${esc(info.brief)}</div>`;
     html += '<div class="dataset-meta">';
     if (info.category) html += catBadge(info.category);
-    if (subtasks.length === 1) html += `<span class="card-badge">1 subtask</span>`;
+    if (subtasks.length === 1) html += `<span class="card-badge">1 ${t('subtask')}</span>`;
     html += '</div>';
   }
   el.innerHTML = html;
-  document.title = `${datasetName} - Samples`;
+  document.title = `${datasetName} - ${t('titleSuffix')}`;
 }
 
 function renderTabs() {
   const container = document.getElementById('tabsContainer');
   if (subtasks.length <= 1) { container.innerHTML = ''; return; }
   const curLabel = esc(formatSubtask(currentSubtask));
-  let html = `<div class="subtask-bar"><p class="cases-info">${subtasks.length} subtasks · ${curLabel}</p><div class="subtask-tabs" role="tablist">`;
+  let html = `<div class="subtask-bar"><p class="cases-info">${subtasks.length} ${t('subtasks')} · ${curLabel}</p><div class="subtask-tabs" role="tablist">`;
   subtasks.forEach((sub, i) => {
     const on = sub === currentSubtask;
     html += `<button type="button" role="tab" aria-selected="${on}" class="tab-btn${on ? ' active' : ''}" onclick="switchTab(${i})">${esc(formatSubtask(sub))}</button>`;
@@ -2285,7 +2457,7 @@ async function loadSubtask(subtask) {
     return;
   }
 
-  container.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading samples…</p></div>';
+  container.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>${t('loadingSamples')}</p></div>`;
 
   // Try local paths first (exact name, then '/' replaced with '_'), then fall back to HuggingFace
   const localName2 = datasetName.replace(/\//g, '_');
@@ -2317,7 +2489,7 @@ async function loadSubtask(subtask) {
     }
   }
 
-  container.innerHTML = `<div class="error-state"><h3>Failed to load</h3><p>${esc(lastErr ? lastErr.message : 'Unknown error')}</p><button class="retry-btn" onclick="loadSubtask('${esc(subtask)}')">Retry</button></div>`;
+  container.innerHTML = `<div class="error-state"><h3>${t('failedLoad')}</h3><p>${esc(lastErr ? lastErr.message : 'Unknown error')}</p><button class="retry-btn" onclick="loadSubtask('${esc(subtask)}')">${t('retry')}</button></div>`;
 }
 
 function switchTab(idx) {
@@ -2340,16 +2512,16 @@ function toggleExpand(btn) {
   const target = btn.previousElementSibling;
   if (target.classList.contains('md-truncate')) {
     if (target.classList.toggle('expanded')) {
-      btn.textContent = 'Collapse';
+      btn.textContent = t('collapse');
     } else {
-      btn.textContent = 'Expand';
+      btn.textContent = t('expand');
     }
   } else if (target.style.display === 'none') {
     target.style.display = '';
-    btn.textContent = 'Collapse';
+    btn.textContent = t('collapse');
   } else {
     target.style.display = 'none';
-    btn.textContent = 'Expand';
+    btn.textContent = t('expand');
   }
 }
 
@@ -2400,7 +2572,7 @@ function handleImgErr(img) {
     img.style.display = 'none';
     var ph = document.createElement('div');
     ph.className = 'img-err-ph';
-    ph.innerHTML = '<div class="ie-icon">\u{1F5BC}\uFE0F</div><div style="font-size:.76rem;color:var(--text-muted)">Image failed to load</div><button class="img-retry-btn" onclick="retryImg(this)">Retry</button>';
+    ph.innerHTML = '<div class="ie-icon">\u{1F5BC}\uFE0F</div><div style="font-size:.76rem;color:var(--text-muted)">' + t('imgFailed') + '</div><button class="img-retry-btn" onclick="retryImg(this)">' + t('retry') + '</button>';
     ph.dataset.src = img.dataset.orig || img.src.split('?')[0];
     img.parentNode.insertBefore(ph, img.nextSibling);
   }
@@ -2469,8 +2641,8 @@ async function init() {
   const params = new URLSearchParams(window.location.search);
   datasetName = params.get('name');
   if (!datasetName) {
-    document.getElementById('headerContent').innerHTML = '<div class="dataset-title">No dataset selected</div>';
-    document.getElementById('casesContainer').innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><h3>Pick a dataset from the list</h3><p><a href="index.html" style="color:var(--accent-light)">Back to list</a></p></div>';
+    document.getElementById('headerContent').innerHTML = `<div class="dataset-title">${t('noDataset')}</div>`;
+    document.getElementById('casesContainer').innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><h3>${t('pickDataset')}</h3><p><a href="index.html" style="color:var(--accent-light)">${t('backToList')}</a></p></div>`;
     return;
   }
 
@@ -2484,7 +2656,7 @@ async function init() {
     siteData = await siteResp.json();
   } catch (e) {
     document.getElementById('headerContent').innerHTML = `<div class="dataset-title">${esc(datasetName)}</div>`;
-    document.getElementById('casesContainer').innerHTML = `<div class="error-state"><h3>Failed to load config</h3><p>${esc(e.message)}</p><button class="retry-btn" onclick="init()">Retry</button></div>`;
+    document.getElementById('casesContainer').innerHTML = `<div class="error-state"><h3>${t('failedLoadConfig')}</h3><p>${esc(e.message)}</p><button class="retry-btn" onclick="init()">${t('retry')}</button></div>`;
     return;
   }
 
@@ -2494,7 +2666,7 @@ async function init() {
   renderHeader(info);
 
   if (subtasks.length === 0) {
-    document.getElementById('casesContainer').innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><h3>No samples</h3><p>Sample data for this dataset has not been added yet.</p></div>';
+    document.getElementById('casesContainer').innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><h3>${t('noSamples')}</h3><p>${t('noSamplesDesc')}</p></div>`;
     return;
   }
 
@@ -2502,8 +2674,9 @@ async function init() {
   loadSubtask(subtasks[0]);
 }
 
+initLang();
 init();
 </script>
-<footer style="text-align:center;padding:24px 16px 32px;color:var(--text-muted);font-size:0.75rem;letter-spacing:0.02em">&copy; 2026. All rights reserved.</footer>
+<footer style="text-align:center;padding:24px 16px 32px;color:var(--text-muted);font-size:0.75rem;letter-spacing:0.02em" data-i18n="footer">© 2026. All rights reserved.</footer>
 </body>
 </html>

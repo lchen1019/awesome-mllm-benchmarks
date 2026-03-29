@@ -9,6 +9,7 @@
 <p align="center">
   <a href="https://awesome.re"><img src="https://awesome.re/badge.svg" alt="Awesome"></a>
   <a href="https://lchen1019.github.io/awesome-mllm-benchmarks/"><img src="https://img.shields.io/badge/Website-GitHub_Pages-6366f1?style=flat-square&logo=github" alt="Website"></a>
+  <a href="https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples"><img src="https://img.shields.io/badge/🤗_HuggingFace-Dataset-yellow?style=flat-square" alt="HuggingFace Dataset"></a>
   <a href="https://github.com/lchen1019/awesome-mllm-benchmarks"><img src="https://img.shields.io/github/stars/lchen1019/awesome-mllm-benchmarks?style=flat-square&logo=github&label=Stars" alt="Stars"></a>
   <a href="https://github.com/lchen1019/awesome-mllm-benchmarks/pulls"><img src="https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square" alt="PRs Welcome"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-orange?style=flat-square" alt="License"></a>
@@ -20,6 +21,8 @@
 </p>
 <p align="center">
   <a href="https://lchen1019.github.io/awesome-mllm-benchmarks/"><strong>🌐 Explore the Interactive Dashboard »</strong></a>
+  <br>
+  <a href="https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples"><strong>🤗 Sample Data on HuggingFace »</strong></a>
 </p>
 
 ---
@@ -62,12 +65,29 @@ Clone and serve locally:
 ```bash
 git clone https://github.com/lchen1019/awesome-mllm-benchmarks.git
 cd awesome-mllm-benchmarks
+
+# Download sample data from HuggingFace
+# Option 1: Using huggingface_hub
+pip install huggingface_hub
+python -c "
+from huggingface_hub import snapshot_download
+snapshot_download(
+    repo_id='lchen1019/awesome-mllm-benchmarks-samples',
+    repo_type='dataset',
+    local_dir='samples'
+)
+"
+# Option 2: Using git
+git clone https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples samples
+
 python serve.py 8080
 ```
 
 Then open [http://localhost:8080](http://localhost:8080) in your browser.
 
 > `serve.py` starts a simple HTTP server with no-cache headers. You can also use any other static file server.
+>
+> The benchmark sample data (images, questions, answers) is hosted on [HuggingFace](https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples) and needs to be downloaded into the `samples/` directory for the sample viewer to work locally.
 
 **Project Structure**
 
