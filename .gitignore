@@ -7,3 +7,5 @@ __pycache__/
 # Download separately or host on external storage (e.g. Hugging Face)
 samples/
 papers/
+scraping_scripts/
+scripts/

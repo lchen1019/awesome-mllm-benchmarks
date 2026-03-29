@@ -6293,7 +6293,7 @@
       "cs.AI"
     ],
     "homepage": "https://microsoft.github.io/WindowsAgentArena",
-    "has_samples": false,
+    "has_samples": true,
     "github_topics": [
       "agentic",
       "ai",
@@ -6350,7 +6350,7 @@
       "cs.LG"
     ],
     "homepage": "",
-    "has_samples": false,
+    "has_samples": true,
     "github_topics": [],
     "github_language": "Python",
     "github_license": "Apache-2.0",
@@ -6431,7 +6431,7 @@
     "paper_published": null,
     "paper_categories": [],
     "homepage": null,
-    "has_samples": false,
+    "has_samples": true,
     "hf_tags": [
       "1K<n<10K",
       "audiofolder",
@@ -6578,7 +6578,7 @@
     "paper_published": null,
     "paper_categories": [],
     "homepage": null,
-    "has_samples": false,
+    "has_samples": true,
     "hf_tags": [
       "n<1K",
       "imagefolder",
@@ -6629,7 +6629,7 @@
       "cs.IR"
     ],
     "homepage": "https://github.com/Alibaba-NLP/DeepResearch/tree/main/WebAgent/WebWatcher",
-    "has_samples": false,
+    "has_samples": true,
     "organization": "Alibaba",
     "affiliation": "Alibaba Group, DAMO Academy, Tongyi Lab",
     "github_topics": [

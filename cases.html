@@ -221,9 +221,9 @@ body {
 .card-question p:last-child, .md-content p:last-child { margin-bottom: 0; }
 .md-truncate { max-height: 8em; overflow: hidden; position: relative; }
 .md-truncate.expanded { max-height: none; }
-.answer-text pre { background: #1e1e2e; color: #cdd6f4; border-radius: 8px; padding: 14px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; }
-.answer-text code { font-family: 'Courier New', monospace; }
-.answer-text pre code { background: none; padding: 0; }
+.answer-text pre, .chat-bbl pre, .card-question pre { background: #1e1e2e; color: #cdd6f4; border-radius: 8px; padding: 14px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; }
+.answer-text code, .chat-bbl code, .card-question code { font-family: 'Courier New', monospace; }
+.answer-text pre code, .chat-bbl pre code, .card-question pre code { background: none; padding: 0; }
 
 .choices-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
 .choice-item {
@@ -775,6 +775,87 @@ const SKIP_FIELDS = new Set([
 ]);
 
 const SAMPLES_BASE = 'https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples/resolve/main';
+const HF_DATASETS_ROWS_API = 'https://datasets-server.huggingface.co/rows';
+
+/**
+ * 静态 samples 仓库未上传全部页图时，按 HF 源数据集行号拉取 image.src（datasets-server 允许 * CORS）。
+ * key 为 cases 页上的 datasetName（与 benchmarks.json 一致）。
+ */
+const HF_DATASET_ROW_FALLBACK = {
+  'OmniDocBench': { dataset: 'opendatalab/OmniDocBench', config: 'default', split: 'train' },
+  'OmniDocBench1.5': { dataset: 'opendatalab/OmniDocBench', config: 'default', split: 'train' },
+};
+
+/** 生成 data-hf-row-fallback：四段均为 encodeURIComponent，以 :: 分隔 */
+function buildHfRowFallbackPayload(item, cardIdx) {
+  const spec = HF_DATASET_ROW_FALLBACK[datasetName];
+  if (!spec) return '';
+  let off = null;
+  if (item.index !== undefined && item.index !== null) {
+    const n = Number(item.index);
+    if (Number.isFinite(n)) off = Math.floor(n);
+  }
+  if (off === null && typeof item.image === 'string') {
+    const m = item.image.match(/(\d+)_page\.(jpe?g|png|gif|webp)/i);
+    if (m) off = parseInt(m[1], 10);
+  }
+  if (off === null) off = cardIdx;
+  return [spec.dataset, spec.config, spec.split, String(off)].map(encodeURIComponent).join('::');
+}
+
+/** 与当前 cases.html 同级的 samples/（避免部署在 /repo/ 时 /samples 指到域名根而 404） */
+function samplesRootPrefix() {
+  let path = window.location.pathname || '/';
+  if (/\.html?$/i.test(path)) path = path.replace(/[^/]+\.html?$/i, '');
+  if (!path.endsWith('/')) path += '/';
+  return path + 'samples/';
+}
+
+/** 将 fetch 用的 URL 转为 pathname，便于解析 samples 后的数据集目录名 */
+function samplesUrlToPathname(url) {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    try { return new URL(url).pathname; } catch (e) { return url; }
+  }
+  if (url.startsWith('/')) return url;
+  try {
+    const base = window.location.pathname.replace(/[^/]*$/, '');
+    return new URL(url, window.location.origin + base).pathname;
+  } catch (e2) { return url; }
+}
+
+function localDatasetNameFromSamplesUrl(url) {
+  const pathonly = samplesUrlToPathname(url);
+  const parts = pathonly.split('/').filter(Boolean);
+  const i = parts.indexOf('samples');
+  if (i >= 0 && parts[i + 1]) return decodeURIComponent(parts[i + 1]);
+  return '';
+}
+
+/**
+ * data.json 里常写死 data/OmniDocBench1.5/...，在 OmniDocBench 页面会拉到错误目录。
+ * 将首段 benchmark 名、第二段 split 与当前页对齐（仅当与当前 datasetName 不一致时替换）。
+ */
+function normalizeDataPathForPage(rawPath) {
+  if (!rawPath || typeof rawPath !== 'string' || !rawPath.startsWith('data/')) return rawPath;
+  if (!datasetName) return rawPath;
+  const rest = rawPath.slice(5);
+  const parts = rest.split('/');
+  if (parts.length < 3) return rawPath;
+  const embeddedBench = parts[0];
+  const embeddedSplit = parts[1];
+  const tail = parts.slice(2).join('/');
+  if (!tail) return rawPath;
+  let bench = embeddedBench;
+  let split = embeddedSplit;
+  if (embeddedBench !== datasetName) {
+    bench = datasetName;
+    split = (currentSubtask && String(currentSubtask)) ? currentSubtask : embeddedSplit;
+  } else if (currentSubtask && embeddedSplit !== currentSubtask) {
+    split = currentSubtask;
+  }
+  if (bench === embeddedBench && split === embeddedSplit) return rawPath;
+  return 'data/' + bench + '/' + split + '/' + tail;
+}
 
 let manifest = {};
 let siteData = [];
@@ -821,6 +902,34 @@ function onContPhyVideoErr(el) {
     return;
   }
   el.outerHTML = '<div class="contphy-media-fallback"><img class="case-image" src="' + esc(fb) + '" alt="Simulation keyframe" loading="lazy" onclick="openLightbox(this.src)" data-orig="' + esc(fb) + '"><p class="contphy-fallback-hint">No local short clip (<code>*_clip.mp4</code>). ContPhy is video-based; this repo may only ship keyframe JPGs. From the repo root run <code>python3 scripts/contphy_jpeg_to_clip.py</code> (needs <strong>ffmpeg</strong>) to build ~2s MP4s in <code>samples/</code>. Full data: Hugging Face <strong>zzcnewly/ContPhy_Dataset</strong> <code>contphy_mini.zip</code>.</p></div>';
+}
+
+/**
+ * Detect prose followed by embedded code (e.g. ChartMimic customized instructions)
+ * and wrap the code portion in a markdown code fence so it renders as a code block.
+ */
+function wrapEmbeddedCode(text) {
+  if (!text || typeof text !== 'string') return text;
+  const lines = text.split('\n');
+  let codeStart = -1;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (/^(import\s|from\s\S+\simport|#\s*={3,}|def\s|class\s)/.test(line)) {
+      codeStart = i;
+      break;
+    }
+    if (/^[a-zA-Z_]\w*\s*=\s*[\[\("'{]/.test(line)) {
+      const remaining = lines.slice(i);
+      const codeLike = remaining.filter(l => /^\s*(#|import |from |[a-zA-Z_]\w*\s*=|def |class |plt\.|np\.|ax\.|fig)/.test(l)).length;
+      if (codeLike > 3) { codeStart = i; break; }
+    }
+  }
+  if (codeStart >= 0 && lines.length - codeStart > 3) {
+    const prose = lines.slice(0, codeStart).join('\n').trim();
+    const code  = lines.slice(codeStart).join('\n').trim();
+    return (prose ? prose + '\n\n' : '') + '```python\n' + code + '\n```';
+  }
+  return text;
 }
 
 function renderMd(text) {
@@ -892,10 +1001,12 @@ function resolveMedia(rawPath) {
   if (!rawPath || typeof rawPath !== 'string') return null;
   if (rawPath.startsWith("b'") || rawPath.startsWith('b"')) return null;
   if (/^https?:\/\//.test(rawPath)) return rawPath;
+  rawPath = normalizeDataPathForPage(rawPath);
+  const localRoot = samplesRootPrefix();
   if (localDatasetName) {
-    if (rawPath.startsWith('samples/')) return '/' + rawPath;
-    if (rawPath.startsWith('data/')) return '/samples/' + rawPath.slice(5);
-    return `/samples/${encodeURIComponent(localDatasetName)}/${encodeURIComponent(currentSubtask)}/${rawPath}`;
+    if (rawPath.startsWith('samples/')) return localRoot + rawPath.slice(8);
+    if (rawPath.startsWith('data/')) return localRoot + rawPath.slice(5);
+    return localRoot + encodeURIComponent(localDatasetName) + '/' + encodeURIComponent(currentSubtask) + '/' + rawPath;
   }
   if (rawPath.startsWith('samples/')) return `${SAMPLES_BASE}/${rawPath.slice(8)}`;
   if (rawPath.startsWith('data/')) return `${SAMPLES_BASE}/${rawPath.slice(5)}`;
@@ -965,17 +1076,15 @@ function detectFormat(rawItems) {
   /* 字符串虽像图片路径，但是上游/HF 元数据，站点内实际资源一般在 image 等字段 */
   const IMG_META_FIELDS = new Set([
     'imgname', 'image_name', 'image_url', 'original_figure_path', 'img_url', 'figure_path',
-    'filename', 'file_name', 'source_filename', 'path',
+    'filename', 'file_name', 'source_filename', 'path', 'image_path',
   ]);
   const SOLUTION_IMG_FIELDS = new Set(['solution_image','answer_image','ground_truth_image','expected_output_image']);
   let imageFields = allKeys.filter(k =>
     !IMG_META_FIELDS.has(k) && !SOLUTION_IMG_FIELDS.has(k) &&
     samples.some(s => typeof s[k] === 'string' && /\.(jpg|jpeg|png|gif|webp)$/i.test(s[k]))
   );
-  /* 与 decoded_image 并存时，image 多为 HF 原始相对路径（如 images/1.jpg），本地静态站只打包了 decoded_image */
-  if (imageFields.includes('decoded_image') && imageFields.includes('image')) {
-    imageFields = imageFields.filter(k => k !== 'image');
-  }
+  /* 与 decoded_image 并存时：旧逻辑去掉 image，但扩样后新行往往只改了 image，decoded_image 仍是模板路径 → 第 11 条起裂图。
+     保留两字段，由 collectImages 按每条样本在 image / decoded_image 之间择一或去重。 */
   const base64ImageFields = allKeys.filter(k =>
     !IMG_META_FIELDS.has(k) && !SOLUTION_IMG_FIELDS.has(k) &&
     !imageFields.includes(k) &&
@@ -1027,6 +1136,7 @@ function detectFormat(rawItems) {
       choicesField = 'options'; choicesType = 'object'; break;
     }
     if (Array.isArray(s.options) && s.options.length > 0) { choicesField = 'options'; break; }
+    if (Array.isArray(s['multi-choice options']) && s['multi-choice options'].length > 0) { choicesField = 'multi-choice options'; break; }
   }
 
   if (!choicesField) {
@@ -1094,11 +1204,55 @@ const IMAGE_LABEL_MAP = {
   'output_image': 'Output', 'target_image': 'Target',
 };
 
-function collectImages(item, fmt) {
+/** HF 行里常见 images/…；静态样本包里多为 data/… 或 N_page.jpg */
+function isHfStyleImagePath(s) {
+  if (typeof s !== 'string' || !s.trim()) return false;
+  const t = s.trim();
+  if (/^https?:\/\//i.test(t)) return false;
+  return /^images\//i.test(t) || /^s\d+\//i.test(t);
+}
+
+/** 本站扩样后的文档页图：data/Bench/sub/ 或纯文件名 N_page.jpg */
+function isBundledDocPageImagePath(s) {
+  if (typeof s !== 'string' || !s.trim()) return false;
+  const t = s.trim();
+  if (/^https?:\/\//i.test(t)) return false;
+  if (t.startsWith('data/')) return true;
+  return /(^|\/)\d+_page\.(jpe?g|png|gif|webp)$/i.test(t);
+}
+
+function collectImages(item, fmt, cardIdx) {
+  const hfFb = buildHfRowFallbackPayload(item, cardIdx == null ? 0 : cardIdx);
   const imgs = [];
-  for (const f of fmt.imageFields) {
+  const seen = new Set();
+  function pushField(f) {
     const p = item[f];
-    if (p) { const r = resolveMedia(p); if (r) imgs.push({ path: r, label: IMAGE_LABEL_MAP[f] || f }); }
+    if (!p) return;
+    const r = resolveMedia(p);
+    if (!r || seen.has(r)) return;
+    seen.add(r);
+    imgs.push({ path: r, label: IMAGE_LABEL_MAP[f] || f, hfFb: hfFb || undefined });
+  }
+
+  let fields = [...fmt.imageFields];
+  const hasIm = fields.includes('image');
+  const hasDec = fields.includes('decoded_image');
+  if (hasIm && hasDec) {
+    const im = item.image;
+    const dec = item.decoded_image;
+    if (isHfStyleImagePath(im)) {
+      fields = fields.filter(k => k !== 'image');
+    } else if (isBundledDocPageImagePath(im) && typeof dec === 'string' && dec.trim()) {
+      const ri = resolveMedia(im);
+      const rd = resolveMedia(dec);
+      if (ri && rd && ri !== rd) {
+        fields = fields.filter(k => k !== 'decoded_image');
+      }
+    }
+  }
+  for (const f of fields) {
+    if (!fmt.imageFields.includes(f)) continue;
+    pushField(f);
   }
   for (const f of fmt.imageArrayFields) {
     const arr = item[f];
@@ -1107,7 +1261,7 @@ function collectImages(item, fmt) {
       if (!r) return;
       let label = `${f}[${i}]`;
       if (f === 'uav_preview') label = i === 0 ? 'UAV view A (mid frame)' : 'UAV view B (mid frame)';
-      imgs.push({ path: r, label });
+      imgs.push({ path: r, label, hfFb: hfFb || undefined });
     });
   }
   if (fmt.base64ImageFields) {
@@ -1178,17 +1332,24 @@ function collectVideos(item, fmt) {
   return out;
 }
 
+function hfRowFallbackDataAttr(imgObj) {
+  if (!imgObj || !imgObj.hfFb) return '';
+  return ' data-hf-row-fallback="' + esc(imgObj.hfFb) + '"';
+}
+
 function renderImagesHtml(images) {
   if (images.length === 0) return '';
   if (images.length === 1) {
-    return `<img class="case-image" src="${esc(images[0].path)}" alt="${esc(images[0].label)}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(images[0].path)}">`;
+    const a0 = hfRowFallbackDataAttr(images[0]);
+    return `<img class="case-image" src="${esc(images[0].path)}" alt="${esc(images[0].label)}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(images[0].path)}"${a0}>`;
   }
   let html = '<div class="images-row">';
   for (const img of images) {
     const showLabel = img.label && !/\[\d+\]/.test(img.label) && !img.label.includes('_');
     const isGT = /ground.truth|answer/i.test(img.label);
+    const fa = hfRowFallbackDataAttr(img);
     html += `<div class="img-wrap">
-      <img class="case-image" src="${esc(img.path)}" alt="${esc(img.label)}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(img.path)}">
+      <img class="case-image" src="${esc(img.path)}" alt="${esc(img.label)}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(img.path)}"${fa}>
       ${showLabel ? `<div class="image-label${isGT ? ' gt-label' : ''}">${esc(img.label)}</div>` : ''}
     </div>`;
   }
@@ -1459,12 +1620,14 @@ function renderOneAnswerBlock(fieldName, val, item, fmt) {
     }
     const mapped = item && fmt ? formatMcAnswerFromNumericIndex(val, item, fmt) : null;
     if (mapped) text = mapped;
-    const looksLikeCode = /^(import |from |#\s*=|def |class |\/\/|package |using )/.test(text.trim()) &&
+    const trimmed = text.trim();
+    const looksLikeCode = /^(import |from |#\s*=|def |class |\/\/|package |using )/.test(trimmed) &&
       text.split('\n').length > 3;
     if (looksLikeCode) {
       const wrapped = '```python\n' + text + '\n```';
       html += '<div class="answer-text md-truncate">' + renderMd(wrapped) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
     } else if (text.length > 150) {
+      text = wrapEmbeddedCode(text);
       html += '<div class="answer-text md-truncate">' + renderMd(text) + '</div><button class="expand-btn" onclick="toggleExpand(this)">Expand</button>';
     } else {
       html += '<div class="answer-text">' + renderMd(text) + '</div>';
@@ -1684,7 +1847,38 @@ function getLongTextFields(item, fmt) {
  */
 function detectImageOptions(item, fmt) {
   const CHOICE_KEYS = ['choices', 'candidates', 'options'];
-  const itemHasTextChoices = fmt.choicesField
+
+  /* Check if choices/options are all <image_N> references (e.g. EMMA dataset) */
+  const imgRefRe = /^<image_(\d+)>$/;
+  let choicesAreImageRefs = false;
+  const imageRefKeys = [];
+  for (const ck of CHOICE_KEYS) {
+    const arr = item[ck];
+    if (Array.isArray(arr) && arr.length >= 2 && arr.every(v => typeof v === 'string' && imgRefRe.test(v))) {
+      choicesAreImageRefs = true;
+      for (const v of arr) imageRefKeys.push('image_' + v.match(imgRefRe)[1]);
+      break;
+    }
+  }
+
+  if (choicesAreImageRefs) {
+    const validKeys = imageRefKeys.filter(k => typeof item[k] === 'string');
+    if (validKeys.length >= 2) {
+      const qText = (fmt.questionField && item[fmt.questionField]) || '';
+      const referencedInQ = new Set();
+      const refRe2 = /<image_(\d+)>/g;
+      let m2;
+      while ((m2 = refRe2.exec(typeof qText === 'string' ? qText : '')) !== null) {
+        referencedInQ.add('image_' + m2[1]);
+      }
+      const questionImgs = Object.keys(item)
+        .filter(k => /^image_\d+$/.test(k) && typeof item[k] === 'string' && referencedInQ.has(k))
+        .sort((a, b) => parseInt(a.split('_')[1]) - parseInt(b.split('_')[1]));
+      return { questionImgs, optionImgs: validKeys };
+    }
+  }
+
+  const itemHasTextChoices = fmt.choicesField && item[fmt.choicesField] != null
     ? (Array.isArray(item[fmt.choicesField]) ? item[fmt.choicesField].length > 0
        : typeof item[fmt.choicesField] === 'object' && Object.keys(item[fmt.choicesField]).length > 0)
     : false;
@@ -1749,7 +1943,7 @@ function renderCard(item, fmt, idx) {
 
   const imgOpts = detectImageOptions(item, fmt);
 
-  const images = collectImages(item, fmt);
+  const images = collectImages(item, fmt, idx);
   const videos = collectVideos(item, fmt);
   const hasQ = fmt.questionField && item[fmt.questionField];
   const hasAns = (fmt.answerFields && fmt.answerFields.some(f => f in item)) || (fmt.answerField && item[fmt.answerField] === null);
@@ -1769,9 +1963,10 @@ function renderCard(item, fmt, idx) {
     const mainImg = images[0];
     const bboxJson = hasBbox ? esc(JSON.stringify(item.bbox)) : '';
     const segJson = hasSeg ? esc(JSON.stringify(item.segmentation)) : '';
+    const fbBbox = hfRowFallbackDataAttr(mainImg);
     html += `<div class="chat-media"><div class="bbox-overlay-wrap">
       <img class="case-image" src="${esc(mainImg.path)}" alt="${esc(mainImg.label)}" loading="lazy"
-        onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(mainImg.path)}"
+        onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(mainImg.path)}"${fbBbox}
         onload="drawBboxOverlay(this)"
         data-bbox="${bboxJson}" data-seg="${segJson}">
       <canvas></canvas>
@@ -1786,7 +1981,7 @@ function renderCard(item, fmt, idx) {
     html += '<div class="chat-row"><div class="chat-ava chat-ava-q">Q</div>';
     let qBody = embeddedMc ? embeddedMc.stem : getQuestionText(item, fmt);
     if (imgOpts) qBody = qBody.replace(/<image_\d+>/g, '').trim();
-    html += '<div class="chat-bbl chat-bbl-q">' + renderMd(qBody) + '</div></div>';
+    html += '<div class="chat-bbl chat-bbl-q">' + renderMd(wrapEmbeddedCode(qBody)) + '</div></div>';
   }
 
   if (imgOpts) {
@@ -1893,10 +2088,11 @@ function renderCard(item, fmt, idx) {
 function renderClassificationGrid(items, fmt) {
   let html = '<div class="classify-grid">';
   items.forEach((item, i) => {
-    const images = collectImages(item, fmt);
+    const images = collectImages(item, fmt, i);
     const imgSrc = images.length > 0 ? images[0].path : null;
+    const fb = images.length > 0 ? hfRowFallbackDataAttr(images[0]) : '';
     html += `<div class="classify-item">`;
-    if (imgSrc) html += `<img src="${esc(imgSrc)}" alt="Case ${i+1}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(imgSrc)}">`;
+    if (imgSrc) html += `<img src="${esc(imgSrc)}" alt="Case ${i+1}" loading="lazy" onclick="openLightbox(this.src)" onerror="handleImgErr(this)" data-orig="${esc(imgSrc)}"${fb}>`;
 
     let label = '';
     if (fmt.answerField) label = item[fmt.answerField] ?? '';
@@ -2093,8 +2289,9 @@ async function loadSubtask(subtask) {
 
   // Try local paths first (exact name, then '/' replaced with '_'), then fall back to HuggingFace
   const localName2 = datasetName.replace(/\//g, '_');
+  const sr = samplesRootPrefix();
   const localCandidates = [...new Set([datasetName, localName2])].map(n =>
-    `/samples/${encodeURIComponent(n)}/${encodeURIComponent(subtask)}/data.json`
+    `${sr}${encodeURIComponent(n)}/${encodeURIComponent(subtask)}/data.json`
   );
   const hfUrl = `${SAMPLES_BASE}/${encodeURIComponent(datasetName)}/${encodeURIComponent(subtask)}/data.json`;
   const allUrls = [...localCandidates, hfUrl];
@@ -2105,10 +2302,10 @@ async function loadSubtask(subtask) {
       const resp = await fetch(url);
       if (!resp.ok) { lastErr = new Error(`HTTP ${resp.status}`); continue; }
       const raw = await resp.json();
-      if (url.startsWith('/samples/')) {
-        localDatasetName = decodeURIComponent(url.split('/')[2]);
-      } else {
+      if (url.startsWith(SAMPLES_BASE)) {
         localDatasetName = '';
+      } else {
+        localDatasetName = localDatasetNameFromSamplesUrl(url);
       }
       const items = Array.isArray(raw) ? raw : [raw];
       const fmt = detectFormat(items);
@@ -2156,7 +2353,44 @@ function toggleExpand(btn) {
   }
 }
 
+function tryHfRowImageFallback(img, payload) {
+  var parts = payload.split('::');
+  if (parts.length !== 4) return Promise.resolve(false);
+  var ds, cfg, spl, off;
+  try {
+    ds = decodeURIComponent(parts[0]);
+    cfg = decodeURIComponent(parts[1]);
+    spl = decodeURIComponent(parts[2]);
+    off = parseInt(decodeURIComponent(parts[3]), 10);
+  } catch (e1) { return Promise.resolve(false); }
+  if (!ds || isNaN(off)) return Promise.resolve(false);
+  var url = HF_DATASETS_ROWS_API + '?dataset=' + encodeURIComponent(ds) + '&config=' + encodeURIComponent(cfg) + '&split=' + encodeURIComponent(spl) + '&offset=' + off + '&length=1';
+  return fetch(url)
+    .then(function(resp) { if (!resp.ok) throw new Error('rows'); return resp.json(); })
+    .then(function(data) {
+      var row = data.rows && data.rows[0] && data.rows[0].row;
+      var im = row && row.image;
+      var src = im && typeof im === 'object' && im.src;
+      if (!src) throw new Error('no src');
+      img.src = src;
+      img.dataset.orig = src;
+      img.style.display = '';
+      var nx = img.nextElementSibling;
+      if (nx && nx.classList && nx.classList.contains('img-err-ph')) nx.remove();
+      return true;
+    })
+    .catch(function() { return false; });
+}
+
 function handleImgErr(img) {
+  var fb = img.dataset.hfRowFallback || '';
+  if (fb && !img.dataset.hfFbTried) {
+    img.dataset.hfFbTried = '1';
+    tryHfRowImageFallback(img, fb).then(function(ok) {
+      if (!ok) handleImgErr(img);
+    });
+    return;
+  }
   var r = parseInt(img.dataset.retry || '0');
   if (r < 3) {
     img.dataset.retry = r + 1;
@@ -2224,6 +2458,7 @@ function retryImg(btn) {
   var img = ph.previousElementSibling;
   if (img && img.tagName === 'IMG') {
     img.dataset.retry = '0';
+    delete img.dataset.hfFbTried;
     img.style.display = '';
     img.src = ph.dataset.src + '?' + Date.now();
     ph.remove();

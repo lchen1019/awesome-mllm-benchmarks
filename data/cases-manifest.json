@@ -5,6 +5,9 @@
   "All-Angles": [
     "default"
   ],
+  "AndroidWorld": [
+    "default"
+  ],
   "ArcAG2-Image": [
     "default"
   ],
@@ -28,6 +31,9 @@
     "Visual_Similarity"
   ],
   "BabyVision": [
+    "default"
+  ],
+  "BrowseComp-VL": [
     "default"
   ],
   "CC-OCR": [
@@ -118,11 +124,16 @@
   "FronTalk": [
     "default"
   ],
+  "HLE-VL": [
+    "default"
+  ],
   "HRBench4K/8K": [
-    "hrbench_version_split"
+    "4K",
+    "8K"
   ],
   "HRBench4K_8K": [
-    "hrbench_version_split"
+    "4K",
+    "8K"
   ],
   "HallusionBench": [
     "default"
@@ -324,6 +335,9 @@
   "Online-Mind2web": [
     "default"
   ],
+  "PA-Bench": [
+    "default"
+  ],
   "PMC-VQA": [
     "default"
   ],
@@ -464,6 +478,9 @@
     "default"
   ],
   "We-Math": [
+    "default"
+  ],
+  "WindowsAA": [
     "default"
   ],
   "WorldVQA": [
