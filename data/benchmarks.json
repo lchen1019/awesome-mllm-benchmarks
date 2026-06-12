@@ -5633,6 +5633,58 @@
     "affiliation": "University of California, San Diego"
   },
   {
+    "name": "GameplayQA",
+    "category": "Video / Multiple",
+    "brief": "Decision-dense POV-synced multi-video understanding of 3D virtual agents",
+    "detail": "",
+    "github_url": "https://github.com/HATS-ICT/GameplayQA",
+    "github_stars": null,
+    "github_forks": null,
+    "github_description": "[ACL 2026] GameplayQA: A Benchmarking Framework for Decision-Dense POV-Synced Multi-Video Understanding of 3D Virtual Agents",
+    "hf_url": "https://huggingface.co/datasets/wangyz1999/GameplayQA",
+    "hf_downloads": 0,
+    "hf_likes": 0,
+    "paper_title": "GameplayQA: A Benchmarking Framework for Decision-Dense POV-Synced Multi-Video Understanding of 3D Virtual Agents",
+    "paper_urls": [
+      "https://arxiv.org/abs/2603.24329"
+    ],
+    "paper_abstract": "GameplayQA is a diagnostic benchmark for first-person/POV-synced multi-video understanding of multi-agent 3D gameplay. It comprises roughly 2.4K question-answering pairs spanning 15 task categories organized across 3 cognitive levels, evaluating multimodal large language models on decision-dense, perspective-synchronized multi-video reasoning over 3D virtual agents.",
+    "paper_authors": [
+      "Yunzhe Wang",
+      "Runhui Xu",
+      "Kexin Zheng",
+      "Tianyi Zhang",
+      "Jayavibhav Niranjan Kogundi",
+      "Soham Hans",
+      "Volkan Ustun"
+    ],
+    "paper_published": "2026-03-01",
+    "paper_categories": [
+      "cs.CV",
+      "cs.AI"
+    ],
+    "homepage": "https://hats-ict.github.io/gameplayqa/",
+    "has_samples": false,
+    "hf_tags": [
+      "question-answering",
+      "visual-question-answering",
+      "video-understanding",
+      "cross-video-reasoning",
+      "multimodal",
+      "multi-agent",
+      "game-benchmark"
+    ],
+    "hf_license": null,
+    "hf_created": null,
+    "hf_modified": null,
+    "github_topics": [],
+    "github_language": null,
+    "github_license": null,
+    "hf_downloads_total": null,
+    "organization": "USC ICT",
+    "affiliation": "USC Institute for Creative Technologies"
+  },
+  {
     "name": "OVBench",
     "category": "Video / Streaming",
     "brief": "Online video stream question answering benchmark",

@@ -357,6 +357,7 @@ awesome-mllm-benchmarks/
 | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- |
 | **MVBench**  | [Paper](https://arxiv.org/abs/2311.17005) · [GitHub](https://github.com/OpenGVLab/Ask-Anything) · [HF](https://huggingface.co/datasets/OpenGVLab/MVBench)   | 2023-11 | Shanghai AI Lab |
 | **CrossVid** | [Paper](https://arxiv.org/abs/2511.12263) · [GitHub](https://github.com/chuntianli666/CrossVid) · [HF](https://huggingface.co/datasets/Chuntianli/CrossVid) | 2025-11 | UCSD            |
+| **GameplayQA** | [Paper](https://arxiv.org/abs/2603.24329) · [GitHub](https://github.com/HATS-ICT/GameplayQA) · [HF](https://huggingface.co/datasets/wangyz1999/GameplayQA) | 2026-03 | USC ICT         |
 
 
 
