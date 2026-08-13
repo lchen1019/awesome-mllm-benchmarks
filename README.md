@@ -66,21 +66,6 @@ Clone and serve locally:
 ```bash
 git clone https://github.com/lchen1019/awesome-mllm-benchmarks.git
 cd awesome-mllm-benchmarks
-
-# Download sample data from HuggingFace
-# Option 1: Using huggingface_hub
-pip install huggingface_hub
-python -c "
-from huggingface_hub import snapshot_download
-snapshot_download(
-    repo_id='lchen1019/awesome-mllm-benchmarks-samples',
-    repo_type='dataset',
-    local_dir='samples'
-)
-"
-# Option 2: Using git
-git clone https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples samples
-
 python serve.py 8080
 ```
 
@@ -88,7 +73,7 @@ Then open [http://localhost:8080](http://localhost:8080) in your browser.
 
 > `serve.py` starts a simple HTTP server with no-cache headers. You can also use any other static file server.
 >
-> The benchmark sample data (images, questions, answers) is hosted on [HuggingFace](https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples) and needs to be downloaded into the `samples/` directory for the sample viewer to work locally.
+> Sample images live in `samples/` and are served locally with the site. A copy also remains on [HuggingFace](https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples).
 
 **Project Structure**
 
@@ -162,6 +147,7 @@ awesome-mllm-benchmarks/
 | **TreeBench**       | [Paper](https://arxiv.org/abs/2507.07999) · [GitHub](https://github.com/Haochen-Wang409/TreeVGR) · [HF](https://huggingface.co/datasets/HaochenWang/TreeBench)              | 2025-07 | HKU             |
 | **RefCOCO(avg)**    | [Paper](https://arxiv.org/abs/1608.00272) · [GitHub](https://github.com/lichengunc/refer) · [HF](https://huggingface.co/datasets/lmms-lab/RefCOCO)                          | -       | UNC             |
 | **EmbSpatialBench** | [Paper](https://arxiv.org/abs/2406.05756) · [HF](https://huggingface.co/datasets/FlagEval/EmbSpatial-Bench)                                                                 | -       | BAAI            |
+| **RealWorldQA**     | [HF](https://huggingface.co/datasets/xai-org/RealWorldQA)                                                                                                              | -       | xAI             |
 | **SUNRGBD**         | [Paper](https://rgbd.cs.princeton.edu/paper.pdf) · [GitHub](https://github.com/PrincetonVision/SUNRGBDtoolbox) · [HF](https://huggingface.co/datasets/Msun/sunrgbd)         | -       | Princeton       |
 
 
@@ -181,7 +167,6 @@ awesome-mllm-benchmarks/
 | **ViVerBench**      | [Paper](https://arxiv.org/abs/2510.13804) · [GitHub](https://github.com/Cominclip/OmniVerifier) · [HF](https://huggingface.co/datasets/comin/ViVerBench)               | 2025-10 | Tsinghua        |
 | **MME-CC**          | [Paper](https://arxiv.org/abs/2511.03146) · [GitHub](https://github.com/randomtutu/MME-CC) · [HF](https://huggingface.co/datasets/MaxwellWen/MME-CC)                   | 2025-11 | NTU             |
 | **WorldVQA**        | [Paper](https://arxiv.org/abs/2602.02537) · [GitHub](https://github.com/MoonshotAI/WorldVQA) · [HF](https://huggingface.co/datasets/moonshotai/WorldVQA)               | 2026-01 | Moonshot AI     |
-| **RealWorldQA**     | [HF](https://huggingface.co/datasets/xai-org/RealWorldQA)                                                                                                              | -       | xAI             |
 | **VibeEval**        | [Paper](https://publications.reka.ai/reka-vibe-eval.pdf) · [GitHub](https://github.com/reka-ai/reka-vibe-eval) · [HF](https://huggingface.co/datasets/RekaAI/VibeEval) | -       | Reka AI         |
 
 
@@ -236,7 +221,6 @@ awesome-mllm-benchmarks/
 
 | Benchmark         | Paper                                                                                                                                                                          | Date    | Organization |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------------ |
-| **RealWorldQA**   | [HF](https://huggingface.co/datasets/xai-org/RealWorldQA)                                                                                                                      | -       | xAI          |
 | **MME**           | [Paper](https://arxiv.org/abs/2306.13394) · [GitHub](https://github.com/BradyFU/Awesome-Multimodal-Large-Language-Models) · [HF](https://huggingface.co/datasets/lmms-lab/MME) | 2023-06 | NJU          |
 | **SEEDBench**     | [Paper](https://arxiv.org/abs/2307.16125) · [GitHub](https://github.com/AILab-CVC/SEED-Bench) · [HF](https://huggingface.co/datasets/lmms-lab/SEED-Bench)                      | 2023-07 | Tencent      |
 | **CRPE**          | [Paper](https://arxiv.org/abs/2403.11289) · [GitHub](https://github.com/THUDM/CogVLM2) · [HF](https://huggingface.co/datasets/THUDM/CRPE)                                      | 2024-03 | Tsinghua     |
@@ -354,11 +338,11 @@ awesome-mllm-benchmarks/
 **Video / Multi-task & Multiple**
 
 
-| Benchmark    | Paper                                                                                                                                                       | Date    | Organization    |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- |
-| **MVBench**  | [Paper](https://arxiv.org/abs/2311.17005) · [GitHub](https://github.com/OpenGVLab/Ask-Anything) · [HF](https://huggingface.co/datasets/OpenGVLab/MVBench)   | 2023-11 | Shanghai AI Lab |
-| **CrossVid** | [Paper](https://arxiv.org/abs/2511.12263) · [GitHub](https://github.com/chuntianli666/CrossVid) · [HF](https://huggingface.co/datasets/Chuntianli/CrossVid) | 2025-11 | UCSD            |
-| **GameplayQA** | [Paper](https://arxiv.org/abs/2603.24329) · [GitHub](https://github.com/HATS-ICT/GameplayQA) · [HF](https://huggingface.co/datasets/wangyz1999/GameplayQA) | 2026-03 | USC ICT         |
+| Benchmark      | Paper                                                                                                                                                       | Date    | Organization    |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- |
+| **MVBench**    | [Paper](https://arxiv.org/abs/2311.17005) · [GitHub](https://github.com/OpenGVLab/Ask-Anything) · [HF](https://huggingface.co/datasets/OpenGVLab/MVBench)   | 2023-11 | Shanghai AI Lab |
+| **CrossVid**   | [Paper](https://arxiv.org/abs/2511.12263) · [GitHub](https://github.com/chuntianli666/CrossVid) · [HF](https://huggingface.co/datasets/Chuntianli/CrossVid) | 2025-11 | UCSD            |
+| **GameplayQA** | [Paper](https://arxiv.org/abs/2603.24329) · [GitHub](https://github.com/HATS-ICT/GameplayQA) · [HF](https://huggingface.co/datasets/wangyz1999/GameplayQA)  | 2026-03 | USC ICT         |
 
 
 
@@ -367,8 +351,9 @@ awesome-mllm-benchmarks/
 
 **Structured Output & Visualization**
 
-| Benchmark | Paper | Date | Organization |
-| --------- | ----- | ---- | ------------ |
+
+| Benchmark        | Paper                                                                                                                                                                                                                 | Date    | Organization |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------ |
 | **StructEval-V** | [Paper](https://arxiv.org/abs/2505.20139) · [GitHub](https://github.com/TIGER-AI-Lab/StructEval) · [HF](https://huggingface.co/datasets/TIGER-Lab/StructEval) · [Project](https://tiger-ai-lab.github.io/StructEval/) | 2025-05 | TIGER-AI Lab |
 
 
