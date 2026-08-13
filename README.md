@@ -52,6 +52,7 @@ We collect **130+ MLLM benchmarks** across **20+ categories** (OCR, Math, Video,
   - [Coding](#coding)
   - [Medical](#medical)
   - [Video](#video)
+  - [Generation](#generation)
   - [Agent](#agent)
 - [Contributing](#-contributing)
 - [Citation](#-citation)
@@ -361,6 +362,15 @@ awesome-mllm-benchmarks/
 
 
 
+### Generation
+
+**Structured Output & Visualization**
+
+| Benchmark | Paper | Date | Organization |
+| --------- | ----- | ---- | ------------ |
+| **StructEval-V** | [Paper](https://arxiv.org/abs/2505.20139) · [GitHub](https://github.com/TIGER-AI-Lab/StructEval) · [HF](https://huggingface.co/datasets/TIGER-Lab/StructEval) · [Project](https://tiger-ai-lab.github.io/StructEval/) | 2025-05 | TIGER-AI Lab |
+
+
 ### Agent
 
 **Agent / General**
@@ -439,5 +449,3 @@ If you find this project useful for your research, please consider citing:
   note         = {Accessed: 2026}
 }
 ```
-
-
