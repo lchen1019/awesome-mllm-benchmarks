@@ -1174,6 +1174,7 @@ function localDatasetNameFromSamplesUrl(url) {
 function normalizeDataPathForPage(rawPath) {
   if (!rawPath || typeof rawPath !== 'string' || !rawPath.startsWith('data/')) return rawPath;
   if (!datasetName) return rawPath;
+  const targetBench = localDatasetName || datasetName;
   const rest = rawPath.slice(5);
   const parts = rest.split('/');
   if (parts.length < 3) return rawPath;
@@ -1183,8 +1184,8 @@ function normalizeDataPathForPage(rawPath) {
   if (!tail) return rawPath;
   let bench = embeddedBench;
   let split = embeddedSplit;
-  if (embeddedBench !== datasetName) {
-    bench = datasetName;
+  if (embeddedBench !== targetBench) {
+    bench = targetBench;
     split = (currentSubtask && String(currentSubtask)) ? currentSubtask : embeddedSplit;
   } else if (currentSubtask && embeddedSplit !== currentSubtask) {
     split = currentSubtask;

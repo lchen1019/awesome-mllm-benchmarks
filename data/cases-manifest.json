@@ -557,5 +557,29 @@
     ],
     "Chartography": [
         "default"
+    ],
+    "VisFactor": [
+        "default"
+    ],
+    "ARKitScenes": [
+        "default"
+    ],
+    "LingoQA": [
+        "default"
+    ],
+    "Hypersim": [
+        "default"
+    ],
+    "SUNRGBD": [
+        "default"
+    ],
+    "Nuscene": [
+        "default"
+    ],
+    "Countix": [
+        "default"
+    ],
+    "ViSpeak": [
+        "default"
     ]
 }

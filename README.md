@@ -17,7 +17,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Benchmarks-150+-blue?style=flat-square" alt="Benchmarks">
   <img src="https://img.shields.io/badge/Categories-20+-orange?style=flat-square" alt="Categories">
-  <img src="https://img.shields.io/badge/Samples-140+-purple?style=flat-square" alt="Samples">
+  <img src="https://img.shields.io/badge/Samples-150+-purple?style=flat-square" alt="Samples">
 </p>
 <p align="center">
   <a href="https://lchen1019.github.io/awesome-mllm-benchmarks/"><strong>🌐 Explore the Interactive Dashboard »</strong></a>

@@ -1576,7 +1576,7 @@
     "paper_published": null,
     "paper_categories": [],
     "homepage": null,
-    "has_samples": false,
+    "has_samples": true,
     "organization": "CUHK",
     "affiliation": "The Chinese University of Hong Kong"
   },
@@ -3997,7 +3997,7 @@
       "cs.MM"
     ],
     "homepage": "",
-    "has_samples": false,
+    "has_samples": true,
     "github_topics": [],
     "github_language": "Python",
     "github_license": "MIT",
@@ -4040,7 +4040,7 @@
       "cs.AI"
     ],
     "homepage": "",
-    "has_samples": false,
+    "has_samples": true,
     "github_topics": [],
     "github_language": "Python",
     "github_license": "NOASSERTION",
@@ -4237,7 +4237,7 @@
       "cs.CV"
     ],
     "homepage": "",
-    "has_samples": false,
+    "has_samples": true,
     "github_topics": [],
     "github_language": "Python",
     "github_license": "NOASSERTION",
@@ -4320,7 +4320,7 @@
       "cs.GR"
     ],
     "homepage": "",
-    "has_samples": false,
+    "has_samples": true,
     "github_topics": [],
     "github_language": "Python",
     "github_license": "NOASSERTION",
@@ -4348,7 +4348,7 @@
     "paper_published": null,
     "paper_categories": [],
     "homepage": null,
-    "has_samples": false,
+    "has_samples": true,
     "hf_tags": [
       "wtfpl"
     ],
@@ -4396,7 +4396,7 @@
       "stat.ML"
     ],
     "homepage": "https://www.nuScenes.org",
-    "has_samples": false,
+    "has_samples": true,
     "github_topics": [],
     "github_language": "Python",
     "github_license": "NOASSERTION",
@@ -5013,7 +5013,7 @@
       "cs.CV"
     ],
     "homepage": "https://sites.google.com/view/repnet",
-    "has_samples": false,
+    "has_samples": true,
     "organization": "Google",
     "affiliation": "Google Research, DeepMind"
   },
@@ -5931,7 +5931,7 @@
       "cs.CV"
     ],
     "homepage": "",
-    "has_samples": false,
+    "has_samples": true,
     "hf_tags": [
       "cc-by-nc-sa-4.0",
       "n<1K",

@@ -488,5 +488,156 @@
         "source_url": "https://arxiv.org/abs/2605.26329"
       }
     ]
+  },
+  "VisFactor": {
+    "default": [
+      {
+        "id": "visfactor-preview-01",
+        "question": "Determine whether two rendered objects are identical under rotation, or differ in their underlying 3D structure.",
+        "category": "Mental rotation",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://arxiv.org/abs/2502.16435"
+      },
+      {
+        "id": "visfactor-preview-02",
+        "question": "Infer which visual transformation preserves the object relationship shown in the reference arrangement.",
+        "category": "Visual analogy",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://arxiv.org/abs/2502.16435"
+      },
+      {
+        "id": "visfactor-preview-03",
+        "question": "Identify the only candidate consistent with the occlusion and depth cues in a simple scene.",
+        "category": "Spatial perception",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://arxiv.org/abs/2502.16435"
+      }
+    ]
+  },
+  "ARKitScenes": {
+    "default": [
+      {
+        "id": "arkit-preview-01",
+        "question": "Given a mobile RGB-D room capture, identify the requested 3D object and its spatial extent.",
+        "category": "3D object detection",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://github.com/apple/ARKitScenes"
+      },
+      {
+        "id": "arkit-preview-02",
+        "question": "Reason about the relative positions of furniture in a reconstructed indoor scene.",
+        "category": "Indoor spatial understanding",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://arxiv.org/abs/2111.08897"
+      }
+    ]
+  },
+  "LingoQA": {
+    "default": [
+      {
+        "id": "lingoqa-preview-01",
+        "question": "From the driving video context, explain why the vehicle should slow down before entering the junction.",
+        "category": "Driving reasoning",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://github.com/wayveai/LingoQA"
+      },
+      {
+        "id": "lingoqa-preview-02",
+        "question": "Identify the road participant that most directly affects the ego vehicle’s next action.",
+        "category": "Video question answering",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://arxiv.org/abs/2312.14115"
+      }
+    ]
+  },
+  "Hypersim": {
+    "default": [
+      {
+        "id": "hypersim-preview-01",
+        "question": "Estimate the relative depth ordering of the marked surfaces in a photorealistic synthetic room.",
+        "category": "Depth reasoning",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://github.com/apple/ml-hypersim"
+      },
+      {
+        "id": "hypersim-preview-02",
+        "question": "Identify the semantic class and surface orientation of an indoor scene region.",
+        "category": "Holistic scene understanding",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://arxiv.org/abs/2011.02523"
+      }
+    ]
+  },
+  "SUNRGBD": {
+    "default": [
+      {
+        "id": "sunrgbd-preview-01",
+        "question": "Use the RGB-D scene context to identify the requested indoor object and its 3D bounding region.",
+        "category": "RGB-D detection",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://github.com/PrincetonVision/SUNRGBDtoolbox"
+      },
+      {
+        "id": "sunrgbd-preview-02",
+        "question": "Determine the room type and the spatial relationship between two annotated objects.",
+        "category": "Scene understanding",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://rgbd.cs.princeton.edu/paper.pdf"
+      }
+    ]
+  },
+  "Nuscene": {
+    "default": [
+      {
+        "id": "nuscenes-preview-01",
+        "question": "Fuse camera and range-sensor context to identify the closest relevant road agent around the ego vehicle.",
+        "category": "Autonomous driving perception",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://github.com/nutonomy/nuscenes-devkit"
+      },
+      {
+        "id": "nuscenes-preview-02",
+        "question": "Reason about the tracked object trajectory and its relationship to the drivable area.",
+        "category": "3D tracking",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://www.nuscenes.org/"
+      }
+    ]
+  },
+  "Countix": {
+    "default": [
+      {
+        "id": "countix-preview-01",
+        "question": "Count how many complete repetitions of the primary action occur in the video clip.",
+        "category": "Repetition counting",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://sites.google.com/view/repnet"
+      },
+      {
+        "id": "countix-preview-02",
+        "question": "Estimate the temporal period of the repeated motion and report the number of completed cycles.",
+        "category": "Temporal perception",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://arxiv.org/abs/2006.15418"
+      }
+    ]
+  },
+  "ViSpeak": {
+    "default": [
+      {
+        "id": "vispeak-preview-01",
+        "question": "While processing a live video stream, provide timely feedback when the observed action diverges from the visual instruction.",
+        "category": "Proactive feedback",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://github.com/HumanMLLM/ViSpeak"
+      },
+      {
+        "id": "vispeak-preview-02",
+        "question": "Detect the relevant event in the ongoing stream and respond without waiting for the video to end.",
+        "category": "Streaming video",
+        "preview_type": "Synthetic format example — no evaluation images, labels, or hidden answers are redistributed",
+        "source_url": "https://arxiv.org/abs/2503.12769"
+      }
+    ]
   }
 }
