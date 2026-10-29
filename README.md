@@ -75,6 +75,7 @@ Then open [http://localhost:8080](http://localhost:8080) in your browser.
 >
 > Sample images live in `samples/` and are served locally with the site. A copy also remains on [HuggingFace](https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples).
 > For gated, encrypted, evaluation-only, or non-redistributable benchmarks, `data/preview-cases.json` provides safe public-documentation or clearly labeled synthetic format previews without copying hidden evaluation data.
+> Built-in preview sets contain 24 varied cases each. Text-only tasks receive generated visual task cards so every sample page has a useful visual overview.
 
 **Project Structure**
 

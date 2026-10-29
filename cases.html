@@ -188,6 +188,49 @@ body {
 }
 .img-wrap { display: flex; flex-direction: column; align-items: center; }
 
+.preview-poster {
+  position: relative; overflow: hidden;
+  width: min(100%, 720px); min-height: 190px;
+  margin: 0 0 16px; padding: 24px 28px;
+  border-radius: 14px; color: #fff;
+  background:
+    radial-gradient(circle at 86% 18%, hsla(var(--poster-hue), 92%, 82%, .42), transparent 31%),
+    radial-gradient(circle at 10% 90%, hsla(calc(var(--poster-hue) + 72), 88%, 68%, .32), transparent 36%),
+    linear-gradient(135deg, hsl(var(--poster-hue), 58%, 36%), hsl(calc(var(--poster-hue) + 42), 68%, 22%));
+  box-shadow: 0 12px 28px hsla(var(--poster-hue), 55%, 26%, .2);
+  isolation: isolate;
+}
+.preview-poster::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .22;
+  background-image:
+    linear-gradient(rgba(255,255,255,.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px);
+  background-size: 28px 28px;
+  transform: perspective(360px) rotateX(58deg) scale(1.45) translateY(22%);
+  transform-origin: center bottom;
+}
+.preview-poster-top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.preview-poster-kicker {
+  font-size:.7rem; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+  color:rgba(255,255,255,.72);
+}
+.preview-poster-index {
+  padding:3px 9px; border:1px solid rgba(255,255,255,.28); border-radius:999px;
+  background:rgba(255,255,255,.1); font:600 .68rem/1.4 monospace;
+}
+.preview-poster-main { display:flex; align-items:center; gap:18px; margin-top:22px; }
+.preview-poster-icon {
+  display:grid; place-items:center; flex:0 0 64px; height:64px; border-radius:18px;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2); font-size:2rem;
+}
+.preview-poster-title { font-size:1.35rem; font-weight:800; letter-spacing:-.025em; }
+.preview-poster-category { margin-top:3px; color:rgba(255,255,255,.76); font-size:.8rem; }
+.preview-poster-foot {
+  margin-top:20px; max-width:86%; color:rgba(255,255,255,.68);
+  font-size:.72rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
 .bbox-overlay-wrap {
   position: relative; display: inline-block;
 }
@@ -2284,6 +2327,35 @@ function renderImageChoices(item, optionImgKeys, answerRaw) {
   return html;
 }
 
+function previewPosterHue(text) {
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+  return Math.abs(hash) % 360;
+}
+
+function renderPreviewPoster(item, idx) {
+  const category = String(item.category || item.domain || 'Benchmark task');
+  const itemId = String(item.idx || item.id || `case-${idx + 1}`);
+  const question = String(item.question || item.prompt || item.instruction || '');
+  const icons = ['⌘', '◈', '◎', '△', '✦', '▦', '◇', '⟐'];
+  const icon = icons[idx % icons.length];
+  const hue = previewPosterHue(`${datasetName}:${category}:${idx}`);
+  return `<div class="preview-poster" style="--poster-hue:${hue}">
+    <div class="preview-poster-top">
+      <span class="preview-poster-kicker">Task preview · ${esc(datasetName)}</span>
+      <span class="preview-poster-index">${esc(String(idx + 1).padStart(2, '0'))} / ${esc(itemId)}</span>
+    </div>
+    <div class="preview-poster-main">
+      <div class="preview-poster-icon">${icon}</div>
+      <div>
+        <div class="preview-poster-title">${esc(category)}</div>
+        <div class="preview-poster-category">${esc(item.preview_type || 'Public benchmark preview')}</div>
+      </div>
+    </div>
+    <div class="preview-poster-foot">${esc(question)}</div>
+  </div>`;
+}
+
 function renderCard(item, fmt, idx) {
   const d = Math.min(idx * 0.05, 0.4);
   let html = `<div class="case-card" style="animation-delay:${d}s"><div class="card-header"><span class="card-num">#${idx + 1}</span>`;
@@ -2306,6 +2378,9 @@ function renderCard(item, fmt, idx) {
   const hasAns = (fmt.answerFields && fmt.answerFields.some(f => f in item)) || (fmt.answerField && item[fmt.answerField] === null);
 
   if (videos.length > 0) html += renderVideosHtml(videos);
+  if (videos.length === 0 && images.length === 0 && hasQ) {
+    html += renderPreviewPoster(item, idx);
+  }
 
   const hasBbox = Array.isArray(item.bbox) && item.bbox.length === 4;
   const hasSeg = Array.isArray(item.segmentation) && item.segmentation.length >= 6;
