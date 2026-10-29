@@ -363,5 +363,130 @@
         "source_url": "https://github.com/surge-ai/chartography/tree/main/task_packs/sample_charts"
       }
     ]
+  },
+  "Agents' Last Exam": {
+    "default": [
+      {
+        "id": "ale-preview-01",
+        "question": "Prepare a professional deliverable from a cluttered workspace containing documents, spreadsheets, and application state, then save it in the requested format.",
+        "category": "Professional workflow",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://agents-last-exam.org/"
+      },
+      {
+        "id": "ale-preview-02",
+        "question": "Use desktop and command-line tools to reconcile source materials and produce a verifiable work product for an industry-specific request.",
+        "category": "Computer use",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://github.com/rdi-berkeley/agents-last-exam"
+      },
+      {
+        "id": "ale-preview-03",
+        "question": "Complete a long-horizon workplace task whose final files and milestones are checked by deterministic graders.",
+        "category": "Deliverable evaluation",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://arxiv.org/abs/2606.05405"
+      }
+    ]
+  },
+  "GDPval": {
+    "default": [
+      {
+        "id": "gdpval-preview-01",
+        "question": "Review supplied financial records and prepare a concise audit workpaper that documents the requested checks and conclusions.",
+        "category": "Accountants and Auditors",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://openai.com/index/gdpval/"
+      },
+      {
+        "id": "gdpval-preview-02",
+        "question": "Analyze the provided operational data and create a presentation-ready recommendation for the relevant professional stakeholder.",
+        "category": "Management Analysts",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://huggingface.co/datasets/openai/gdpval"
+      },
+      {
+        "id": "gdpval-preview-03",
+        "question": "Use the reference materials to produce a structured professional document that satisfies the stated business requirements.",
+        "category": "Knowledge work",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://arxiv.org/abs/2510.04374"
+      }
+    ]
+  },
+  "GDPval-AA": {
+    "default": [
+      {
+        "id": "gdpval-aa-preview-01",
+        "question": "In an agentic shell-and-browser environment, create the requested professional deliverable from the supplied reference files.",
+        "category": "Agentic knowledge work",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://artificialanalysis.ai/evaluations/gdpval-aa"
+      },
+      {
+        "id": "gdpval-aa-preview-02",
+        "question": "Complete a realistic occupational task and return the final office document for blind pairwise quality comparison.",
+        "category": "Deliverable creation",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://github.com/ArtificialAnalysis/Stirrup"
+      },
+      {
+        "id": "gdpval-aa-preview-03",
+        "question": "Research, calculate, and assemble a decision-ready artifact while preserving citations to the provided materials.",
+        "category": "Professional research",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://huggingface.co/datasets/openai/gdpval"
+      }
+    ]
+  },
+  "SWE-Bench Pro": {
+    "default": [
+      {
+        "id": "swebench-pro-preview-01",
+        "question": "Modify a multi-package repository to implement the requested interface while preserving backward compatibility and passing hidden regression tests.",
+        "category": "Repository issue resolution",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://github.com/scaleapi/SWE-bench_Pro-os"
+      },
+      {
+        "id": "swebench-pro-preview-02",
+        "question": "Trace a production bug across several modules, implement a robust fix, and avoid unrelated behavioral changes.",
+        "category": "Long-horizon debugging",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://labs.scale.com/papers/swe-bench-pro"
+      },
+      {
+        "id": "swebench-pro-preview-03",
+        "question": "Add an enterprise-style feature spanning API, persistence, and validation layers in an existing codebase.",
+        "category": "Feature implementation",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://arxiv.org/abs/2509.16941"
+      }
+    ]
+  },
+  "JobBench": {
+    "default": [
+      {
+        "id": "jobbench-preview-01",
+        "question": "Reconcile contradictory records from several reference files and produce a cited summary for a professional reviewer.",
+        "category": "Data reconciliation",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://job-bench.github.io/"
+      },
+      {
+        "id": "jobbench-preview-02",
+        "question": "Cross-reference public records and a supplied spreadsheet to create the requested worker-facing deliverable.",
+        "category": "Professional research",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://github.com/Job-Bench/job-bench-eval"
+      },
+      {
+        "id": "jobbench-preview-03",
+        "question": "Pre-process a heterogeneous workspace and generate a structured output that satisfies fact-anchored criteria.",
+        "category": "Workspace processing",
+        "preview_type": "Synthetic format example — no hidden answers, deliverables, tests, or rubrics are included",
+        "source_url": "https://arxiv.org/abs/2605.26329"
+      }
+    ]
   }
 }
