@@ -350,8 +350,8 @@
     },
     {
       "name": "HLE",
-      "category": "STEM",
-      "in_project": false,
+      "category": "Knowledge",
+      "in_project": true,
       "models": [
         "step3vl",
         "claude4"
@@ -1087,6 +1087,126 @@
         "step3vl",
         "gemini25"
       ]
+    },
+    {
+      "name": "Terminal-Bench",
+      "category": "Agent (Terminal)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "DeepSWE",
+      "category": "Coding",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "AutomationBench",
+      "category": "Agent (Tool)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "Agents' Last Exam",
+      "category": "Agent (Computer)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "OSWorld",
+      "category": "Agent (Computer)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "GDPval-AA",
+      "category": "Agent (General)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "GPQA",
+      "category": "STEM",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "CyberGym",
+      "category": "Coding",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "ProgramBench",
+      "category": "Coding",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "SWE-Bench Pro",
+      "category": "Coding",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "FrontierSWE",
+      "category": "Coding",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "OfficeQA Pro",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "PostTrainBench",
+      "category": "Agent (AI Research)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "Toolathlon Verified",
+      "category": "Agent (Tool)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "BrowseComp",
+      "category": "Agent (Browser)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "JobBench",
+      "category": "Agent (General)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "NL2Repo-Bench",
+      "category": "Coding",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "GDPval",
+      "category": "Agent (General)",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "Chartography",
+      "category": "OCR/Doc/Chart",
+      "in_project": true,
+      "models": []
+    },
+    {
+      "name": "BabyVision",
+      "category": "Reasoning & Logic",
+      "in_project": true,
+      "models": []
     }
   ]
 }

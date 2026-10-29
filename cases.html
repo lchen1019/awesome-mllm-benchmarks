@@ -950,8 +950,20 @@ const SKIP_FIELDS = new Set([
 ]);
 
 const HF_DATASETS_ROWS_API = 'https://datasets-server.huggingface.co/rows';
+const HF_DATASETS_SPLITS_API = 'https://datasets-server.huggingface.co/splits';
 /** 样本仓：本地 samples/ 优先；GitHub Pages 没有大视频时回落到这里（上传后即可播） */
 const HF_SAMPLES_REPO = 'lchen1019/awesome-mllm-benchmarks-samples';
+const SAMPLE_PATH_ALIASES = {
+  'OSWorld': ['OSWorld-Verified'],
+};
+let bundledPreviewCasesPromise = null;
+const HF_PREVIEW_HIDDEN_FIELDS = new Set([
+  // Source-dataset previews show prompts and inputs, never reference solutions,
+  // hidden tests, deliverables, or grading rubrics.
+  'patch', 'test_patch', 'fail_to_pass', 'pass_to_pass',
+  'deliverable_files', 'deliverable_file_urls', 'deliverable_file_hf_uris',
+  'rubric_json', 'rubric_pretty',
+]);
 
 /**
  * 静态 samples 仓库未上传全部页图时，按 HF 源数据集行号拉取 image.src（datasets-server 允许 * CORS）。
@@ -993,6 +1005,101 @@ function encodeSampleRelPath(rel) {
 
 function hfSamplesResolveUrl(rel) {
   return 'https://huggingface.co/datasets/' + HF_SAMPLES_REPO + '/resolve/main/' + encodeSampleRelPath(rel);
+}
+
+/** 从 benchmark 的 Hugging Face URL 提取 owner/dataset。 */
+function hfDatasetIdFromUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const match = url.match(/^https?:\/\/huggingface\.co\/datasets\/([^/?#]+\/[^/?#]+)/i);
+  return match ? decodeURIComponent(match[1]) : '';
+}
+
+/** datasets-server 将图片表示为 {src, ...}；转换成现有 cases 渲染器认识的 URL。 */
+function normalizeHfPreviewValue(value) {
+  if (Array.isArray(value)) return value.map(normalizeHfPreviewValue);
+  if (!value || typeof value !== 'object') return value;
+  if (typeof value.src === 'string' && value.src) return value.src;
+  const normalized = {};
+  for (const [key, nested] of Object.entries(value)) {
+    // 二进制内容不应进入页面 JSON；datasets-server 提供的 src 已足够预览。
+    if (key === 'bytes') continue;
+    normalized[key] = normalizeHfPreviewValue(nested);
+  }
+  return normalized;
+}
+
+function normalizeHfPreviewRow(row) {
+  if (!row || typeof row !== 'object') return {};
+  const normalized = {};
+  for (const [key, value] of Object.entries(row)) {
+    if (HF_PREVIEW_HIDDEN_FIELDS.has(key)) continue;
+    normalized[key] = normalizeHfPreviewValue(value);
+  }
+  return normalized;
+}
+
+async function loadHfDatasetPreview(info, requestedConfig) {
+  const dataset = hfDatasetIdFromUrl(info && info.hf_url);
+  if (!dataset) throw new Error('No public Hugging Face dataset configured');
+
+  const splitResp = await fetch(
+    HF_DATASETS_SPLITS_API + '?dataset=' + encodeURIComponent(dataset)
+  );
+  if (!splitResp.ok) throw new Error(`Hugging Face splits: HTTP ${splitResp.status}`);
+  const splitData = await splitResp.json();
+  const allSplits = Array.isArray(splitData.splits) ? splitData.splits : [];
+  if (allSplits.length === 0) throw new Error('No previewable Hugging Face split');
+
+  let candidates = allSplits.filter(s => s.config === requestedConfig);
+  if (candidates.length === 0 && requestedConfig === 'default') {
+    candidates = allSplits.filter(s => s.config === 'default');
+  }
+  if (candidates.length === 0) candidates = allSplits.slice();
+
+  const splitPriority = { test: 0, validation: 1, dev: 2, train: 3 };
+  candidates.sort((a, b) =>
+    (splitPriority[a.split] ?? 9) - (splitPriority[b.split] ?? 9)
+  );
+
+  let lastError = null;
+  for (const candidate of candidates) {
+    const rowsUrl = HF_DATASETS_ROWS_API
+      + '?dataset=' + encodeURIComponent(dataset)
+      + '&config=' + encodeURIComponent(candidate.config)
+      + '&split=' + encodeURIComponent(candidate.split)
+      + '&offset=0&length=20';
+    try {
+      const rowsResp = await fetch(rowsUrl);
+      if (!rowsResp.ok) {
+        lastError = new Error(`Hugging Face rows: HTTP ${rowsResp.status}`);
+        continue;
+      }
+      const rowsData = await rowsResp.json();
+      const rows = Array.isArray(rowsData.rows) ? rowsData.rows : [];
+      if (rows.length > 0) {
+        return rows.map(item => normalizeHfPreviewRow(item.row || item));
+      }
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error('No previewable Hugging Face rows');
+}
+
+async function loadBundledPreviewCases(name, subtask) {
+  if (!bundledPreviewCasesPromise) {
+    bundledPreviewCasesPromise = fetch(
+      'data/preview-cases.json?t=' + Date.now(),
+      { cache: 'no-store' }
+    ).then(resp => {
+      if (!resp.ok) throw new Error(`Bundled previews: HTTP ${resp.status}`);
+      return resp.json();
+    });
+  }
+  const allPreviews = await bundledPreviewCasesPromise;
+  const datasetPreviews = allPreviews && allPreviews[name];
+  const items = datasetPreviews && datasetPreviews[subtask];
+  return Array.isArray(items) && items.length > 0 ? items : null;
 }
 
 /** 从 /samples/<rel> 或 HF resolve URL 抽出样本相对路径 */
@@ -1340,7 +1447,7 @@ function detectFormat(rawItems) {
   }
 
   let questionField = null;
-  for (const f of ['question','Question','question_text','reasoning_q','query','prompt','confirmed_task','instruction','problem','goal','text']) {
+  for (const f of ['question','Question','question_text','reasoning_q','query','prompt','task_prompt','problem_statement','task_card','confirmed_task','instruction','problem','goal','text']) {
     if (samples.some(s => {
       if (!s[f]) return false;
       if (typeof s[f] === 'string') return true;
@@ -2536,10 +2643,11 @@ async function loadSubtask(subtask) {
 
   container.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>${t('loadingSamples')}</p></div>`;
 
-  // 本地 samples/ 优先；没有时读 HF 样本仓（以后视频也放那里）
+  // 本地 samples/ 优先。
   const localName2 = datasetName.replace(/\//g, '_');
   const sr = samplesRootPrefix();
-  const names = [...new Set([datasetName, localName2])];
+  const aliases = SAMPLE_PATH_ALIASES[datasetName] || [];
+  const names = [...new Set([datasetName, localName2, ...aliases])];
   const localCandidates = names.map(n =>
     `${sr}${encodeURIComponent(n)}/${encodeURIComponent(subtask)}/data.json`
   );
@@ -2548,7 +2656,7 @@ async function loadSubtask(subtask) {
   );
 
   let lastErr = null;
-  for (const url of localCandidates.concat(hfCandidates)) {
+  for (const url of localCandidates) {
     try {
       const resp = await fetch(url);
       if (!resp.ok) { lastErr = new Error(`HTTP ${resp.status}`); continue; }
@@ -2562,6 +2670,50 @@ async function loadSubtask(subtask) {
     } catch (e) {
       lastErr = e;
     }
+  }
+
+  // 对 gated、加密、禁止再分发或没有标准 HF split 的 benchmark，
+  // 使用随站点发布的安全预览：官方公开 dummy/example，或明确标注的合成格式样例。
+  try {
+    const items = await loadBundledPreviewCases(datasetName, subtask);
+    if (items) {
+      const fmt = detectFormat(items);
+      dataCache[subtask] = fmt;
+      renderCases(fmt);
+      return;
+    }
+  } catch (e) {
+    lastErr = e;
+  }
+
+  // 没有内置安全预览时，再尝试完整 HF 样本仓。
+  for (const url of hfCandidates) {
+    try {
+      const resp = await fetch(url);
+      if (!resp.ok) { lastErr = new Error(`HTTP ${resp.status}`); continue; }
+      const raw = await resp.json();
+      localDatasetName = localDatasetNameFromSamplesUrl(url) || names[0];
+      const items = Array.isArray(raw) ? raw : [raw];
+      const fmt = detectFormat(items);
+      dataCache[subtask] = fmt;
+      renderCases(fmt);
+      return;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+
+  // 新收录 benchmark 不必先复制一份数据到样本仓；公开且支持 Dataset Viewer
+  // 的源数据集可直接预览。只有 cases-manifest 中显式列出的项目才会走到这里。
+  try {
+    const info = siteData.find(d => d.name === datasetName);
+    const items = await loadHfDatasetPreview(info, subtask);
+    const fmt = detectFormat(items);
+    dataCache[subtask] = fmt;
+    renderCases(fmt);
+    return;
+  } catch (e) {
+    lastErr = e;
   }
 
   container.innerHTML = `<div class="error-state"><h3>${t('failedLoad')}</h3><p>${esc(lastErr ? lastErr.message : 'Unknown error')}</p><button class="retry-btn" onclick="loadSubtask('${esc(subtask)}')">${t('retry')}</button></div>`;

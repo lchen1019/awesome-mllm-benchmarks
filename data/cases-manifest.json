@@ -8,6 +8,9 @@
     "AndroidWorld": [
         "default"
     ],
+    "Agents' Last Exam": [
+        "default"
+    ],
     "ArcAG2-Image": [
         "default"
     ],
@@ -127,6 +130,12 @@
     "GameplayQA": [
         "default"
     ],
+    "GDPval": [
+        "default"
+    ],
+    "GDPval-AA": [
+        "default"
+    ],
     "HLE-VL": [
         "default"
     ],
@@ -141,6 +150,9 @@
         "default"
     ],
     "InfoVQA": [
+        "default"
+    ],
+    "JobBench": [
         "default"
     ],
     "LVBench": [
@@ -312,6 +324,9 @@
     "ODVBench": [
         "odvbench"
     ],
+    "OSWorld": [
+        "default"
+    ],
     "OSWorld-Verified": [
         "default"
     ],
@@ -368,6 +383,9 @@
         "default"
     ],
     "SFE": [
+        "default"
+    ],
+    "SWE-Bench Pro": [
         "default"
     ],
     "SLAKE": [
@@ -497,5 +515,47 @@
     "ZEROBench": [
         "main",
         "subquestions"
+    ],
+    "Terminal-Bench": [
+        "default"
+    ],
+    "DeepSWE": [
+        "default"
+    ],
+    "AutomationBench": [
+        "default"
+    ],
+    "HLE": [
+        "default"
+    ],
+    "GPQA": [
+        "default"
+    ],
+    "CyberGym": [
+        "default"
+    ],
+    "ProgramBench": [
+        "default"
+    ],
+    "FrontierSWE": [
+        "default"
+    ],
+    "OfficeQA Pro": [
+        "default"
+    ],
+    "PostTrainBench": [
+        "default"
+    ],
+    "Toolathlon Verified": [
+        "default"
+    ],
+    "BrowseComp": [
+        "default"
+    ],
+    "NL2Repo-Bench": [
+        "default"
+    ],
+    "Chartography": [
+        "default"
     ]
 }

@@ -1,0 +1,367 @@
+{
+  "Terminal-Bench": {
+    "default": [
+      {
+        "id": "terminal-preview-01",
+        "question": "Repair a containerized command-line project whose test suite fails because an asynchronous worker exits before queued jobs are flushed.",
+        "category": "Software debugging",
+        "preview_type": "Synthetic format example — not an evaluation item",
+        "source_url": "https://github.com/harbor-framework/terminal-bench-2"
+      },
+      {
+        "id": "terminal-preview-02",
+        "question": "Inspect a Linux workspace, recover a corrupted build configuration, and produce an artifact that passes the provided verifier.",
+        "category": "Build systems",
+        "preview_type": "Synthetic format example — not an evaluation item",
+        "source_url": "https://www.tbench.ai/"
+      },
+      {
+        "id": "terminal-preview-03",
+        "question": "Use shell tools to diagnose a data-processing pipeline, correct its output, and leave the expected files in the submission directory.",
+        "category": "Data processing",
+        "preview_type": "Synthetic format example — not an evaluation item",
+        "source_url": "https://arxiv.org/abs/2601.11868"
+      }
+    ]
+  },
+  "DeepSWE": {
+    "default": [
+      {
+        "id": "deepswe-preview-01",
+        "question": "Add bounded retries and cancellation propagation to a repository's background job scheduler without changing its public API.",
+        "category": "TypeScript",
+        "preview_type": "Synthetic format example — held-out benchmark tasks are not reproduced",
+        "source_url": "https://github.com/datacurve-ai/deep-swe"
+      },
+      {
+        "id": "deepswe-preview-02",
+        "question": "Implement cross-module validation for a Go service and make the existing integration tests pass.",
+        "category": "Go",
+        "preview_type": "Synthetic format example — held-out benchmark tasks are not reproduced",
+        "source_url": "https://deepswe.datacurve.ai/"
+      },
+      {
+        "id": "deepswe-preview-03",
+        "question": "Refactor a Python cache layer to support transactional updates while preserving backward compatibility.",
+        "category": "Python",
+        "preview_type": "Synthetic format example — held-out benchmark tasks are not reproduced",
+        "source_url": "https://arxiv.org/abs/2607.07946"
+      }
+    ]
+  },
+  "AutomationBench": {
+    "default": [
+      {
+        "id": "automation-preview-01",
+        "question": "A qualified sales lead replied by email. Update the CRM stage, schedule a follow-up, and notify the account channel while following the company's routing policy.",
+        "category": "Sales",
+        "preview_type": "Synthetic workflow matching the public benchmark format",
+        "source_url": "https://github.com/zapier/AutomationBench"
+      },
+      {
+        "id": "automation-preview-02",
+        "question": "Reconcile an approved expense with the accounting record and create the required audit note without modifying unrelated transactions.",
+        "category": "Finance",
+        "preview_type": "Synthetic workflow matching the public benchmark format",
+        "source_url": "https://zapier.com/benchmarks"
+      },
+      {
+        "id": "automation-preview-03",
+        "question": "Route an overdue support ticket according to SLA and escalation rules, then record the resulting actions in the correct systems.",
+        "category": "Support",
+        "preview_type": "Synthetic workflow matching the public benchmark format",
+        "source_url": "https://arxiv.org/abs/2604.18934"
+      }
+    ]
+  },
+  "HLE": {
+    "default": [
+      {
+        "id": "hle-preview-01",
+        "question": "An expert-level closed-ended question combines a scientific figure with domain knowledge and requires one unambiguous, automatically verifiable response.",
+        "category": "Multimodal science",
+        "preview_type": "Synthetic format example — gated HLE questions are not redistributed",
+        "source_url": "https://lastexam.ai/"
+      },
+      {
+        "id": "hle-preview-02",
+        "question": "A specialist humanities question requires identifying a precise relationship from the supplied primary-source excerpt.",
+        "category": "Humanities",
+        "preview_type": "Synthetic format example — gated HLE questions are not redistributed",
+        "source_url": "https://arxiv.org/abs/2501.14249"
+      },
+      {
+        "id": "hle-preview-03",
+        "question": "A graduate-level mathematics problem asks for a short exact answer after several linked deductions.",
+        "category": "Mathematics",
+        "preview_type": "Synthetic format example — gated HLE questions are not redistributed",
+        "source_url": "https://github.com/centerforaisafety/hle"
+      }
+    ]
+  },
+  "GPQA": {
+    "default": [
+      {
+        "id": "gpqa-preview-01",
+        "question": "A graduate-level physics multiple-choice problem requires combining a stated experimental setup with the relevant conservation law.",
+        "choices": [
+          "Option A",
+          "Option B",
+          "Option C",
+          "Option D"
+        ],
+        "category": "Physics",
+        "preview_type": "Synthetic format example — gated GPQA questions are not redistributed",
+        "source_url": "https://arxiv.org/abs/2311.12022"
+      },
+      {
+        "id": "gpqa-preview-02",
+        "question": "A chemistry question asks which mechanism is consistent with the supplied kinetic and spectroscopic observations.",
+        "choices": [
+          "Option A",
+          "Option B",
+          "Option C",
+          "Option D"
+        ],
+        "category": "Chemistry",
+        "preview_type": "Synthetic format example — gated GPQA questions are not redistributed",
+        "source_url": "https://github.com/Idavidrein/gpqa"
+      },
+      {
+        "id": "gpqa-preview-03",
+        "question": "A biology question asks for the only interpretation compatible with a described molecular perturbation experiment.",
+        "choices": [
+          "Option A",
+          "Option B",
+          "Option C",
+          "Option D"
+        ],
+        "category": "Biology",
+        "preview_type": "Synthetic format example — gated GPQA questions are not redistributed",
+        "source_url": "https://huggingface.co/datasets/Idavidrein/gpqa"
+      }
+    ]
+  },
+  "CyberGym": {
+    "default": [
+      {
+        "id": "cybergym-preview-01",
+        "question": "Given a pre-patch parser and a vulnerability description, create a non-destructive proof-of-concept input that reproduces the sanitizer failure in the isolated local runner.",
+        "category": "Vulnerability reproduction",
+        "preview_type": "Safe synopsis — no exploit payload or benchmark instance is included",
+        "source_url": "https://github.com/sunblaze-ucb/cybergym"
+      },
+      {
+        "id": "cybergym-preview-02",
+        "question": "Trace an input from the public entry point to the vulnerable code path and demonstrate the issue only inside the provided sandbox.",
+        "category": "Program analysis",
+        "preview_type": "Safe synopsis — no exploit payload or benchmark instance is included",
+        "source_url": "https://www.cybergym.io/cybergym/"
+      },
+      {
+        "id": "cybergym-preview-03",
+        "question": "Determine whether a generated test reliably triggers the vulnerable revision but not the patched revision.",
+        "category": "Execution verification",
+        "preview_type": "Safe synopsis — no exploit payload or benchmark instance is included",
+        "source_url": "https://arxiv.org/abs/2506.02548"
+      }
+    ]
+  },
+  "ProgramBench": {
+    "default": [
+      {
+        "id": "programbench-preview-01",
+        "question": "Using only a command-line program's documentation and observable executable behavior, implement a compatible replacement and build script.",
+        "category": "CLI reconstruction",
+        "preview_type": "Synthetic format example — hidden behavioral tests are not included",
+        "source_url": "https://github.com/facebookresearch/ProgramBench"
+      },
+      {
+        "id": "programbench-preview-02",
+        "question": "Rebuild a data-conversion utility from its documented interface and black-box outputs without access to the reference source.",
+        "category": "Program reconstruction",
+        "preview_type": "Synthetic format example — hidden behavioral tests are not included",
+        "source_url": "https://programbench.com/"
+      },
+      {
+        "id": "programbench-preview-03",
+        "question": "Create a complete repository that matches a reference executable's file handling, error behavior, and output formatting.",
+        "category": "Repository generation",
+        "preview_type": "Synthetic format example — hidden behavioral tests are not included",
+        "source_url": "https://arxiv.org/abs/2605.03546"
+      }
+    ]
+  },
+  "FrontierSWE": {
+    "default": [
+      {
+        "id": "frontierswe-public-synopsis-01",
+        "question": "Implement a compatible Lean 4 kernel type checker in Pascal and satisfy the deterministic verifier.",
+        "category": "Implementation",
+        "preview_type": "Public task-title synopsis from FrontierSWE v2",
+        "source_url": "https://github.com/Proximal-Labs/frontier-swe-v2"
+      },
+      {
+        "id": "frontierswe-public-synopsis-02",
+        "question": "Optimize an FFmpeg scaling component while preserving correctness across the supplied validation suite.",
+        "category": "Performance Optimisation",
+        "preview_type": "Public task-title synopsis from FrontierSWE v2",
+        "source_url": "https://www.frontierswe.com/blog/v2"
+      },
+      {
+        "id": "frontierswe-public-synopsis-03",
+        "question": "Build and evaluate a medium-range weather forecasting system under the benchmark's long-horizon compute budget.",
+        "category": "Scientific Computing",
+        "preview_type": "Public task-title synopsis from FrontierSWE v2",
+        "source_url": "https://github.com/Proximal-Labs/frontier-swe-v2"
+      }
+    ]
+  },
+  "OfficeQA Pro": {
+    "default": [
+      {
+        "id": "officeqa-preview-01",
+        "question": "Locate values distributed across several historical Treasury tables, normalize their units, and compute the requested comparison.",
+        "category": "Multi-document finance",
+        "preview_type": "Synthetic format example — gated questions and answers are not redistributed",
+        "source_url": "https://github.com/databricks/officeqa"
+      },
+      {
+        "id": "officeqa-preview-02",
+        "question": "Identify the relevant fiscal periods in the supplied document corpus and derive a precise numerical answer with source citations.",
+        "category": "Grounded reasoning",
+        "preview_type": "Synthetic format example — gated questions and answers are not redistributed",
+        "source_url": "https://arxiv.org/abs/2603.08655"
+      },
+      {
+        "id": "officeqa-preview-03",
+        "question": "Reconcile a figure reported under changing historical table labels across multiple government bulletins.",
+        "category": "Document retrieval",
+        "preview_type": "Synthetic format example — gated questions and answers are not redistributed",
+        "source_url": "https://huggingface.co/datasets/databricks/officeqa"
+      }
+    ]
+  },
+  "PostTrainBench": {
+    "default": [
+      {
+        "id": "posttrain-preview-01",
+        "question": "Starting from Qwen3-4B-Base, autonomously improve held-out mathematical reasoning performance within 10 hours on one H100 without using test data.",
+        "category": "AIME 2025",
+        "preview_type": "Public benchmark-configuration synopsis",
+        "source_url": "https://github.com/aisa-group/PostTrainBench"
+      },
+      {
+        "id": "posttrain-preview-02",
+        "question": "Post-train a supplied base model for code generation, submit the resulting checkpoint, and let the fixed HumanEval harness measure pass@1.",
+        "category": "HumanEval",
+        "preview_type": "Public benchmark-configuration synopsis",
+        "source_url": "https://posttrainbench.com/"
+      },
+      {
+        "id": "posttrain-preview-03",
+        "question": "Choose a legal data and optimization strategy to improve a small base model on graduate-level science QA under the fixed compute budget.",
+        "category": "GPQA",
+        "preview_type": "Public benchmark-configuration synopsis",
+        "source_url": "https://arxiv.org/abs/2603.08640"
+      }
+    ]
+  },
+  "Toolathlon Verified": {
+    "default": [
+      {
+        "id": "toolathlon-public-example-01",
+        "question": "Check email for assignment submissions, execute the attached Python files locally, and record grades in the learning-management system according to the published rules.",
+        "category": "Email + Terminal + LMS",
+        "preview_type": "Scenario summarized from the public paper and README",
+        "source_url": "https://github.com/hkust-nlp/Toolathlon"
+      },
+      {
+        "id": "toolathlon-preview-02",
+        "question": "Coordinate calendar, email, and file-system tools to complete a multi-step workplace request and leave each application in the verified final state.",
+        "category": "Productivity tools",
+        "preview_type": "Synthetic format example — gated task packages are not copied",
+        "source_url": "https://toolathlon.xyz/"
+      },
+      {
+        "id": "toolathlon-preview-03",
+        "question": "Inspect a production-style database, identify the requested anomaly, and create the required report using the available tool APIs.",
+        "category": "Data operations",
+        "preview_type": "Scenario summarized from the public paper",
+        "source_url": "https://arxiv.org/abs/2510.25726"
+      }
+    ]
+  },
+  "BrowseComp": {
+    "default": [
+      {
+        "id": "browsecomp-preview-01",
+        "question": "Find a specific fact that requires connecting clues across several independent web pages and return a short verifiable answer.",
+        "category": "Multi-hop web research",
+        "preview_type": "Synthetic format example — official encrypted questions are never exposed",
+        "source_url": "https://openai.com/index/browsecomp"
+      },
+      {
+        "id": "browsecomp-preview-02",
+        "question": "Persistently browse primary sources to identify the only entity matching a set of uncommon historical and geographic constraints.",
+        "category": "Entity identification",
+        "preview_type": "Synthetic format example — official encrypted questions are never exposed",
+        "source_url": "https://github.com/openai/simple-evals"
+      },
+      {
+        "id": "browsecomp-preview-03",
+        "question": "Locate and combine two hard-to-find records from different sites, then provide the requested concise response.",
+        "category": "Information retrieval",
+        "preview_type": "Synthetic format example — official encrypted questions are never exposed",
+        "source_url": "https://arxiv.org/abs/2504.12516"
+      }
+    ]
+  },
+  "NL2Repo-Bench": {
+    "default": [
+      {
+        "id": "nl2repo-preview-01",
+        "question": "From a requirements document and an empty workspace, build an installable Python package for profiling CSV datasets, including its CLI, modules, tests, and packaging metadata.",
+        "category": "Data processing",
+        "preview_type": "Synthetic format example — public task files are not copied",
+        "source_url": "https://github.com/multimodal-art-projection/NL2RepoBench"
+      },
+      {
+        "id": "nl2repo-preview-02",
+        "question": "Design and implement a complete asynchronous HTTP utility library from the supplied natural-language specification.",
+        "category": "Networking tools",
+        "preview_type": "Synthetic format example — public task files are not copied",
+        "source_url": "https://arxiv.org/abs/2512.12730"
+      },
+      {
+        "id": "nl2repo-preview-03",
+        "question": "Create a runnable multi-module repository for a lightweight database migration tool and satisfy the upstream execution-based tests.",
+        "category": "Database interaction",
+        "preview_type": "Synthetic format example — public task files are not copied",
+        "source_url": "https://proceedings.mlr.press/v306/ding26j.html"
+      }
+    ]
+  },
+  "Chartography": {
+    "default": [
+      {
+        "id": "sample_task_1",
+        "question": "How long would it take an environment of 1100 degC / 0.03 K/m to deform 4 metres vertically? Answer in years with 1 decimal place.",
+        "answer": "77.5 (acceptable range 76.0 to 79.0)",
+        "image": "https://raw.githubusercontent.com/surge-ai/chartography/main/task_packs/sample_charts/charts/sample_chart_1.png",
+        "category": "STEM - General",
+        "preview_type": "Official dummy sample — not part of the released evaluation set",
+        "source_url": "https://github.com/surge-ai/chartography/tree/main/task_packs/sample_charts"
+      },
+      {
+        "id": "sample_task_2",
+        "question": "Using Mg-9 wt % Al alloy, at what temperature does Mg17Al12 precipitate? Round to the nearest 10 degrees.",
+        "answer": "350C (acceptable range 330C to 370C)",
+        "image": "https://raw.githubusercontent.com/surge-ai/chartography/main/task_packs/sample_charts/charts/sample_chart_2.jpg",
+        "category": "STEM - Chemistry",
+        "preview_type": "Official dummy sample — not part of the released evaluation set",
+        "source_url": "https://github.com/surge-ai/chartography/tree/main/task_packs/sample_charts"
+      }
+    ]
+  }
+}

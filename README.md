@@ -15,9 +15,9 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-orange?style=flat-square" alt="License"></a>
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/Benchmarks-130+-blue?style=flat-square" alt="Benchmarks">
+  <img src="https://img.shields.io/badge/Benchmarks-150+-blue?style=flat-square" alt="Benchmarks">
   <img src="https://img.shields.io/badge/Categories-20+-orange?style=flat-square" alt="Categories">
-  <img src="https://img.shields.io/badge/Samples-110+-purple?style=flat-square" alt="Samples">
+  <img src="https://img.shields.io/badge/Samples-140+-purple?style=flat-square" alt="Samples">
 </p>
 <p align="center">
   <a href="https://lchen1019.github.io/awesome-mllm-benchmarks/"><strong>🌐 Explore the Interactive Dashboard »</strong></a>
@@ -27,7 +27,7 @@
 
 ---
 
-We collect **130+ MLLM benchmarks** across **20+ categories** (OCR, Math, Video, Agent, Spatial Intelligence, etc.) with rich metadata including GitHub stars, HuggingFace downloads, paper abstracts, model evaluation coverage, and more. Everything is presented through a **modern interactive dashboard** — you can search, filter, sort, and browse actual benchmark samples directly in the browser.
+We collect **150+ MLLM benchmarks** across **20+ categories** (OCR, Math, Video, Agent, Spatial Intelligence, etc.) with rich metadata including GitHub stars, HuggingFace downloads, paper abstracts, model evaluation coverage, and more. Everything is presented through a **modern interactive dashboard** — you can search, filter, sort, and browse actual benchmark samples directly in the browser.
 
 <p align="center">
   <a href="https://lchen1019.github.io/awesome-mllm-benchmarks/">
@@ -74,6 +74,7 @@ Then open [http://localhost:8080](http://localhost:8080) in your browser.
 > `serve.py` starts a simple HTTP server with no-cache headers. You can also use any other static file server.
 >
 > Sample images live in `samples/` and are served locally with the site. A copy also remains on [HuggingFace](https://huggingface.co/datasets/lchen1019/awesome-mllm-benchmarks-samples).
+> For gated, encrypted, evaluation-only, or non-redistributable benchmarks, `data/preview-cases.json` provides safe public-documentation or clearly labeled synthetic format previews without copying hidden evaluation data.
 
 **Project Structure**
 
@@ -82,9 +83,10 @@ awesome-mllm-benchmarks/
 ├── index.html                   # Main dashboard page
 ├── cases.html                   # Sample viewer page
 ├── data/
-│   ├── benchmarks.json          # Benchmark metadata (130+ entries)
+│   ├── benchmarks.json          # Benchmark metadata (150+ entries)
 │   ├── model-matrix.json        # Model × Benchmark coverage data
-│   └── cases-manifest.json      # Sample viewer config
+│   ├── cases-manifest.json      # Sample viewer config
+│   └── preview-cases.json       # Safe built-in previews for restricted benchmarks
 ├── samples/                     # Benchmark sample data (images, per-benchmark data)
 ├── assets/                      # Logo, favicon, screenshots
 ├── serve.py                     # Dev server with no-cache headers
@@ -120,6 +122,8 @@ awesome-mllm-benchmarks/
 | **ChartQAPro**         | [Paper](https://arxiv.org/abs/2504.05506) · [GitHub](https://github.com/vis-nlp/ChartQAPro) · [HF](https://huggingface.co/datasets/ahmed-masry/ChartQAPro)                                           | 2025-04 | YorkU           |
 | **MMLongBench**        | [Paper](https://arxiv.org/abs/2505.10610) · [GitHub](https://github.com/EdinburghNLP/MMLongBench) · [HF](https://huggingface.co/datasets/VLM2Vec/MMLongBench)                                        | 2025-05 | Edinburgh       |
 | **Real5-OmniDocBench** | [Paper](https://arxiv.org/abs/2603.04205) · [HF](https://huggingface.co/datasets/PaddlePaddle/Real5-OmniDocBench)                                                                                    | 2026-03 | Baidu           |
+| **Chartography**       | [Paper](https://arxiv.org/abs/2608.10677) · [GitHub](https://github.com/surge-ai/chartography) · [HF](https://huggingface.co/datasets/surgeai/chartography)                                          | 2026-08 | Surge AI        |
+| **OfficeQA Pro**       | [Paper](https://arxiv.org/abs/2603.08655) · [GitHub](https://github.com/databricks/officeqa) · [HF](https://huggingface.co/datasets/databricks/officeqa)                                            | 2026-03 | Databricks      |
 | **AI2D_TEST**          | [Paper](https://arxiv.org/abs/1603.07396) · [HF](https://huggingface.co/datasets/lmms-lab/ai2d)                                                                                                      | -       | AI2             |
 | **InfoVQA**            | [Paper](https://arxiv.org/abs/2104.12756) · [HF](https://huggingface.co/datasets/Ahren09/InfoVQA)                                                                                                    | -       | IIIT Hyderabad  |
 | **TableVQA**           | [HF](https://huggingface.co/datasets/terryoo/TableVQA-Bench)                                                                                                                                         | -       | KAIST           |
@@ -168,6 +172,7 @@ awesome-mllm-benchmarks/
 | **MME-CC**          | [Paper](https://arxiv.org/abs/2511.03146) · [GitHub](https://github.com/randomtutu/MME-CC) · [HF](https://huggingface.co/datasets/MaxwellWen/MME-CC)                   | 2025-11 | NTU             |
 | **WorldVQA**        | [Paper](https://arxiv.org/abs/2602.02537) · [GitHub](https://github.com/MoonshotAI/WorldVQA) · [HF](https://huggingface.co/datasets/moonshotai/WorldVQA)               | 2026-01 | Moonshot AI     |
 | **VibeEval**        | [Paper](https://publications.reka.ai/reka-vibe-eval.pdf) · [GitHub](https://github.com/reka-ai/reka-vibe-eval) · [HF](https://huggingface.co/datasets/RekaAI/VibeEval) | -       | Reka AI         |
+| **HLE**             | [Paper](https://arxiv.org/abs/2501.14249) · [GitHub](https://github.com/centerforaisafety/hle) · [HF](https://huggingface.co/datasets/cais/hle)                       | 2025-01 | CAIS            |
 
 
 ### Math
@@ -213,7 +218,7 @@ awesome-mllm-benchmarks/
 | **HistoryBench** | [Paper](https://arxiv.org/abs/2502.07135) · [HF](https://huggingface.co/datasets/UniModal4Reasoning/HistoryBench)                                             | 2025-02 | CAS          |
 | **MEGA-Bench**   | [Paper](https://arxiv.org/abs/2410.10563) · [GitHub](https://github.com/TIGER-AI-Lab/MEGA-Bench) · [HF](https://huggingface.co/datasets/TIGER-Lab/MEGA-Bench) | 2024-10 | TIGER-Lab    |
 | **NPHardEval4V** | [Paper](https://arxiv.org/abs/2403.01777) · [GitHub](https://github.com/lizhouf/NPHardEval4V) · [HF](https://huggingface.co/datasets/lizhouf/NPHardEval4V)    | 2024-03 | UMich        |
-| **GPQA-Diamond** | [Paper](https://arxiv.org/abs/2311.12022) · [HF](https://huggingface.co/datasets/Idavidrein/gpqa)                                                             | 2023-11 | NYU          |
+| **GPQA**         | [Paper](https://arxiv.org/abs/2311.12022) · [GitHub](https://github.com/idavidrein/gpqa) · [HF](https://huggingface.co/datasets/Idavidrein/gpqa)             | 2023-11 | NYU          |
 
 
 ### Perception
@@ -245,6 +250,12 @@ awesome-mllm-benchmarks/
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------------ |
 | **Design2Code** | [Paper](https://arxiv.org/abs/2403.03163) · [GitHub](https://github.com/NoviScl/Design2Code) · [HF](https://huggingface.co/datasets/SALT-NLP/Design2Code)    | 2024-03 | Stanford     |
 | **ChartMimic**  | [Paper](https://arxiv.org/abs/2406.09961) · [GitHub](https://github.com/ChartMimic/ChartMimic) · [HF](https://huggingface.co/datasets/ChartMimic/ChartMimic) | 2024-06 | Tsinghua     |
+| **CyberGym**    | [Paper](https://arxiv.org/abs/2506.02548) · [GitHub](https://github.com/sunblaze-ucb/cybergym) · [HF](https://huggingface.co/datasets/sunblaze-ucb/cybergym) | 2025-06 | UC Berkeley  |
+| **SWE-Bench Pro** | [Paper](https://arxiv.org/abs/2509.16941) · [GitHub](https://github.com/scaleapi/SWE-bench_Pro-os) · [HF](https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro) | 2025-09 | Scale AI |
+| **NL2Repo-Bench** | [Paper](https://arxiv.org/abs/2512.12730) · [GitHub](https://github.com/multimodal-art-projection/NL2RepoBench) | 2025-12 | ByteDance Seed |
+| **DeepSWE**      | [Paper](https://arxiv.org/abs/2607.07946) · [GitHub](https://github.com/datacurve-ai/deep-swe) · [HF](https://huggingface.co/datasets/datacurve/deep-swe)     | 2026-07 | Datacurve    |
+| **ProgramBench** | [Paper](https://arxiv.org/abs/2605.03546) · [GitHub](https://github.com/facebookresearch/ProgramBench) · [HF](https://huggingface.co/datasets/programbench/ProgramBench-Tests) | 2026-05 | Meta |
+| **FrontierSWE** | [Report](https://www.frontierswe.com/blog/v2) · [GitHub](https://github.com/Proximal-Labs/frontier-swe-v2) | 2026-09 | Proximal Labs |
 | **UniSVG**      | [Paper](https://arxiv.org/abs/2511.21631) · [HF](https://huggingface.co/datasets/lili24/UniSVG)                                                              | 2025-11 | SJTU         |
 | **FronTalk**    | [Paper](https://arxiv.org/abs/2601.04203) · [HF](https://huggingface.co/datasets/xqwu/FronTalk)                                                              | 2025-12 | UCLA         |
 
@@ -366,6 +377,9 @@ awesome-mllm-benchmarks/
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | --------------- |
 | **Minedojo Verified** | [Paper](https://arxiv.org/abs/2206.08853) · [GitHub](https://github.com/MineDojo/MineDojo)                                                                                         | 2022-06 | NVIDIA          |
 | **ScreenSpot Pro**    | [Paper](https://arxiv.org/abs/2505.12370) · [GitHub](https://github.com/likaixin2000/ScreenSpot-Pro-GUI-Grounding) · [HF](https://huggingface.co/datasets/likaixin/ScreenSpot-Pro) | 2025-05 | Shanghai AI Lab |
+| **GDPval**            | [Paper](https://arxiv.org/abs/2510.04374) · [HF](https://huggingface.co/datasets/openai/gdpval)                                                                                   | 2025-10 | OpenAI          |
+| **GDPval-AA**         | [Paper](https://arxiv.org/abs/2510.04374) · [HF](https://huggingface.co/datasets/openai/gdpval) · [Leaderboard](https://artificialanalysis.ai/evaluations/gdpval-aa)             | 2025-10 | Artificial Analysis |
+| **JobBench**          | [Paper](https://arxiv.org/abs/2605.26329) · [GitHub](https://github.com/Job-Bench/job-bench-eval) · [HF](https://huggingface.co/datasets/JobBench/job-bench)                     | 2026-05 | UW              |
 
 
 
@@ -376,7 +390,9 @@ awesome-mllm-benchmarks/
 | Benchmark            | Paper                                                                                                                                             | Date    | Organization |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------ |
 | **OSWorld-Verified** | [Paper](https://arxiv.org/abs/2404.07972) · [GitHub](https://github.com/xlang-ai/OSWorld) · [HF](https://huggingface.co/datasets/xlangai/osworld) | 2024-04 | HKU          |
+| **OSWorld**          | [Paper](https://arxiv.org/abs/2404.07972) · [GitHub](https://github.com/xlang-ai/OSWorld) · [HF](https://huggingface.co/datasets/xlangai/osworld) | 2024-04 | HKU          |
 | **WindowsAA**        | [Paper](https://arxiv.org/abs/2409.08264) · [GitHub](https://github.com/microsoft/WindowsAgentArena)                                              | 2024-09 | Microsoft    |
+| **Agents' Last Exam** | [Paper](https://arxiv.org/abs/2606.05405) · [GitHub](https://github.com/rdi-berkeley/agents-last-exam) · [HF](https://huggingface.co/datasets/agents-last-exam/agents-last-exam) | 2026-06 | UC Berkeley RDI |
 
 
 
@@ -387,6 +403,7 @@ awesome-mllm-benchmarks/
 | Benchmark           | Paper                                                                                                                                                          | Date    | Organization |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------ |
 | **Online-Mind2web** | [Paper](https://arxiv.org/abs/2504.01382) · [GitHub](https://github.com/OSU-NLP-Group/Online-Mind2Web) · [HF](https://huggingface.co/datasets/osunlp/Mind2Web) | 2025-04 | OSU          |
+| **BrowseComp**      | [Paper](https://arxiv.org/abs/2504.12516) · [GitHub](https://github.com/openai/simple-evals)                                                                            | 2025-04 | OpenAI       |
 | **PA-Bench**        | [Paper](https://vibrantlabs.com/blog/pa-bench)                                                                                                                 | -       | VibrantLabs  |
 
 
@@ -410,6 +427,20 @@ awesome-mllm-benchmarks/
 | **BrowseComp-VL** | [Paper](https://arxiv.org/abs/2508.05748) · [GitHub](https://github.com/Alibaba-NLP/DeepResearch)                                                                     | 2025-08 | Alibaba      |
 | **MM-BrowseComp** | [Paper](https://arxiv.org/abs/2508.13186) · [GitHub](https://github.com/MMBrowseComp/MM-BrowseComp) · [HF](https://huggingface.co/datasets/mmbrowsecomp/MMBrowseComp) | 2025-08 | ByteDance    |
 | **HLE-VL**        | [Paper](https://arxiv.org/abs/2501.14249) · [HF](https://huggingface.co/datasets/DjangoJungle/hle-vl)                                                                 | -       | Scale AI     |
+
+**Agent / Tool & Terminal**
+
+| Benchmark               | Paper                                                                                                                                                                                        | Date    | Organization |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------ |
+| **AutomationBench**     | [Paper](https://arxiv.org/abs/2604.18934) · [GitHub](https://github.com/zapier/AutomationBench)                                                                                             | 2026-04 | Zapier       |
+| **Toolathlon Verified** | [Paper](https://arxiv.org/abs/2510.25726) · [GitHub](https://github.com/hkust-nlp/Toolathlon) · [HF](https://huggingface.co/datasets/hkust-nlp/Toolathlon)                                  | 2026-06 | HKUST        |
+| **Terminal-Bench**      | [Paper](https://arxiv.org/abs/2601.11868) · [GitHub](https://github.com/harbor-framework/terminal-bench-2)                                                                                   | 2026-01 | Harbor       |
+
+**Agent / AI Research**
+
+| Benchmark          | Paper                                                                                                                                                                                                    | Date    | Organization |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------ |
+| **PostTrainBench** | [Paper](https://arxiv.org/abs/2603.08640) · [GitHub](https://github.com/aisa-group/PostTrainBench) · [Project](https://posttrainbench.com/)                                                              | 2026-03 | ELLIS Institute Tübingen |
 
 
 
