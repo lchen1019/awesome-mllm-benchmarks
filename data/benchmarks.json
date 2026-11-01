@@ -8198,5 +8198,53 @@
     "hf_downloads_total": null,
     "organization": "Surge AI",
     "affiliation": "Surge AI"
+  },
+  {
+    "name": "Next-Gen CAPTCHAs",
+    "category": "Agent (Browser)",
+    "brief": "Interactive, procedurally generated CAPTCHA benchmark measuring the human–GUI-agent performance gap",
+    "detail": "",
+    "github_url": "https://github.com/MetaAgentX/NextGen-CAPTCHAs",
+    "github_stars": 30,
+    "github_forks": 0,
+    "github_description": "[ICML 2026]A defense framework against MLLM-based web GUI agents. This repository provides both the generative CAPTCHA system and tools for evaluating agent resistance.",
+    "hf_url": "https://huggingface.co/datasets/YaxinLuo/NextGen-CAPTCHAs",
+    "hf_downloads": 175,
+    "hf_likes": 1,
+    "paper_title": "Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense",
+    "paper_urls": [
+      "https://arxiv.org/abs/2602.09012"
+    ],
+    "paper_abstract": "The rapid evolution of GUI-enabled agents has rendered traditional CAPTCHAs obsolete. While previous benchmarks like OpenCaptchaWorld established a baseline for evaluating multimodal agents, recent advancements in reasoning-heavy models, such as Gemini3-Pro-High and GPT-5.2-Xhigh have effectively collapsed this security barrier, achieving pass rates as high as 90% on complex logic puzzles like \"Bingo\". In response, we introduce Next-Gen CAPTCHAs, a scalable defense framework designed to secure the next-generation web against the advanced agents. Unlike static datasets, our benchmark is built upon a robust data generation pipeline, allowing for large-scale and easily scalable evaluations, notably, for backend-supported types, our system is capable of generating effectively unbounded CAPTCHA instances. We exploit the persistent human-agent \"Cognitive Gap\" in interactive perception, memory, decision-making, and action. By engineering dynamic tasks that require adaptive intuition rather than granular planning, we re-establish a robust distinction between biological users and artificial agents, offering a scalable and diverse defense mechanism for the agentic era.",
+    "paper_authors": [
+      "Jiacheng Liu",
+      "Yaxin Luo",
+      "Jiacheng Cui",
+      "Xinyi Shang",
+      "Xiaohan Zhao",
+      "Zhiqiang Shen"
+    ],
+    "paper_published": "2026-02-09",
+    "paper_categories": [
+      "cs.LG",
+      "cs.AI",
+      "cs.CL"
+    ],
+    "has_samples": false,
+    "hf_tags": [
+      "license:apache-2.0",
+      "size_categories:1K<n<10K",
+      "format:imagefolder",
+      "modality:image"
+    ],
+    "hf_license": "apache-2.0",
+    "hf_created": "2026-02-04T15:32:30.000Z",
+    "hf_modified": "2026-02-04T16:46:06.000Z",
+    "github_topics": [],
+    "github_language": "Python",
+    "github_license": "MIT",
+    "hf_downloads_total": null,
+    "organization": "MBZUAI",
+    "affiliation": "MBZUAI and MetaAgentX; University College London"
   }
 ]

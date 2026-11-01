@@ -403,6 +403,7 @@ awesome-mllm-benchmarks/
 
 | Benchmark           | Paper                                                                                                                                                          | Date    | Organization |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------ |
+| **Next-Gen CAPTCHAs** | [Paper](https://arxiv.org/abs/2602.09012) · [GitHub](https://github.com/MetaAgentX/NextGen-CAPTCHAs) · [HF](https://huggingface.co/datasets/YaxinLuo/NextGen-CAPTCHAs) | 2026-02 | MBZUAI       |
 | **Online-Mind2web** | [Paper](https://arxiv.org/abs/2504.01382) · [GitHub](https://github.com/OSU-NLP-Group/Online-Mind2Web) · [HF](https://huggingface.co/datasets/osunlp/Mind2Web) | 2025-04 | OSU          |
 | **BrowseComp**      | [Paper](https://arxiv.org/abs/2504.12516) · [GitHub](https://github.com/openai/simple-evals)                                                                            | 2025-04 | OpenAI       |
 | **PA-Bench**        | [Paper](https://vibrantlabs.com/blog/pa-bench)                                                                                                                 | -       | VibrantLabs  |
