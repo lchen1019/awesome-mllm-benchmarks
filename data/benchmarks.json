@@ -8246,5 +8246,50 @@
     "hf_downloads_total": null,
     "organization": "MBZUAI",
     "affiliation": "MBZUAI and MetaAgentX; University College London"
+  },
+  {
+    "name": "MMESGBench",
+    "category": "OCR/Doc/Chart",
+    "brief": "Multimodal long-document QA and reasoning over real-world ESG reports",
+    "detail": "",
+    "github_url": "https://github.com/Zhanglei1103/MMESGBench",
+    "github_stars": 6,
+    "github_forks": 3,
+    "github_description": "A dataset designed to support multimodal question answering over real-world ESG documents",
+    "hf_url": null,
+    "hf_downloads": null,
+    "hf_likes": null,
+    "paper_title": "MMESGBench: Pioneering Multimodal Understanding and Complex Reasoning Benchmark for ESG Tasks",
+    "paper_urls": [
+      "https://arxiv.org/abs/2507.18932"
+    ],
+    "paper_abstract": "Environmental, Social, and Governance (ESG) reports are essential for evaluating sustainability practices, ensuring regulatory compliance, and promoting financial transparency. However, these documents are often lengthy, structurally diverse, and multimodal, comprising dense text, structured tables, complex figures, and layout-dependent semantics. Existing AI systems often struggle to perform reliable document-level reasoning in such settings, and no dedicated benchmark currently exists in ESG domain. To fill the gap, we introduce MMESGBench, a first-of-its-kind benchmark dataset targeted to evaluate multimodal understanding and complex reasoning across structurally diverse and multi-source ESG documents. This dataset is constructed via a human-AI collaborative, multi-stage pipeline. First, a multimodal LLM generates candidate question-answer (QA) pairs by jointly interpreting rich textual, tabular, and visual information from layout-aware document pages. Second, an LLM verifies the semantic accuracy, completeness, and reasoning complexity of each QA pair. This automated process is followed by an expert-in-the-loop validation, where domain specialists validate and calibrate QA pairs to ensure quality, relevance, and diversity. MMESGBench comprises 933 validated QA pairs derived from 45 ESG documents, spanning across seven distinct document types and three major ESG source categories. Questions are categorized as single-page, cross-page, or unanswerable, with each accompanied by fine-grained multimodal evidence. Initial experiments validate that multimodal and retrieval-augmented models substantially outperform text-only baselines, particularly on visually grounded and cross-page tasks. MMESGBench is publicly available as an open-source dataset at https://github.com/Zhanglei1103/MMESGBench.",
+    "paper_authors": [
+      "Lei Zhang",
+      "Xin Zhou",
+      "Chaoyue He",
+      "Di Wang",
+      "Yi Wu",
+      "Hong Xu",
+      "Wei Liu",
+      "Chunyan Miao"
+    ],
+    "paper_published": "2025-07-25",
+    "paper_categories": [
+      "cs.MM",
+      "cs.CL"
+    ],
+    "homepage": null,
+    "has_samples": false,
+    "hf_tags": null,
+    "hf_license": null,
+    "hf_created": null,
+    "hf_modified": null,
+    "github_topics": [],
+    "github_language": "Python",
+    "github_license": null,
+    "hf_downloads_total": null,
+    "organization": "NTU",
+    "affiliation": "Nanyang Technological University; University College London; Alibaba Group"
   }
 ]
